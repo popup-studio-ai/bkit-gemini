@@ -1,0 +1,33 @@
+{
+  "version": "2.0",
+  "lastUpdated": "2026-02-01T12:00:00.000Z",
+  "activeFeatures": ["bkit-gemini-conversion"],
+  "primaryFeature": "bkit-gemini-conversion",
+  "features": {
+    "bkit-gemini-conversion": {
+      "phase": "plan",
+      "matchRate": null,
+      "iterationCount": 0,
+      "createdAt": "2026-02-01T12:00:00.000Z",
+      "updatedAt": "2026-02-01T12:00:00.000Z"
+    }
+  },
+  "pipeline": {
+    "currentPhase": 1,
+    "level": "Dynamic",
+    "phaseHistory": []
+  },
+  "session": {
+    "startedAt": "2026-02-01T12:00:00.000Z",
+    "onboardingCompleted": false,
+    "lastActivity": "2026-02-01T12:00:00.000Z"
+  },
+  "history": [
+    {
+      "timestamp": "2026-02-01T12:00:00.000Z",
+      "action": "plan_created",
+      "feature": "bkit-gemini-conversion",
+      "details": "Initial plan document created"
+    }
+  ]
+}
