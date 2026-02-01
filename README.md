@@ -9,6 +9,9 @@
 
 bkit is a Gemini CLI extension that transforms how you build software with AI. It provides structured development workflows, automatic documentation, and intelligent code assistance through the PDCA (Plan-Do-Check-Act) methodology.
 
+![Smart Onboarding](images/bkit-smart-onboarding.png)
+*Smart onboarding guides you through project setup with intelligent options*
+
 ---
 
 ## What is Context Engineering?
@@ -71,18 +74,51 @@ Event 7: SessionEnd      → Cleanup and session termination
 
 ## Quick Start
 
+> **Note**: bkit-gemini is designed for **Gemini CLI**. For Claude Code, see [bkit-claude-code](https://github.com/popup-studio-ai/bkit-claude-code).
+
+### Prerequisites
+
+- [Gemini CLI](https://github.com/google-gemini/gemini-cli) v0.26.0 or later
+- [Git](https://git-scm.com/) installed on your machine
+
 ### Installation
 
+#### Option 1: CLI Install (Recommended)
+
 ```bash
-# Clone the repository
-git clone https://github.com/popup-studio-ai/bkit-gemini.git
-
-# Navigate to your project
-cd your-project
-
-# Copy the extension to your Gemini CLI extensions folder
-cp -r bkit-gemini ~/.gemini/extensions/bkit
+gemini extensions install https://github.com/popup-studio-ai/bkit-gemini.git
 ```
+
+#### Option 2: Manual Install
+
+```bash
+git clone https://github.com/popup-studio-ai/bkit-gemini.git ~/.gemini/extensions/bkit
+```
+
+### Verify Installation
+
+```bash
+# In interactive mode
+/extensions list
+
+# Or in non-interactive mode
+gemini extensions list
+```
+
+### Hooks Configuration (Optional)
+
+Hooks are **enabled by default** in Gemini CLI v0.26.0+. If you need to manually configure:
+
+```json
+// ~/.gemini/settings.json
+{
+  "hooksConfig": {
+    "enabled": true
+  }
+}
+```
+
+> **Note:** Do NOT use `"tools": { "enableHooks": true }` - this is incorrect syntax.
 
 ### Extension Structure
 
@@ -102,6 +138,9 @@ bkit-gemini/
 ---
 
 ## Usage
+
+![How to Use bkit](images/how-to-use-bkit.png)
+*9-phase development pipeline with PDCA methodology*
 
 ### Initialize a Project
 ```bash

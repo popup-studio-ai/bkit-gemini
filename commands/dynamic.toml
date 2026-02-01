@@ -1,0 +1,17 @@
+description = "Initialize a Dynamic-level fullstack project with bkend.ai"
+prompt = """
+Activate the dynamic skill for fullstack development with bkend.ai BaaS.
+
+User command: /dynamic {{args}}
+
+Actions:
+- init [name]: Initialize fullstack project with bkend.ai integration
+- guide: Show Dynamic development guide
+- help: Show available commands
+
+For project initialization:
+1. Setup Next.js with TypeScript
+2. Configure bkend.ai MCP integration
+3. Setup authentication patterns
+4. Create standard folder structure
+"""

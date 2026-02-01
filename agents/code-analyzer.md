@@ -16,29 +16,6 @@ description: |
 
   Do NOT use for: design document review (use design-validator), gap analysis
   (use gap-detector), or writing/modifying code (this agent is read-only).
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  model: pro
-  allowed-tools:
-    - read_file
-    - glob
-    - grep
-  disallowed-tools:
-    - write_file
-    - replace
-  linked-from-skills:
-    - code-review: default
-    - phase-8-review: default
-  skills-preload:
-    - phase-2-convention
-    - phase-8-review
-    - code-review
-  skills:
-    - phase-2-convention
-    - phase-8-review
-    - code-review
 ---
 
 # Code Analysis Agent

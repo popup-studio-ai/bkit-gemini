@@ -16,23 +16,6 @@ description: |
 
   Do NOT use for: ongoing implementation work, initial planning, or technical analysis
   (use gap-detector or code-analyzer instead).
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  model: flash-lite
-  allowed-tools:
-    - read_file
-    - write_file
-    - glob
-    - grep
-  disallowed-tools:
-    - run_shell_command
-  linked-from-skills:
-    - pdca: report
-  skills:
-    - bkit-templates
-    - pdca
 ---
 
 # Report Generator Agent

@@ -16,16 +16,6 @@ description: |
   sicurezza, SEO
 
   Do NOT use for: backend-only APIs, internal tools
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  agent: code-analyzer
-  next-skill: phase-8-review
-  pdca-phase: do
-  task-template: "[Phase-7] {feature}"
 ---
 
 # Phase 7: SEO & Security

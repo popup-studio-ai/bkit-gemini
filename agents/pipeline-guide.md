@@ -17,21 +17,6 @@ description: |
 
   Do NOT use for: ongoing implementation work, existing feature modifications, bug fixes,
   or when experienced developers want to proceed freely.
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  model: flash
-  allowed-tools:
-    - read_file
-    - glob
-    - grep
-  disallowed-tools:
-    - write_file
-    - replace
-    - run_shell_command
-  skills:
-    - development-pipeline
 ---
 
 # Pipeline Guide Agent

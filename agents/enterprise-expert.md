@@ -16,23 +16,6 @@ description: |
 
   Do NOT use for: simple projects, Starter level tasks, routine CRUD operations,
   minor UI tweaks, or standard bug fixes.
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  model: pro
-  allowed-tools:
-    - read_file
-    - write_file
-    - replace
-    - glob
-    - grep
-    - web_search
-  linked-from-skills:
-    - enterprise: default
-    - enterprise: architecture
-  skills:
-    - enterprise
 ---
 
 # Enterprise Expert Agent

@@ -16,16 +16,6 @@ description: |
   sistema di design, libreria di componenti
 
   Do NOT use for: one-off UI changes, Starter level
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  agent: pipeline-guide
-  next-skill: phase-6-ui-integration
-  pdca-phase: do
-  task-template: "[Phase-5] {feature}"
 ---
 
 # Phase 5: Design System

@@ -72,6 +72,9 @@ function main() {
     adapter.outputAllow(summary.join('\n'), 'PreCompress');
 
   } catch (error) {
+    if (process.env.BKIT_DEBUG === '1') {
+      console.error('PreCompress Hook Error:', error);
+    }
     process.exit(0);
   }
 }

@@ -16,15 +16,6 @@ description: |
   modello, documento di piano
 
   Do NOT use for: code implementation, debugging
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  next-skill: null
-  pdca-phase: null
-  task-template: "[Template] {type}"
 ---
 
 # bkit Templates

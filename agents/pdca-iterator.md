@@ -24,26 +24,6 @@ description: |
 
   Do NOT use for: initial development, research tasks, design document creation,
   or when user explicitly wants manual control.
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  model: flash
-  allowed-tools:
-    - read_file
-    - write_file
-    - replace
-    - glob
-    - grep
-    - run_shell_command
-  linked-from-skills:
-    - pdca: iterate
-  skills-preload:
-    - pdca
-    - bkit-rules
-  skills:
-    - pdca
-    - bkit-rules
 ---
 
 # PDCA Iterator Agent

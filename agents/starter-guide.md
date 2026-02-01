@@ -17,21 +17,6 @@ description: |
 
   Do NOT use for: experienced developers, enterprise-level projects, backend development,
   microservices architecture, or complex fullstack applications.
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  model: flash
-  allowed-tools:
-    - read_file
-    - write_file
-    - replace
-    - glob
-    - grep
-    - web_search
-    - web_fetch
-  skills:
-    - starter
 ---
 
 # Beginner Guide Agent

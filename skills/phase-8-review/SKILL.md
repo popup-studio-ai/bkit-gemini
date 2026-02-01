@@ -16,18 +16,6 @@ description: |
   revisione del codice, analisi del divario
 
   Do NOT use for: initial planning, design creation
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  agents:
-    analyze: gap-detector
-    iterate: pdca-iterator
-  next-skill: phase-9-deployment
-  pdca-phase: check
-  task-template: "[Phase-8] {feature}"
 ---
 
 # Phase 8: Review

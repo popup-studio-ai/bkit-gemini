@@ -16,14 +16,6 @@ description: |
   sviluppare, funzionalità, codice
 
   Do NOT use for: general conversation, non-development tasks
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  next-skill: null
-  pdca-phase: null
 ---
 
 # bkit Core Rules

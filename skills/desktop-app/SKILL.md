@@ -16,16 +16,6 @@ description: |
   applicazione desktop, app desktop
 
   Do NOT use for: web-only projects, mobile apps
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  agent: pipeline-guide
-  next-skill: null
-  pdca-phase: null
-  task-template: "[Desktop] {feature}"
 ---
 
 # Desktop App Skill

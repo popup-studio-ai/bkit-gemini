@@ -16,19 +16,6 @@ description: |
 
   Do NOT use for: unit testing with test scripts, frontend-only testing without Docker,
   or design document validation.
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  model: flash-lite
-  allowed-tools:
-    - run_shell_command
-    - read_file
-    - write_file
-    - glob
-    - grep
-  skills:
-    - zero-script-qa
 ---
 
 # QA Monitoring Agent

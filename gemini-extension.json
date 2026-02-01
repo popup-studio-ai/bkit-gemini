@@ -5,19 +5,9 @@
   "author": "POPUP STUDIO PTE. LTD.",
   "license": "Apache-2.0",
   "repository": "https://github.com/popup-studio-ai/bkit-gemini",
-  "keywords": ["vibecoding", "pdca", "ai-native", "fullstack", "context-engineering"],
+  "keywords": ["vibecoding", "pdca", "ai-native", "fullstack", "context-engineering", "agentic", "agents", "workflow"],
 
   "contextFileName": "GEMINI.md",
-
-  "mcpServers": {
-    "bkend": {
-      "command": "npx",
-      "args": ["@bkend/mcp-server"],
-      "env": {
-        "BKEND_API_KEY": "$BKEND_API_KEY"
-      }
-    }
-  },
 
   "excludeTools": [],
 

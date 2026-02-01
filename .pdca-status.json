@@ -1,33 +1,38 @@
 {
   "version": "2.0",
   "activeFeatures": {
-    "bkit-gemini-conversion": {
+    "bkit-gemini-comprehensive-test": {
       "phase": "completed",
       "matchRate": 100,
-      "lastUpdated": "2026-02-01T04:20:00Z",
+      "iterationCount": 1,
+      "lastUpdated": "2026-02-01T00:00:00Z",
+      "completedAt": "2026-02-01T00:00:00Z",
       "documents": {
-        "plan": "docs/01-plan/features/bkit-gemini-conversion.plan.md",
-        "design": "docs/02-design/features/bkit-gemini-conversion.design.md",
-        "analysis": "docs/03-analysis/bkit-gemini-conversion.analysis.md",
-        "report": "docs/04-report/features/bkit-gemini-conversion.report.md"
+        "plan": "docs/01-plan/features/bkit-gemini-comprehensive-test.plan.md",
+        "design": "docs/02-design/features/bkit-gemini-comprehensive-test.design.md",
+        "report": "docs/04-report/features/bkit-gemini-comprehensive-test.report.md"
       },
-      "iterations": 1
+      "note": "Test feature - not archived"
+    }
+  },
+  "archivedFeatures": {
+    "bkit-gemini-conversion": {
+      "phase": "archived",
+      "matchRate": 100,
+      "archivedAt": "2026-02-01T00:00:00Z",
+      "archivedTo": "docs/archive/2026-02/bkit-gemini-conversion/"
     },
     "gemini-philosophy-gaps": {
-      "phase": "plan",
-      "matchRate": 0,
-      "lastUpdated": "2026-02-01T12:30:00Z",
-      "documents": {
-        "plan": "docs/01-plan/features/gemini-philosophy-gaps.plan.md",
-        "report": "docs/04-report/features/gemini-philosophy-alignment.report.md"
-      },
-      "iterations": 0,
-      "gaps": {
-        "critical": 3,
-        "moderate": 3,
-        "minor": 2,
-        "alignmentScore": 78
-      }
+      "phase": "archived",
+      "matchRate": 100,
+      "archivedAt": "2026-02-01T00:00:00Z",
+      "archivedTo": "docs/archive/2026-02/gemini-philosophy-gaps/"
+    },
+    "commands-toml-conversion": {
+      "phase": "archived",
+      "matchRate": 100,
+      "archivedAt": "2026-02-01T00:00:00Z",
+      "archivedTo": "docs/archive/2026-02/commands-toml-conversion/"
     }
   },
   "pipeline": {
@@ -35,5 +40,5 @@
     "currentPhase": 9,
     "phaseHistory": []
   },
-  "lastChecked": "2026-02-01T04:20:00Z"
+  "lastChecked": "2026-02-01T00:00:00Z"
 }

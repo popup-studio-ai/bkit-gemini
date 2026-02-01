@@ -16,16 +16,6 @@ description: |
   progettazione API, backend
 
   Do NOT use for: frontend-only projects, Starter level
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  agent: qa-monitor
-  next-skill: phase-5-design-system
-  pdca-phase: do
-  task-template: "[Phase-4] {feature}"
 ---
 
 # Phase 4: API Design & Implementation

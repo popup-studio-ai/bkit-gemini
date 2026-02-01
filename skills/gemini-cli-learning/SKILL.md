@@ -19,17 +19,6 @@ description: |
   imparare gemini cli, configurazione
 
   Do NOT use for: implementation tasks, debugging code
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  argument-hint: "[learn|setup|help]"
-  agent: null
-  next-skill: null
-  pdca-phase: null
-  task-template: "[Learning] {topic}"
 ---
 
 # Gemini CLI Learning

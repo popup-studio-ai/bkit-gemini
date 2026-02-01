@@ -15,25 +15,6 @@ description: |
   está bien?, es correcto?, c'est correct?, ist das richtig?, è giusto?, va bene?
 
   Do NOT use for: documentation-only tasks, initial planning, or design creation.
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  model: pro
-  allowed-tools:
-    - read_file
-    - glob
-    - grep
-  disallowed-tools:
-    - write_file
-    - replace
-  linked-from-skills:
-    - pdca: analyze
-    - phase-8-review: gap
-  skills:
-    - bkit-templates
-    - phase-2-convention
-    - pdca
 ---
 
 # Design-Implementation Gap Detection Agent

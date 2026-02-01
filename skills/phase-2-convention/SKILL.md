@@ -16,16 +16,6 @@ description: |
   convenzione, stile di codice
 
   Do NOT use for: existing projects with established conventions
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  agent: pipeline-guide
-  next-skill: phase-3-mockup
-  pdca-phase: plan
-  task-template: "[Phase-2] {feature}"
 ---
 
 # Phase 2: Convention Definition

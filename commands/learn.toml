@@ -1,0 +1,15 @@
+description = "Learn Gemini CLI configuration and best practices"
+prompt = """
+Activate the gemini-cli-learning skill for CLI education.
+
+User command: /learn {{args}}
+
+Topics:
+- GEMINI.md context files
+- Custom commands (TOML)
+- Skills and agents
+- Hooks configuration
+- Project setup optimization
+
+If 'setup' is specified, analyze current project configuration.
+"""

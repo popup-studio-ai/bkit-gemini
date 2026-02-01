@@ -16,16 +16,6 @@ description: |
   schema, terminologia, modello dati
 
   Do NOT use for: UI-only changes, deployment
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  agent: pipeline-guide
-  next-skill: phase-2-convention
-  pdca-phase: plan
-  task-template: "[Phase-1] {feature}"
 ---
 
 # Phase 1: Schema/Terminology Definition

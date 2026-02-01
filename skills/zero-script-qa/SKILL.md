@@ -16,17 +16,6 @@ description: |
   QA senza script, test basati sui log
 
   Do NOT use for: unit testing, projects without Docker
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  argument-hint: "[start|monitor|report]"
-  agent: qa-monitor
-  next-skill: null
-  pdca-phase: check
-  task-template: "[QA] {feature}"
 ---
 
 # Zero Script QA

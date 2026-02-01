@@ -15,17 +15,6 @@ description: |
   revisione del codice, rilevamento bug
 
   Do NOT use for: design document creation, deployment tasks
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  argument-hint: "[path|feature]"
-  agent: code-analyzer
-  next-skill: null
-  pdca-phase: check
-  task-template: "[Review] {feature}"
 ---
 
 # Code Review Skill

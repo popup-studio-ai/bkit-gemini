@@ -16,16 +16,6 @@ description: |
   implementazione UI, integrazione API
 
   Do NOT use for: mockup creation, backend-only development
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  agent: pipeline-guide
-  next-skill: phase-7-seo-security
-  pdca-phase: do
-  task-template: "[Phase-6] {feature}"
 ---
 
 # Phase 6: UI Integration

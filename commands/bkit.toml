@@ -1,0 +1,38 @@
+description = "Show bkit plugin help and available functions"
+prompt = """
+Display the bkit help information:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ bkit - AI Native Development Toolkit v1.5.0 (Gemini Edition)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PDCA (Document-Driven Development)
+  /pdca plan <feature>       Start planning a new feature
+  /pdca design <feature>     Create design document
+  /pdca do <feature>         Implementation guide
+  /pdca analyze <feature>    Gap analysis
+  /pdca iterate <feature>    Auto-improvement
+  /pdca report <feature>     Completion report
+  /pdca status               Show current status
+  /pdca next                 Guide to next step
+
+Project Initialization
+  /starter init <name>       Static web project
+  /dynamic init <name>       Fullstack app (bkend.ai)
+  /enterprise init <name>    Enterprise system
+
+Development Pipeline
+  /pipeline start            Start pipeline
+  /pipeline next             Next phase
+  /pipeline status           Current phase
+
+Quality Management
+  /review <path>             Code review
+  /qa                        Zero Script QA
+
+Learning
+  /learn                     Gemini CLI learning
+  /learn setup               Analyze project setup
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+"""

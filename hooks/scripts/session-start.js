@@ -99,7 +99,7 @@ function main() {
     // On error, output minimal context
     console.log(JSON.stringify({
       status: 'allow',
-      context: 'bkit Vibecoding Kit v1.0.0 activated (Gemini CLI)',
+      context: 'bkit Vibecoding Kit v1.5.0 activated (Gemini CLI)',
       hookEvent: 'SessionStart'
     }));
     process.exit(0);
@@ -154,7 +154,7 @@ function detectProjectLevel(projectDir) {
 
 function generateWelcomeContext(pdcaStatus, level) {
   const lines = [
-    '# bkit Vibecoding Kit v1.0.0 - Session Start',
+    '# bkit Vibecoding Kit v1.5.0 - Session Start',
     '',
     '## MANDATORY: Session Start Action',
     '',

@@ -26,3 +26,10 @@ npm-debug.log*
 
 # Local settings
 .claude/settings.local.json
+
+# PDCA artifacts
+docs/.pdca-snapshots/
+docs/archive/
+
+# Local symlinks (absolute paths)
+bkit-system/philosophy

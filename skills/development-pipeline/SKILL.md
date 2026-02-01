@@ -15,17 +15,6 @@ description: |
   pipeline di sviluppo, da dove iniziare
 
   Do NOT use for: ongoing implementation, bug fixes
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  argument-hint: "[start|next|status]"
-  agent: pipeline-guide
-  next-skill: null
-  pdca-phase: null
-  task-template: "[Pipeline] {feature}"
 ---
 
 # Development Pipeline

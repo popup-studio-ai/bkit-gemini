@@ -1,0 +1,23 @@
+description = "9-phase development pipeline management"
+prompt = """
+Activate the development-pipeline skill for pipeline guidance.
+
+User command: /pipeline {{args}}
+
+Actions:
+- start: Begin the development pipeline
+- next: Move to next phase
+- status: Show current pipeline status
+- phase N: Jump to specific phase (1-9)
+
+Pipeline phases:
+1. Schema/Terminology
+2. Coding Conventions
+3. Mockup Development
+4. API Design (Dynamic/Enterprise only)
+5. Design System (Dynamic/Enterprise only)
+6. UI Implementation
+7. SEO/Security
+8. Code Review
+9. Deployment
+"""

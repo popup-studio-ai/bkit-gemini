@@ -16,16 +16,6 @@ description: |
   applicazione mobile, app mobile
 
   Do NOT use for: web-only projects, desktop apps
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  agent: pipeline-guide
-  next-skill: null
-  pdca-phase: null
-  task-template: "[Mobile] {feature}"
 ---
 
 # Mobile App Skill

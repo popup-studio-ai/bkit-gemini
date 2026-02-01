@@ -19,17 +19,6 @@ description: |
   autenticazione, accesso, registrazione, database, fullstack
 
   Do NOT use for: static websites, microservices architecture
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  argument-hint: "[init|guide|help]"
-  agent: bkend-expert
-  next-skill: phase-1-schema
-  pdca-phase: plan
-  task-template: "[Dynamic] {feature}"
 ---
 
 # Dynamic Skill

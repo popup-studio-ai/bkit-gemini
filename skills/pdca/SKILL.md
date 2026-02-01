@@ -17,21 +17,6 @@ description: |
   pianificare, progettazione, analizzare, verificare, rapporto
 
   Do NOT use for: simple one-line fixes, non-development tasks
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  argument-hint: "[action] [feature]"
-  agents:
-    analyze: gap-detector
-    iterate: pdca-iterator
-    report: report-generator
-    default: null
-  next-skill: null
-  pdca-phase: null
-  task-template: "[PDCA] {feature}"
 ---
 
 # PDCA Skill

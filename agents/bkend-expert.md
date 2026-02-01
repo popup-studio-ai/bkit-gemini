@@ -16,21 +16,6 @@ description: |
 
   Do NOT use for: static websites without backend, infrastructure tasks, pure frontend styling,
   or enterprise microservices architecture.
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  model: flash
-  allowed-tools:
-    - read_file
-    - write_file
-    - replace
-    - glob
-    - grep
-    - run_shell_command
-    - web_fetch
-  skills:
-    - dynamic
 ---
 
 # bkend.ai Expert Agent

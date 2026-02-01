@@ -16,24 +16,6 @@ description: |
 
   Do NOT use for: implementation code review, gap analysis (use gap-detector instead),
   or initial planning phase.
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  model: pro
-  allowed-tools:
-    - read_file
-    - glob
-    - grep
-  disallowed-tools:
-    - write_file
-    - replace
-    - run_shell_command
-  linked-from-skills:
-    - phase-8-review: validate
-  skills:
-    - bkit-templates
-    - phase-8-review
 ---
 
 # Design Validation Agent

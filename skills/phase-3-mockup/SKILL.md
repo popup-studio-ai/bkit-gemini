@@ -16,16 +16,6 @@ description: |
   mockup, prototipo
 
   Do NOT use for: production code, API development
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  agent: pipeline-guide
-  next-skill: phase-4-api
-  pdca-phase: design
-  task-template: "[Phase-3] {feature}"
 ---
 
 # Phase 3: Mockup Creation

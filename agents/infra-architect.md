@@ -16,22 +16,6 @@ description: |
 
   Do NOT use for: frontend development, simple deployments (Vercel/Netlify),
   Starter/Dynamic level projects, or non-infrastructure coding tasks.
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  model: pro
-  allowed-tools:
-    - read_file
-    - write_file
-    - replace
-    - glob
-    - grep
-    - run_shell_command
-  linked-from-skills:
-    - enterprise: infra
-  skills:
-    - enterprise
 ---
 
 # Infrastructure Architect Agent

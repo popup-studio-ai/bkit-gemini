@@ -16,16 +16,6 @@ description: |
   distribuzione, produzione
 
   Do NOT use for: local development, design phase
-
-license: Apache-2.0
-metadata:
-  author: POPUP STUDIO
-  version: "1.0.0"
-  bkit-version: "1.0.0"
-  agent: infra-architect
-  next-skill: null
-  pdca-phase: act
-  task-template: "[Phase-9] {feature}"
 ---
 
 # Phase 9: Deployment
