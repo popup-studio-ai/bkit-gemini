@@ -8,9 +8,26 @@
       "documents": {
         "plan": "docs/01-plan/features/bkit-gemini-conversion.plan.md",
         "design": "docs/02-design/features/bkit-gemini-conversion.design.md",
-        "analysis": "docs/03-analysis/bkit-gemini-conversion.analysis.md"
+        "analysis": "docs/03-analysis/bkit-gemini-conversion.analysis.md",
+        "report": "docs/04-report/features/bkit-gemini-conversion.report.md"
       },
       "iterations": 1
+    },
+    "gemini-philosophy-gaps": {
+      "phase": "plan",
+      "matchRate": 0,
+      "lastUpdated": "2026-02-01T12:30:00Z",
+      "documents": {
+        "plan": "docs/01-plan/features/gemini-philosophy-gaps.plan.md",
+        "report": "docs/04-report/features/gemini-philosophy-alignment.report.md"
+      },
+      "iterations": 0,
+      "gaps": {
+        "critical": 3,
+        "moderate": 3,
+        "minor": 2,
+        "alignmentScore": 78
+      }
     }
   },
   "pipeline": {
