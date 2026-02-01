@@ -33,3 +33,6 @@ docs/archive/
 
 # Local symlinks (absolute paths)
 bkit-system/philosophy
+
+# Documents
+docs/bkit-Best-Practice.pdf
