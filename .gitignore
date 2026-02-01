@@ -25,7 +25,7 @@ build/
 npm-debug.log*
 
 # Local settings
-.claude/settings.local.json
+.claude/
 
 # PDCA artifacts
 docs/.pdca-snapshots/
