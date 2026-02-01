@@ -1,0 +1,20 @@
+description = "Collect GitHub repository statistics"
+prompt = """
+Collect GitHub statistics for the bkit-gemini repository.
+
+Execute the following commands to gather data:
+
+!{gh repo view popup-studio-ai/bkit-gemini --json stargazerCount,forkCount,watchers,issues,pullRequests,createdAt,pushedAt}
+
+!{gh api repos/popup-studio-ai/bkit-gemini/traffic/views}
+
+!{gh api repos/popup-studio-ai/bkit-gemini/traffic/clones}
+
+Generate a summary report with:
+- Stars, forks, watchers
+- Traffic views (last 14 days)
+- Clone statistics
+- Growth trends
+
+Note: GitHub Traffic API has 1-2 day processing delay.
+"""

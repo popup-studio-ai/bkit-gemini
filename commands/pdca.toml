@@ -1,0 +1,19 @@
+description = "PDCA cycle management - plan, design, do, check, act, report"
+prompt = """
+Activate the pdca skill and execute the following command:
+
+/pdca {{args}}
+
+The pdca skill supports these actions:
+- plan <feature>: Create plan document
+- design <feature>: Create design document
+- do <feature>: Implementation guide
+- analyze <feature>: Run gap analysis (calls gap-detector agent)
+- iterate <feature>: Auto-improvement iteration (calls pdca-iterator agent)
+- report <feature>: Generate completion report (calls report-generator agent)
+- archive <feature>: Archive completed PDCA documents
+- status: Show current PDCA status
+- next: Guide to next phase
+
+Execute the appropriate action based on the arguments provided.
+"""

@@ -1,0 +1,16 @@
+description = "Run code review and quality analysis"
+prompt = """
+Activate the code-review skill to analyze code quality.
+
+User command: /review {{args}}
+
+Perform comprehensive code review including:
+- Naming convention compliance
+- Code structure analysis
+- Security vulnerability detection
+- Performance issues
+- Architecture compliance
+
+If a path is specified, focus on that area.
+Otherwise, analyze the entire codebase.
+"""

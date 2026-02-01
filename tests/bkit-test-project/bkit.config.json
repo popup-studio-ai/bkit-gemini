@@ -1,0 +1,9 @@
+{
+  "pdca": {
+    "matchThreshold": 90,
+    "maxIterations": 5
+  },
+  "permissions": {
+    "default": "allow"
+  }
+}
