@@ -1,0 +1,38 @@
+bkit - Vibecoding Kit (Gemini CLI Edition)
+Copyright 2024-2026 POPUP STUDIO PTE. LTD.
+
+This product includes software developed by POPUP STUDIO PTE. LTD.
+(https://popupstudio.ai)
+
+================================================================================
+
+bkit-gemini is a Gemini CLI extension that provides PDCA methodology and
+development pipeline automation for AI-native software development.
+
+This is a fork of bkit-claude-code, adapted for Gemini CLI compatibility.
+
+Original Authors:
+- POPUP STUDIO PTE. LTD. (https://popupstudio.ai)
+
+Contributors:
+- See CONTRIBUTORS.md for the full list of contributors
+
+================================================================================
+
+Third-Party Notices:
+
+This software is designed to work with Gemini CLI by Google.
+Gemini CLI is subject to Google's terms of service.
+https://ai.google.dev/terms
+
+Original bkit-claude-code was designed for Claude Code by Anthropic, PBC.
+https://www.anthropic.com/terms
+
+================================================================================
+
+If you use this software, you must:
+1. Include this NOTICE file in any redistribution
+2. Retain all copyright and attribution notices
+3. Not use "bkit" trademark without permission from POPUP STUDIO PTE. LTD.
+
+For commercial licensing inquiries, contact: contact@popupstudio.ai

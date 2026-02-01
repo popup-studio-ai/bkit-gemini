@@ -1,0 +1,227 @@
+# {{PROJECT_NAME}}
+
+> {{PROJECT_DESCRIPTION}}
+
+---
+
+## Core Principles
+
+### 1. Automation First, Commands are Shortcuts
+```
+Gemini automatically applies PDCA methodology.
+Commands are shortcuts for power users.
+```
+
+### 2. SoR (Single Source of Truth) Priority
+```
+1st: Codebase (actual working code)
+2nd: GEMINI.md / Convention docs
+3rd: docs/ design documents
+```
+
+### 3. No Guessing
+```
+Unknown → Check documentation
+Not in docs → Ask user
+Never guess
+```
+
+---
+
+## Tech Stack
+
+| Item | Value |
+|------|-------|
+| Language | {{LANGUAGE}} |
+| Framework | {{FRAMEWORK}} |
+| Package Manager | {{PACKAGE_MANAGER}} |
+| Level | {{LEVEL}} |
+| Tier | {{TIER}} |
+
+### Language Tier Context (v1.0.0)
+
+{{#if TIER_1}}
+> **Tier 1 (AI-Native Essential)**
+> - Full AI tool support (Copilot, Claude, Cursor, Gemini)
+> - Vibe Coding optimized
+> - PDCA automation fully supported
+{{/if}}
+
+{{#if TIER_2}}
+> **Tier 2 (Mainstream Recommended)**
+> - Good AI tool compatibility
+> - Domain-specific strengths
+> - PDCA recommended
+{{/if}}
+
+{{#if TIER_3}}
+> **Tier 3 (Domain Specific)**
+> - Platform-specific requirements
+> - Moderate AI support
+> - Consider migration path for new features
+{{/if}}
+
+{{#if TIER_4}}
+> **Tier 4 (Legacy/Niche)**
+> - Maintenance mode
+> - Migration plan recommended
+> - New features should use Tier 1-2
+{{/if}}
+
+---
+
+## Development Workflow
+
+### Commands
+```bash
+# Type check
+{{TYPECHECK_COMMAND}}
+
+# Test
+{{TEST_COMMAND}}
+
+# Lint
+{{LINT_COMMAND}}
+
+# Build
+{{BUILD_COMMAND}}
+```
+
+---
+
+## Coding Conventions
+
+### Naming Rules
+
+| Target | Convention | Example |
+|--------|-----------|---------|
+| Components | PascalCase | `UserProfile`, `LoginForm` |
+| Functions | camelCase | `getUserById`, `handleSubmit` |
+| Constants | UPPER_SNAKE_CASE | `MAX_RETRY_COUNT`, `API_TIMEOUT` |
+| Types/Interfaces | PascalCase | `UserProfile`, `ApiResponse` |
+| Files (component) | PascalCase.tsx | `UserProfile.tsx` |
+| Files (utility) | camelCase.ts | `formatDate.ts` |
+| Folders | kebab-case | `user-profile/`, `auth-provider/` |
+
+### Import Order
+
+```typescript
+// 1. External libraries (react, next, third-party)
+import { useState, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
+
+// 2. Internal absolute imports (@/...)
+import { Button } from '@/components/ui'
+import { userService } from '@/services/user'
+
+// 3. Relative imports (./...)
+import { useLocalState } from './hooks'
+import { formatData } from './utils'
+
+// 4. Type imports
+import type { User, ApiResponse } from '@/types'
+
+// 5. Styles (last)
+import './styles.css'
+```
+
+### Clean Architecture (Level: {{LEVEL}})
+
+| Layer | Location | Responsibility | Can Import |
+|-------|----------|----------------|------------|
+| **Presentation** | `components/`, `hooks/`, `app/` | UI, user events | Application, Domain |
+| **Application** | `services/`, `features/*/hooks/` | Business logic | Domain, Infrastructure |
+| **Domain** | `types/`, `domain/` | Entities, core rules | Nothing (independent) |
+| **Infrastructure** | `lib/`, `api/` | External services | Domain only |
+
+### Environment Variables
+
+| Prefix | Scope | Example | Notes |
+|--------|-------|---------|-------|
+| `NEXT_PUBLIC_` | Client (Browser) | `NEXT_PUBLIC_API_URL` | Exposed to browser |
+| `DB_` | Server only | `DB_HOST`, `DB_PASSWORD` | Never expose |
+| `API_` | Server only | `API_STRIPE_SECRET` | External API keys |
+| `AUTH_` | Server only | `AUTH_SECRET` | Auth secrets |
+
+### Additional Conventions
+
+{{CONVENTIONS}}
+
+---
+
+## Project Structure
+
+```
+{{FOLDER_STRUCTURE}}
+```
+
+---
+
+## PDCA Auto Behavior
+
+### On New Feature Request
+```
+User: "Create login feature"
+Gemini: 1. Check docs/02-design/ → Create design if missing
+        2. Generate design document using template
+        3. Implement based on design
+        4. Suggest Gap analysis after completion
+```
+
+### On Bug Fix / Refactoring
+```
+Gemini: 1. Compare code with design documents
+        2. Identify cause and fix
+        3. Suggest updating documentation
+```
+
+---
+
+## Key Commands
+
+| Command | Description |
+|---------|-------------|
+| `/pdca status` | Check current PDCA status |
+| `/pdca design {feature}` | Create design document |
+| `/pdca analyze {feature}` | Run Gap analysis |
+
+---
+
+## Document Structure Rules
+
+### bkit-system/ (Current Implementation Reference)
+```
+- Update together with code changes
+- Always reflects "current codebase state"
+- Use this folder for implementation reference
+```
+
+### docs/pdca/ (Active Work)
+```
+- Active PDCA documents in progress
+- Move to docs/archive/ after completion
+```
+
+### docs/archive/ (History)
+```
+- Completed plan/design documents
+- Read-only (no modifications)
+```
+
+### Archive Trigger
+```
+Gap analysis completed (match rate >= 90%)
+OR user explicit completion
+→ Move to archive
+```
+
+---
+
+## Reference
+
+Use `/pdca plan`, `/pdca design`, `/pdca analyze` commands for PDCA workflow.
+
+---
+
+**Generated by**: bkit-gemini
+**Template Version**: 1.0.0 (Gemini CLI Edition)

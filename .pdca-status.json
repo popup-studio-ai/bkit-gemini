@@ -1,0 +1,22 @@
+{
+  "version": "2.0",
+  "activeFeatures": {
+    "bkit-gemini-conversion": {
+      "phase": "completed",
+      "matchRate": 100,
+      "lastUpdated": "2026-02-01T04:20:00Z",
+      "documents": {
+        "plan": "docs/01-plan/features/bkit-gemini-conversion.plan.md",
+        "design": "docs/02-design/features/bkit-gemini-conversion.design.md",
+        "analysis": "docs/03-analysis/bkit-gemini-conversion.analysis.md"
+      },
+      "iterations": 1
+    }
+  },
+  "pipeline": {
+    "level": "Enterprise",
+    "currentPhase": 9,
+    "phaseHistory": []
+  },
+  "lastChecked": "2026-02-01T04:20:00Z"
+}

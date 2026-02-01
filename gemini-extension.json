@@ -1,0 +1,27 @@
+{
+  "name": "bkit",
+  "version": "1.5.0",
+  "description": "bkit Vibecoding Kit - PDCA + AI-native development for Gemini CLI",
+  "author": "POPUP STUDIO PTE. LTD.",
+  "license": "Apache-2.0",
+  "repository": "https://github.com/popup-studio-ai/bkit-gemini",
+  "keywords": ["vibecoding", "pdca", "ai-native", "fullstack", "context-engineering"],
+
+  "contextFileName": "GEMINI.md",
+
+  "mcpServers": {
+    "bkend": {
+      "command": "npx",
+      "args": ["@bkend/mcp-server"],
+      "env": {
+        "BKEND_API_KEY": "$BKEND_API_KEY"
+      }
+    }
+  },
+
+  "excludeTools": [],
+
+  "experimental": {
+    "skills": true
+  }
+}

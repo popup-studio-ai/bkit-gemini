@@ -1,0 +1,50 @@
+{
+  "timestamp": "2026-02-01T02:56:04.958Z",
+  "reason": "compaction",
+  "status": {
+    "version": "2.0",
+    "lastUpdated": "2026-02-01T13:00:00.000Z",
+    "activeFeatures": [
+      "bkit-gemini-conversion"
+    ],
+    "primaryFeature": "bkit-gemini-conversion",
+    "features": {
+      "bkit-gemini-conversion": {
+        "phase": "design",
+        "matchRate": null,
+        "iterationCount": 0,
+        "createdAt": "2026-02-01T12:00:00.000Z",
+        "updatedAt": "2026-02-01T13:00:00.000Z"
+      }
+    },
+    "pipeline": {
+      "currentPhase": 2,
+      "level": "Dynamic",
+      "phaseHistory": [
+        {
+          "phase": 1,
+          "completedAt": "2026-02-01T12:00:00.000Z"
+        }
+      ]
+    },
+    "session": {
+      "startedAt": "2026-02-01T12:00:00.000Z",
+      "onboardingCompleted": true,
+      "lastActivity": "2026-02-01T13:00:00.000Z"
+    },
+    "history": [
+      {
+        "timestamp": "2026-02-01T12:00:00.000Z",
+        "action": "plan_created",
+        "feature": "bkit-gemini-conversion",
+        "details": "Initial plan document created"
+      },
+      {
+        "timestamp": "2026-02-01T13:00:00.000Z",
+        "action": "design_created",
+        "feature": "bkit-gemini-conversion",
+        "details": "Comprehensive design document with 7 implementation phases"
+      }
+    ]
+  }
+}

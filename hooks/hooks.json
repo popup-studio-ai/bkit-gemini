@@ -1,0 +1,124 @@
+{
+  "description": "bkit Vibecoding Kit v1.0.0 - Gemini CLI Edition",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "name": "bkit-session-init",
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/scripts/session-start.js",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "BeforeAgent": [
+      {
+        "hooks": [
+          {
+            "name": "bkit-intent-detection",
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/scripts/before-agent.js",
+            "timeout": 3000
+          }
+        ]
+      }
+    ],
+    "BeforeTool": [
+      {
+        "matcher": "write_file|replace",
+        "hooks": [
+          {
+            "name": "bkit-pre-write",
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/scripts/before-tool.js",
+            "timeout": 5000
+          }
+        ]
+      },
+      {
+        "matcher": "run_shell_command",
+        "hooks": [
+          {
+            "name": "bkit-pre-bash",
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/scripts/before-tool.js",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "AfterTool": [
+      {
+        "matcher": "write_file",
+        "hooks": [
+          {
+            "name": "bkit-post-write",
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/scripts/after-tool.js",
+            "timeout": 5000
+          }
+        ]
+      },
+      {
+        "matcher": "run_shell_command",
+        "hooks": [
+          {
+            "name": "bkit-post-bash",
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/scripts/after-tool.js",
+            "timeout": 5000
+          }
+        ]
+      },
+      {
+        "matcher": "skill",
+        "hooks": [
+          {
+            "name": "bkit-post-skill",
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/scripts/after-tool.js",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "AfterAgent": [
+      {
+        "hooks": [
+          {
+            "name": "bkit-agent-cleanup",
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/scripts/after-agent.js",
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
+    "PreCompress": [
+      {
+        "hooks": [
+          {
+            "name": "bkit-context-save",
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/scripts/pre-compress.js",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "name": "bkit-cleanup",
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/scripts/session-end.js",
+            "timeout": 10000
+          }
+        ]
+      }
+    ]
+  }
+}
