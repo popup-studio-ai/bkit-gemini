@@ -1,16 +1,17 @@
 description = "Zero Script QA - Log-based testing with Docker"
 prompt = """
-Activate the zero-script-qa skill for log-based testing.
+@skills/zero-script-qa/SKILL.md
 
-User command: /qa {{args}}
+Target: {{args}}
+
+Docker status:
+!docker ps --format "table {{.Names}}\t{{.Status}}" 2>/dev/null || echo 'Docker not running'
 
 Zero Script QA methodology:
 1. Start Docker containers
-2. Monitor logs in real-time
-3. Detect errors and issues
+2. Monitor logs in real-time via `docker logs -f`
+3. Detect errors and issues from structured JSON logs
 4. Generate QA report
 
-Prerequisites:
-- Docker and docker-compose installed
-- Services configured with JSON structured logging
+Delegate monitoring to qa-monitor agent for continuous analysis.
 """

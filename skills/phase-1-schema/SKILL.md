@@ -16,6 +16,26 @@ description: |
   schema, terminologia, modello dati
 
   Do NOT use for: UI-only changes, deployment
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: ""
+
+allowed-tools:
+  - read_file
+  - write_file
+  - replace
+  - glob_tool
+  - grep_search
+
+imports:
+  - templates/plan.template.md
+
+agents: {}
+
+context: session
+memory: project
+pdca-phase: plan
 ---
 
 # Phase 1: Schema/Terminology Definition

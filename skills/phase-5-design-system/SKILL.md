@@ -16,6 +16,27 @@ description: |
   sistema di design, libreria di componenti
 
   Do NOT use for: one-off UI changes, Starter level
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: ""
+
+allowed-tools:
+  - read_file
+  - write_file
+  - replace
+  - glob_tool
+  - grep_search
+  - web_search
+
+imports: []
+
+agents:
+  frontend: frontend-architect
+
+context: session
+memory: project
+pdca-phase: design
 ---
 
 # Phase 5: Design System

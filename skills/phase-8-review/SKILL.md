@@ -16,6 +16,28 @@ description: |
   revisione del codice, analisi del divario
 
   Do NOT use for: initial planning, design creation
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: ""
+
+allowed-tools:
+  - read_file
+  - read_many_files
+  - glob_tool
+  - grep_search
+  - list_directory
+
+imports:
+  - templates/analysis.template.md
+
+agents:
+  analyze: code-analyzer
+  gaps: gap-detector
+
+context: session
+memory: project
+pdca-phase: check
 ---
 
 # Phase 8: Review

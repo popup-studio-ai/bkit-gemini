@@ -16,6 +16,27 @@ description: |
   progettazione API, backend
 
   Do NOT use for: frontend-only projects, Starter level
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: ""
+
+allowed-tools:
+  - read_file
+  - write_file
+  - replace
+  - glob_tool
+  - grep_search
+  - run_shell_command
+
+imports:
+  - templates/design.template.md
+
+agents: {}
+
+context: session
+memory: project
+pdca-phase: do
 ---
 
 # Phase 4: API Design & Implementation

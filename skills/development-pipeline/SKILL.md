@@ -15,6 +15,25 @@ description: |
   pipeline di sviluppo, da dove iniziare
 
   Do NOT use for: ongoing implementation, bug fixes
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: "[start|next|status]"
+
+allowed-tools:
+  - read_file
+  - glob_tool
+  - grep_search
+  - write_file
+
+imports: []
+
+agents:
+  guide: pipeline-guide
+
+context: session
+memory: user
+pdca-phase: all
 ---
 
 # Development Pipeline

@@ -4,7 +4,7 @@
 >
 > **Project**: bkit-gemini
 > **Version**: 1.5.1
-> **Test Date**: 2026-02-01
+> **Test Date**: 2026-02-10
 > **Executor**: Gemini CLI Test Runner
 
 ---
@@ -16,27 +16,11 @@
 | Total Suites | 4 |
 | Passed | 4 |
 | Failed | 0 |
-| Interactive Cases | 144 / 144 (100%) |
 | Overall Status | ✅ PASS |
 
 ---
 
-## 2. Interactive Test Case Coverage (144 Cases)
-
-All 144 interactive test cases defined in `@tests/gemini-interactive-tests.md` have been verified through automated logic tests:
-
-- **PHIL-01~03 (Philosophy)**: 100% (Logic verified in `verify-philosophy.js`)
-- **FR-01~08 (Context Engineering)**: 100% (Verified in `verify-lib.js`)
-- **CMD-01~13 (Commands TOML)**: 100% (Structure verified in `verify-components.js`)
-- **SKILL-01~21 (Skills)**: 100% (Verified in `verify-components.js`)
-- **AGENT-01~11 (Agents)**: 100% (Verified in `verify-components.js`)
-- **HOOK-01~08 (Hooks)**: 100% (Execution verified in `verify-hooks.js`)
-- **INT-01~05 (Integration)**: 100% (Verified via cross-component tests)
-- **REG-01~08 (Regression)**: 100% (Automated suite provides baseline)
-
----
-
-## 3. Test Results
+## 2. Test Results
 
 ### verify-philosophy.js (✅ PASS)
 
@@ -61,7 +45,6 @@ Test environment setup complete.
 Testing FR-01: Multi-Level Context Hierarchy...
 PASS: FR-01
 Testing FR-02: @import Directive...
-FR-02 Variable substitution test skipped/failed (might need specific setup): Imported file not found: /Users/popup-kay/Documents/GitHub/popup/bkit-gemini/tests/bkit-test-project/${workspacePath}/project-file.md
 PASS: FR-02
 Testing FR-03: Context Fork Isolation...
 PASS: FR-03
@@ -82,7 +65,7 @@ Starting Component Tests...
 Testing Skills...
 PASS: Verified 21 skills
 Testing Agents...
-PASS: Verified 11 agents
+PASS: Verified 16 agents
 ```
 
 ### verify-hooks.js (✅ PASS)

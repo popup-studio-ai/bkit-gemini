@@ -1,7 +1,7 @@
 {
   "name": "bkit",
-  "version": "1.5.0",
-  "description": "bkit Vibecoding Kit - PDCA + AI-native development for Gemini CLI",
+  "version": "1.5.1",
+  "description": "bkit Vibecoding Kit - PDCA methodology + Context Engineering for AI-native development with Gemini CLI",
   "author": "POPUP STUDIO PTE. LTD.",
   "license": "Apache-2.0",
   "repository": "https://github.com/popup-studio-ai/bkit-gemini",
@@ -10,6 +10,19 @@
   "contextFileName": "GEMINI.md",
 
   "excludeTools": [],
+
+  "settings": [
+    {
+      "name": "Output Style",
+      "description": "Response formatting style (bkit-learning, bkit-pdca-guide, bkit-enterprise, bkit-pdca-enterprise)",
+      "envVar": "BKIT_OUTPUT_STYLE"
+    },
+    {
+      "name": "Project Level",
+      "description": "Override auto-detected project level (Starter, Dynamic, Enterprise)",
+      "envVar": "BKIT_PROJECT_LEVEL"
+    }
+  ],
 
   "experimental": {
     "skills": true

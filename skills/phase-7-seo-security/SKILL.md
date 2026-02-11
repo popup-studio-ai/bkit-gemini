@@ -16,6 +16,27 @@ description: |
   sicurezza, SEO
 
   Do NOT use for: backend-only APIs, internal tools
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: ""
+
+allowed-tools:
+  - read_file
+  - write_file
+  - replace
+  - glob_tool
+  - grep_search
+  - web_search
+
+imports: []
+
+agents:
+  security: security-architect
+
+context: session
+memory: project
+pdca-phase: check
 ---
 
 # Phase 7: SEO & Security

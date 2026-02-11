@@ -26,6 +26,7 @@ npm-debug.log*
 
 # Local settings
 .claude/
+.bkit/
 
 # PDCA artifacts
 docs/.pdca-snapshots/

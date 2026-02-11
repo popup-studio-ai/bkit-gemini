@@ -19,6 +19,26 @@ description: |
   imparare gemini cli, configurazione
 
   Do NOT use for: implementation tasks, debugging code
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: "[learn|setup]"
+
+allowed-tools:
+  - read_file
+  - write_file
+  - glob_tool
+  - grep_search
+  - web_search
+  - web_fetch
+
+imports: []
+
+agents: {}
+
+context: session
+memory: user
+pdca-phase: all
 ---
 
 # Gemini CLI Learning

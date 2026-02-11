@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * BeforeTool Hook - Pre-execution Validation
- * Validates tool calls, checks permissions, and provides PDCA guidance
+ * BeforeTool Hook - Pre-execution Validation (v1.5.1)
+ * Validates tool calls, checks permissions via PermissionManager,
+ * applies PDCA phase restrictions, and provides guidance
  */
 const fs = require('fs');
 const path = require('path');
@@ -21,11 +22,43 @@ function main() {
     // Map tool name
     const claudeToolName = adapter.reverseMapToolName(toolName);
 
-    // Handle by tool type
+    const projectDir = adapter.getProjectDir();
+
+    // 1. Check PermissionManager (integrated from lib/core/permission.js)
+    const permResult = checkPermissionManager(toolName, toolInput, projectDir);
+    if (permResult.level === 'deny') {
+      adapter.outputBlock(`Permission denied: ${permResult.reason || 'Blocked by permission policy'}`);
+      return;
+    }
+
+    const contexts = [];
+
+    // Add permission warnings
+    if (permResult.level === 'ask') {
+      contexts.push(`**Permission Warning**: ${permResult.reason || 'This action requires caution.'}`);
+    }
+
+    // 2. Check PDCA phase restrictions
+    const pdcaWarning = checkPdcaPhaseRestriction(toolName, projectDir);
+    if (pdcaWarning) {
+      contexts.push(pdcaWarning);
+    }
+
+    // 3. Handle by tool type (existing logic)
     if (['write_file', 'replace'].includes(toolName) || ['Write', 'Edit'].includes(claudeToolName)) {
-      handleWriteEdit(adapter, toolInput);
+      const writeContexts = handleWriteEdit(toolInput);
+      contexts.push(...writeContexts);
     } else if (toolName === 'run_shell_command' || claudeToolName === 'Bash') {
-      handleBash(adapter, toolInput);
+      const bashResult = handleBash(toolInput);
+      if (bashResult.block) {
+        adapter.outputBlock(bashResult.message);
+        return;
+      }
+      contexts.push(...bashResult.warnings);
+    }
+
+    if (contexts.length > 0) {
+      adapter.outputAllow(contexts.join('\n'), 'BeforeTool');
     } else {
       adapter.outputEmpty();
     }
@@ -35,42 +68,72 @@ function main() {
   }
 }
 
-function handleWriteEdit(adapter, toolInput) {
+/**
+ * Check PermissionManager from lib/core/permission.js
+ */
+function checkPermissionManager(toolName, toolInput, projectDir) {
+  try {
+    const { checkPermission } = require(path.join(libPath, 'core', 'permission'));
+    return checkPermission(toolName, toolInput, projectDir);
+  } catch (e) {
+    // Permission module not available, fall through to hardcoded checks
+    return { level: 'allow', reason: null, matchedPattern: null };
+  }
+}
+
+/**
+ * Check PDCA phase restrictions
+ */
+function checkPdcaPhaseRestriction(toolName, projectDir) {
+  try {
+    const statusPath = path.join(projectDir, 'docs', '.pdca-status.json');
+    if (!fs.existsSync(statusPath)) return null;
+
+    const status = JSON.parse(fs.readFileSync(statusPath, 'utf-8'));
+    const feature = status.primaryFeature;
+    if (!feature || !status.features[feature]) return null;
+
+    const phase = status.features[feature].phase;
+
+    // Plan/Check phases should be read-only
+    if ((phase === 'plan' || phase === 'check') &&
+        ['write_file', 'replace', 'run_shell_command'].includes(toolName)) {
+      return `**PDCA Phase Warning**: Current phase is "${phase}" (read-only recommended). Writing files may deviate from the PDCA workflow.`;
+    }
+
+    return null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function handleWriteEdit(toolInput) {
   const filePath = toolInput.file_path || toolInput.path || '';
   const content = toolInput.content || '';
+  const contexts = [];
 
   // Check for dangerous patterns in content
   if (content.includes('rm -rf /') || content.includes(':(){ :|:& };:')) {
-    adapter.outputBlock('Potentially dangerous content detected');
-    return;
+    // This is now handled by PermissionManager, but keep as fallback
+    contexts.push('**Security Alert**: Potentially dangerous content detected');
   }
-
-  // Get PDCA guidance based on file type
-  const contexts = [];
 
   // Check if writing to source code
   const ext = path.extname(filePath).toLowerCase();
   const sourceExts = ['.ts', '.tsx', '.js', '.jsx', '.py', '.go', '.rs', '.java'];
 
   if (sourceExts.includes(ext)) {
-    // Estimate task size
     const lines = content.split('\n').length;
-    let pdcaLevel = 'none';
     let guidance = '';
 
     if (lines > 500) {
-      pdcaLevel = 'required';
       guidance = 'Major feature detected. PDCA documentation is strongly recommended.';
     } else if (lines > 100) {
-      pdcaLevel = 'recommended';
       guidance = 'Feature-sized change detected. Consider creating design documentation.';
-    } else if (lines > 30) {
-      pdcaLevel = 'optional';
-      guidance = 'Minor change detected. PDCA is optional but helpful.';
     }
 
     if (guidance) {
-      contexts.push(`**PDCA Guidance** (${pdcaLevel}): ${guidance}`);
+      contexts.push(`**PDCA Guidance**: ${guidance}`);
     }
   }
 
@@ -79,17 +142,13 @@ function handleWriteEdit(adapter, toolInput) {
     contexts.push('**Security Note**: Writing to environment file. Ensure sensitive values are not committed.');
   }
 
-  if (contexts.length > 0) {
-    adapter.outputAllow(contexts.join('\n'), 'BeforeTool');
-  } else {
-    adapter.outputEmpty();
-  }
+  return contexts;
 }
 
-function handleBash(adapter, toolInput) {
+function handleBash(toolInput) {
   const command = toolInput.command || '';
 
-  // Dangerous patterns to block
+  // Dangerous patterns to block (fallback for PermissionManager)
   const blockPatterns = [
     /rm\s+-rf\s+\/(?!\s)/,
     /rm\s+-rf\s+\*/,
@@ -102,8 +161,7 @@ function handleBash(adapter, toolInput) {
 
   for (const pattern of blockPatterns) {
     if (pattern.test(command)) {
-      adapter.outputBlock(`Dangerous command pattern detected: ${pattern}`);
-      return;
+      return { block: true, message: `Dangerous command pattern detected: ${pattern}`, warnings: [] };
     }
   }
 
@@ -123,11 +181,7 @@ function handleBash(adapter, toolInput) {
     }
   }
 
-  if (warnings.length > 0) {
-    adapter.outputAllow(warnings.join('\n'), 'BeforeTool');
-  } else {
-    adapter.outputEmpty();
-  }
+  return { block: false, message: '', warnings };
 }
 
 main();

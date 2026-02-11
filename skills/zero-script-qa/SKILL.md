@@ -16,6 +16,26 @@ description: |
   QA senza script, test basati sui log
 
   Do NOT use for: unit testing, projects without Docker
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: "[target]"
+
+allowed-tools:
+  - run_shell_command
+  - read_file
+  - write_file
+  - grep_search
+  - glob_tool
+
+imports: []
+
+agents:
+  monitor: qa-monitor
+
+context: session
+memory: project
+pdca-phase: check
 ---
 
 # Zero Script QA

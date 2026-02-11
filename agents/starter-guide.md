@@ -17,6 +17,18 @@ description: |
 
   Do NOT use for: experienced developers, enterprise-level projects, backend development,
   microservices architecture, or complex fullstack applications.
+
+model: gemini-2.5-flash
+tools:
+  - read_file
+  - write_file
+  - replace
+  - glob_tool
+  - grep_search
+  - web_search
+temperature: 0.7
+max_turns: 20
+timeout_mins: 10
 ---
 
 # Beginner Guide Agent

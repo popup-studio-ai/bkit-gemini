@@ -19,6 +19,29 @@ description: |
   autenticazione, accesso, registrazione, database, fullstack
 
   Do NOT use for: static websites, microservices architecture
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: "[init]"
+
+allowed-tools:
+  - read_file
+  - write_file
+  - replace
+  - glob_tool
+  - grep_search
+  - run_shell_command
+  - web_search
+  - web_fetch
+
+imports: []
+
+agents:
+  backend: bkend-expert
+
+context: session
+memory: project
+pdca-phase: all
 ---
 
 # Dynamic Skill

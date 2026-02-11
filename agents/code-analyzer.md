@@ -16,6 +16,17 @@ description: |
 
   Do NOT use for: design document review (use design-validator), gap analysis
   (use gap-detector), or writing/modifying code (this agent is read-only).
+
+model: gemini-2.5-pro
+tools:
+  - read_file
+  - read_many_files
+  - grep_search
+  - glob_tool
+  - list_directory
+temperature: 0.2
+max_turns: 20
+timeout_mins: 10
 ---
 
 # Code Analysis Agent

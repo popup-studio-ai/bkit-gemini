@@ -16,6 +16,27 @@ description: |
   applicazione desktop, app desktop
 
   Do NOT use for: web-only projects, mobile apps
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: "[electron|tauri]"
+
+allowed-tools:
+  - read_file
+  - write_file
+  - replace
+  - glob_tool
+  - grep_search
+  - run_shell_command
+  - web_search
+
+imports: []
+
+agents: {}
+
+context: session
+memory: project
+pdca-phase: all
 ---
 
 # Desktop App Skill

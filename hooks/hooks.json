@@ -1,5 +1,5 @@
 {
-  "description": "bkit Vibecoding Kit v1.0.0 - Gemini CLI Edition",
+  "description": "bkit Vibecoding Kit v1.5.1 - Gemini CLI Edition",
   "hooks": {
     "SessionStart": [
       {
@@ -20,6 +20,42 @@
             "name": "bkit-intent-detection",
             "type": "command",
             "command": "node ${extensionPath}/hooks/scripts/before-agent.js",
+            "timeout": 3000
+          }
+        ]
+      }
+    ],
+    "BeforeModel": [
+      {
+        "hooks": [
+          {
+            "name": "bkit-before-model",
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/scripts/before-model.js",
+            "timeout": 3000
+          }
+        ]
+      }
+    ],
+    "AfterModel": [
+      {
+        "hooks": [
+          {
+            "name": "bkit-after-model",
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/scripts/after-model.js",
+            "timeout": 3000
+          }
+        ]
+      }
+    ],
+    "BeforeToolSelection": [
+      {
+        "hooks": [
+          {
+            "name": "bkit-tool-filter",
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/scripts/before-tool-selection.js",
             "timeout": 3000
           }
         ]

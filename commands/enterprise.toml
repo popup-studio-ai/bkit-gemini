@@ -1,17 +1,15 @@
 description = "Initialize an Enterprise-level microservices project"
 prompt = """
-Activate the enterprise skill for enterprise-grade system development.
+@skills/enterprise/SKILL.md
 
-User command: /enterprise {{args}}
-
-Actions:
-- init [name]: Initialize Enterprise project with microservices architecture
-- guide: Show Enterprise development guide
-- help: Show available commands
+Action: {{args}}
 
 For project initialization:
 1. Monorepo structure setup
 2. Kubernetes/Terraform configuration
 3. CI/CD pipeline with GitHub Actions
 4. Microservices architecture design
+
+Delegate infrastructure to infra-architect agent.
+Delegate architecture decisions to enterprise-expert agent.
 """

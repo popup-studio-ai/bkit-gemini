@@ -16,6 +16,18 @@ description: |
 
   Do NOT use for: simple projects, Starter level tasks, routine CRUD operations,
   minor UI tweaks, or standard bug fixes.
+
+model: gemini-2.5-pro
+tools:
+  - read_file
+  - write_file
+  - replace
+  - glob_tool
+  - grep_search
+  - web_search
+temperature: 0.2
+max_turns: 25
+timeout_mins: 10
 ---
 
 # Enterprise Expert Agent

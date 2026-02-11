@@ -16,6 +16,23 @@ description: |
   sviluppare, funzionalità, codice
 
   Do NOT use for: general conversation, non-development tasks
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: false
+argument-hint: ""
+
+allowed-tools:
+  - read_file
+  - glob_tool
+  - grep_search
+
+imports: []
+
+agents: {}
+
+context: project
+memory: project
+pdca-phase: all
 ---
 
 # bkit Core Rules

@@ -19,6 +19,29 @@ description: |
   microservizi, strategia aziendale, architettura
 
   Do NOT use for: simple projects, static websites, learning projects
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: "[init]"
+
+allowed-tools:
+  - read_file
+  - write_file
+  - replace
+  - glob_tool
+  - grep_search
+  - run_shell_command
+  - web_search
+
+imports: []
+
+agents:
+  infra: infra-architect
+  arch: enterprise-expert
+
+context: session
+memory: project
+pdca-phase: all
 ---
 
 # Enterprise Skill

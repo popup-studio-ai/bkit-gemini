@@ -16,6 +16,27 @@ description: |
   distribuzione, produzione
 
   Do NOT use for: local development, design phase
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: ""
+
+allowed-tools:
+  - read_file
+  - write_file
+  - replace
+  - glob_tool
+  - grep_search
+  - run_shell_command
+
+imports: []
+
+agents:
+  infra: infra-architect
+
+context: session
+memory: project
+pdca-phase: act
 ---
 
 # Phase 9: Deployment

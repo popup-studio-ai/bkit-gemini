@@ -106,7 +106,7 @@ function handlePostSkill(adapter, toolInput) {
 
   const contexts = [];
 
-  // Track skill completion and suggest next steps
+  // 1. Generic skill tracking (existing logic)
   if (skillName === 'pdca' || skillName.startsWith('bkit:pdca')) {
     const action = args.split(' ')[0];
     const feature = args.split(' ').slice(1).join(' ');
@@ -117,6 +117,31 @@ function handlePostSkill(adapter, toolInput) {
       contexts.push(`**PDCA Progress**: Design created for "${feature}". Next: Start implementation, then \`/pdca analyze ${feature}\``);
     } else if (action === 'analyze' && feature) {
       contexts.push(`**PDCA Progress**: Gap analysis completed for "${feature}". Check match rate for next steps.`);
+    }
+  }
+
+  // 2. Call specialized post-processors (FR-16)
+  if (skillName === 'pdca' || skillName.startsWith('bkit:pdca')) {
+    const action = args.split(' ')[0];
+    const skillScriptMap = {
+      'plan': 'pdca-plan-post.js',
+      'design': 'pdca-design-post.js',
+      'analyze': 'pdca-analyze-post.js',
+      'iterate': 'pdca-iterate-post.js',
+      'report': 'pdca-report-post.js'
+    };
+
+    const scriptFile = skillScriptMap[action];
+    if (scriptFile) {
+      try {
+        const postProcessor = require(path.join(__dirname, 'skills', scriptFile));
+        const result = postProcessor(toolInput, adapter);
+        if (result && result.additionalContext) {
+          contexts.push(result.additionalContext);
+        }
+      } catch (e) {
+        // Silently fail post-processor
+      }
     }
   }
 
