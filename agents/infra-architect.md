@@ -16,6 +16,18 @@ description: |
 
   Do NOT use for: frontend development, simple deployments (Vercel/Netlify),
   Starter/Dynamic level projects, or non-infrastructure coding tasks.
+
+model: gemini-2.5-pro
+tools:
+  - read_file
+  - write_file
+  - replace
+  - glob_tool
+  - grep_search
+  - run_shell_command
+temperature: 0.2
+max_turns: 20
+timeout_mins: 10
 ---
 
 # Infrastructure Architect Agent

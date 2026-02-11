@@ -19,6 +19,28 @@ description: |
   sito web statico, portfolio, pagina di destinazione, principiante
 
   Do NOT use for: fullstack apps, backend development, microservices
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: "[init]"
+
+allowed-tools:
+  - read_file
+  - write_file
+  - replace
+  - glob_tool
+  - grep_search
+  - web_search
+  - web_fetch
+
+imports: []
+
+agents:
+  guide: starter-guide
+
+context: session
+memory: project
+pdca-phase: all
 ---
 
 # Starter Skill

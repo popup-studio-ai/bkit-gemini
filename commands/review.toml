@@ -1,8 +1,11 @@
 description = "Run code review and quality analysis"
 prompt = """
-Activate the code-review skill to analyze code quality.
+@skills/code-review/SKILL.md
 
-User command: /review {{args}}
+Target: {{args}}
+
+Project conventions:
+!cat bkit.config.json 2>/dev/null | head -30
 
 Perform comprehensive code review including:
 - Naming convention compliance
@@ -13,4 +16,5 @@ Perform comprehensive code review including:
 
 If a path is specified, focus on that area.
 Otherwise, analyze the entire codebase.
+Delegate to code-analyzer agent for deep analysis.
 """

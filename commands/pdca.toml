@@ -1,19 +1,21 @@
 description = "PDCA cycle management - plan, design, do, check, act, report"
 prompt = """
-Activate the pdca skill and execute the following command:
+@skills/pdca/SKILL.md
 
-/pdca {{args}}
+Execute PDCA action: {{args}}
 
-The pdca skill supports these actions:
-- plan <feature>: Create plan document
-- design <feature>: Create design document
-- do <feature>: Implementation guide
-- analyze <feature>: Run gap analysis (calls gap-detector agent)
-- iterate <feature>: Auto-improvement iteration (calls pdca-iterator agent)
-- report <feature>: Generate completion report (calls report-generator agent)
-- archive <feature>: Archive completed PDCA documents
+Current project status:
+!cat docs/.pdca-status.json 2>/dev/null || echo '{"primaryFeature": null}'
+
+Available actions:
+- plan <feature>: Create plan document using @templates/plan.template.md
+- design <feature>: Create design document using @templates/design.template.md
+- do <feature>: Implementation guide based on design doc
+- analyze <feature>: Run gap analysis (delegates to gap-detector agent)
+- iterate <feature>: Auto-improvement iteration (delegates to pdca-iterator agent)
+- report <feature>: Generate completion report (delegates to report-generator agent)
 - status: Show current PDCA status
-- next: Guide to next phase
+- next: Guide to next phase based on current status
 
 Execute the appropriate action based on the arguments provided.
 """

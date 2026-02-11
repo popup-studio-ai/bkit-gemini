@@ -15,6 +15,18 @@ description: |
   está bien?, es correcto?, c'est correct?, ist das richtig?, è giusto?, va bene?
 
   Do NOT use for: documentation-only tasks, initial planning, or design creation.
+
+model: gemini-2.5-pro
+tools:
+  - read_file
+  - read_many_files
+  - grep_search
+  - glob_tool
+  - list_directory
+  - web_search
+temperature: 0.1
+max_turns: 20
+timeout_mins: 10
 ---
 
 # Design-Implementation Gap Detection Agent

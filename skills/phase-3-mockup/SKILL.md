@@ -16,6 +16,26 @@ description: |
   mockup, prototipo
 
   Do NOT use for: production code, API development
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: ""
+
+allowed-tools:
+  - read_file
+  - write_file
+  - replace
+  - glob_tool
+  - grep_search
+  - web_search
+
+imports: []
+
+agents: {}
+
+context: session
+memory: project
+pdca-phase: design
 ---
 
 # Phase 3: Mockup Creation

@@ -16,6 +16,25 @@ description: |
   convenzione, stile di codice
 
   Do NOT use for: existing projects with established conventions
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: ""
+
+allowed-tools:
+  - read_file
+  - write_file
+  - replace
+  - glob_tool
+  - grep_search
+
+imports: []
+
+agents: {}
+
+context: session
+memory: project
+pdca-phase: plan
 ---
 
 # Phase 2: Convention Definition

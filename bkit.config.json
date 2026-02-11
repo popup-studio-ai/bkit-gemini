@@ -1,6 +1,6 @@
 {
   "$schema": "./bkit.config.schema.json",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "platform": "gemini",
 
   "sourceDirectories": ["src", "lib", "app", "components", "pages", "features", "services"],
@@ -136,5 +136,51 @@
       "enabled": true,
       "snapshotLimit": 10
     }
+  },
+
+  "outputStyles": {
+    "default": "bkit-pdca-guide",
+    "levelDefaults": {
+      "Starter": "bkit-learning",
+      "Dynamic": "bkit-pdca-guide",
+      "Enterprise": "bkit-enterprise"
+    },
+    "available": ["bkit-learning", "bkit-pdca-guide", "bkit-enterprise", "bkit-pdca-enterprise"]
+  },
+
+  "agentMemory": {
+    "enabled": true,
+    "projectScope": ".gemini/agent-memory/bkit/",
+    "userScope": "~/.gemini/agent-memory/bkit/",
+    "maxSessionsPerAgent": 20,
+    "agentScopes": {
+      "starter-guide": "user",
+      "pipeline-guide": "user",
+      "default": "project"
+    }
+  },
+
+  "team": {
+    "enabled": false,
+    "defaultStrategy": "dynamic",
+    "strategies": {
+      "dynamic": { "maxAgents": 3 },
+      "enterprise": { "maxAgents": 5 },
+      "custom": { "maxAgents": 10 }
+    },
+    "stateDir": ".gemini/teams/"
+  },
+
+  "contextHierarchy": {
+    "enabled": true,
+    "cacheTTL": 5000,
+    "levels": ["plugin", "user", "project", "session"]
+  },
+
+  "skillOrchestrator": {
+    "enabled": true,
+    "autoImportTemplates": true,
+    "autoCreateTasks": true,
+    "agentDelegation": true
   }
 }

@@ -1,116 +1,70 @@
-const { exec } = require('child_process');
-const fs = require('fs');
-const path = require('path');
-
-const TESTS = [
-  'verify-philosophy.js',
-  'verify-lib.js',
-  'verify-components.js',
-  'verify-hooks.js'
-];
-
-async function runTest(script) {
-  return new Promise((resolve) => {
-    console.log(`\n=== Running ${script} ===`);
-    const child = exec(`node tests/${script}`);
-    
-    let output = '';
-    child.stdout.on('data', data => {
-      process.stdout.write(data);
-      output += data;
-    });
-    child.stderr.on('data', data => {
-      process.stderr.write(data);
-      output += data;
-    });
-    
-    child.on('close', (code) => {
-      resolve({ script, code, output });
-    });
-  });
-}
+// tests/run-all.js - Main test runner
+const { runSuite } = require('./test-utils');
 
 async function main() {
-  console.log('Starting bkit-gemini Comprehensive Test Suite...');
-  
-  const results = [];
-  let allPassed = true;
+  const suites = [
+    { name: 'TC-04: Lib Modules', file: 'suites/tc04-lib-modules.js', priority: 'P0' },
+    { name: 'TC-01: Hook System', file: 'suites/tc01-hooks.js', priority: 'P0' },
+    { name: 'TC-02: Skill System', file: 'suites/tc02-skills.js', priority: 'P0' },
+    { name: 'TC-07: Configuration', file: 'suites/tc07-config.js', priority: 'P1' },
+    { name: 'TC-03: Agent System', file: 'suites/tc03-agents.js', priority: 'P1' },
+    { name: 'TC-05: MCP Server', file: 'suites/tc05-mcp.js', priority: 'P1' },
+    { name: 'TC-06: TOML Commands', file: 'suites/tc06-commands.js', priority: 'P1' },
+    { name: 'TC-08: Context Engineering', file: 'suites/tc08-context.js', priority: 'P1' },
+    { name: 'TC-09: PDCA E2E', file: 'suites/tc09-pdca-e2e.js', priority: 'P0' },
+    { name: 'TC-10: Philosophy', file: 'suites/tc10-philosophy.js', priority: 'P2' },
+  ];
 
-  for (const test of TESTS) {
-    const result = await runTest(test);
-    results.push(result);
-    if (result.code !== 0) allPassed = false;
+  let passed = 0, failed = 0, skipped = 0;
+  for (const suite of suites) {
+    const result = await runSuite(suite);
+    passed += result.passed;
+    failed += result.failed;
+    skipped += result.skipped;
   }
 
-  generateReport(results, allPassed);
+  console.log(`\n${'='.repeat(60)}`);
+  console.log(`Total: ${passed + failed + skipped} | Pass: ${passed} | Fail: ${failed} | Skip: ${skipped}`);
+  console.log(`Pass Rate: ${(((passed || 0) / ((passed + failed) || 1)) * 100).toFixed(1)}%`);
+  
+  // Generate completion report logic
+  generatePDCACompletionReport(passed, failed, skipped);
+  
+  process.exit(failed > 0 ? 1 : 0);
 }
 
-function generateReport(results, allPassed) {
+function generatePDCACompletionReport(passed, failed, skipped) {
+  const fs = require('fs');
+  const path = require('path');
   const date = new Date().toISOString().split('T')[0];
-  const reportPath = path.resolve(__dirname, '../docs/04-report/features/bkit-gemini-comprehensive-test.report.md');
+  const reportPath = path.resolve(__dirname, '../docs/04-report/features/bkit-gemini-v151-test.report.md');
   
-  // Ensure directory exists
   fs.mkdirSync(path.dirname(reportPath), { recursive: true });
 
-  let report = `# bkit-gemini Comprehensive Test Report
+  const matchRate = (((passed || 0) / ((passed + failed) || 1)) * 100).toFixed(1);
 
-> **Status**: ${allPassed ? 'Passed' : 'Failed'}
->
-> **Project**: bkit-gemini
-> **Version**: 1.5.1
-> **Test Date**: ${date}
-> **Executor**: Gemini CLI Test Runner
+  let report = `# bkit-gemini v1.5.1 Comprehensive Test Report
 
----
+> **Feature**: bkit-gemini-v151-test
+> **Status**: ${failed === 0 ? 'COMPLETED' : 'IN_PROGRESS'}
+> **Match Rate**: ${matchRate}%
+> **Date**: ${date}
 
 ## 1. Summary
 
-| Metric | Value |
-|--------|-------|
-| Total Suites | ${results.length} |
-| Passed | ${results.filter(r => r.code === 0).length} |
-| Failed | ${results.filter(r => r.code !== 0).length} |
-| Overall Status | ${allPassed ? '✅ PASS' : '❌ FAIL'} |
+| Category | Passed | Failed | Skipped | Status |
+|----------|--------|--------|---------|--------|
+| Total | ${passed} | ${failed} | ${skipped} | ${failed === 0 ? '✅' : '❌'} |
+
+## 2. Test Execution Details
+
+The test suite covered 10 categories including Hook System, Skill System, Lib Modules, and Philosophy Alignment.
 
 ---
-
-## 2. Test Results
-
-`;
-
-  results.forEach(r => {
-    const status = r.code === 0 ? '✅ PASS' : '❌ FAIL';
-    report += `### ${r.script} (${status})\n\n`;
-    report += '```\n';
-    report += r.output.trim();
-    report += '\n```\n\n';
-  });
-
-  report += `---
-
-## 3. Detailed Verification
-
-### 3.1 Philosophy Alignment
-- **Automation First**: Verified via logic tests in \`verify-philosophy.js\`
-- **No Guessing**: Verified via logic tests in \`verify-philosophy.js\`
-- **Docs = Code**: Verified via template checks in \`verify-philosophy.js\`
-
-### 3.2 Functional Requirements
-- **FR-01 to FR-08**: Verified via library unit tests in \`verify-lib.js\`
-
-### 3.3 Components
-- **Skills/Agents**: Verified file existence and structure in \`verify-components.js\`
-- **Hooks**: Verified execution in \`verify-hooks.js\`
-
----
-
-## 4. Conclusion
-
-This report confirms that the core mechanisms of bkit-gemini v1.5.1 are functioning as designed.
+*Generated by bkit PDCA Act Phase*
 `;
 
   fs.writeFileSync(reportPath, report);
-  console.log(`\nReport generated at: ${reportPath}`);
 }
 
 main();

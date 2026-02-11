@@ -17,6 +17,39 @@ description: |
   pianificare, progettazione, analizzare, verificare, rapporto
 
   Do NOT use for: simple one-line fixes, non-development tasks
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: "[plan|design|do|analyze|iterate|report|status|next] [feature]"
+
+allowed-tools:
+  - read_file
+  - write_file
+  - replace
+  - glob_tool
+  - grep_search
+  - web_search
+  - spawn_agent
+
+imports:
+  - templates/plan.template.md
+  - templates/design.template.md
+  - templates/analysis.template.md
+  - templates/report.template.md
+
+agents:
+  analyze: gap-detector
+  iterate: pdca-iterator
+  report: report-generator
+
+context: session
+memory: project
+pdca-phase: all
+
+task-template:
+  subject: "PDCA {action} - {feature}"
+  description: "Execute PDCA {action} phase for feature '{feature}'"
+  activeForm: "Executing PDCA {action}"
 ---
 
 # PDCA Skill

@@ -15,6 +15,26 @@ description: |
   revisione del codice, rilevamento bug
 
   Do NOT use for: design document creation, deployment tasks
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: "[file-path]"
+
+allowed-tools:
+  - read_file
+  - read_many_files
+  - glob_tool
+  - grep_search
+  - list_directory
+
+imports: []
+
+agents:
+  analyze: code-analyzer
+
+context: session
+memory: project
+pdca-phase: do
 ---
 
 # Code Review Skill

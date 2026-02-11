@@ -71,6 +71,31 @@ const AGENTS = {
     file: 'infra-architect.md',
     description: 'AWS, Kubernetes, Terraform infrastructure design',
     recommendedModel: 'pro'
+  },
+  'cto-lead': {
+    file: 'cto-lead.md',
+    description: 'CTO-level orchestrator, PDCA workflow management, team composition',
+    recommendedModel: 'pro'
+  },
+  'frontend-architect': {
+    file: 'frontend-architect.md',
+    description: 'UI/UX architecture, component design, design system expert',
+    recommendedModel: 'pro'
+  },
+  'security-architect': {
+    file: 'security-architect.md',
+    description: 'Vulnerability analysis, auth design, OWASP compliance (read-only)',
+    recommendedModel: 'pro'
+  },
+  'product-manager': {
+    file: 'product-manager.md',
+    description: 'Requirements analysis, feature specs, user stories, product roadmap',
+    recommendedModel: 'flash'
+  },
+  'qa-strategist': {
+    file: 'qa-strategist.md',
+    description: 'Test strategy, quality metrics, verification coordination',
+    recommendedModel: 'pro'
   }
 };
 
@@ -96,6 +121,10 @@ class SpawnAgentServer {
     });
 
     process.stdin.on('end', () => {
+      if (this.buffer.trim()) {
+        this.handleMessage(this.buffer);
+        this.buffer = '';
+      }
       process.exit(0);
     });
 
@@ -277,6 +306,57 @@ class SpawnAgentServer {
             required: ['agent_name']
           }
         }
+        ,
+        {
+          name: 'team_create',
+          description: 'Create a team of agents for coordinated multi-agent tasks',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              team_name: {
+                type: 'string',
+                description: 'Unique name for the team'
+              },
+              strategy: {
+                type: 'string',
+                description: 'Team composition strategy',
+                enum: ['dynamic', 'enterprise', 'custom'],
+                default: 'dynamic'
+              },
+              agents: {
+                type: 'array',
+                description: 'Agent names to include (for custom strategy)',
+                items: { type: 'string' }
+              }
+            },
+            required: ['team_name']
+          }
+        },
+        {
+          name: 'team_assign',
+          description: 'Assign a task to a specific agent in a team',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              team_name: { type: 'string', description: 'Team name' },
+              agent_name: { type: 'string', description: 'Agent to assign' },
+              task: { type: 'string', description: 'Task description' },
+              context: { type: 'object', description: 'Task context', additionalProperties: true }
+            },
+            required: ['team_name', 'agent_name', 'task']
+          }
+        },
+        {
+          name: 'team_status',
+          description: 'Get current status of a team and its agents',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              team_name: { type: 'string', description: 'Team name' }
+            },
+            required: ['team_name']
+          }
+        }
       ]
     };
   }
@@ -298,6 +378,15 @@ class SpawnAgentServer {
 
       case 'get_agent_info':
         return this.handleGetAgentInfo(args);
+
+      case 'team_create':
+        return this.handleTeamCreate(args);
+
+      case 'team_assign':
+        return await this.handleTeamAssign(args);
+
+      case 'team_status':
+        return this.handleTeamStatus(args);
 
       default:
         throw new Error(`Unknown tool: ${name}`);
@@ -434,6 +523,152 @@ class SpawnAgentServer {
           exists: fs.existsSync(agentPath)
         }, null, 2)
       }]
+    };
+  }
+
+  /**
+   * Handle team_create tool call
+   * @param {object} args
+   * @returns {object}
+   */
+  handleTeamCreate(args) {
+    const { team_name, strategy = 'dynamic', agents: customAgents } = args;
+
+    const strategyAgents = {
+      dynamic: ['cto-lead', 'code-analyzer', 'gap-detector'],
+      enterprise: ['cto-lead', 'frontend-architect', 'security-architect', 'code-analyzer', 'gap-detector'],
+      custom: customAgents || []
+    };
+
+    const teamAgents = strategyAgents[strategy] || strategyAgents.dynamic;
+
+    // Validate all agents exist
+    const invalid = teamAgents.filter(a => !AGENTS[a]);
+    if (invalid.length > 0) {
+      return {
+        content: [{ type: 'text', text: JSON.stringify({
+          success: false, error: `Unknown agents: ${invalid.join(', ')}`,
+          available_agents: Object.keys(AGENTS)
+        }, null, 2) }]
+      };
+    }
+
+    // Create team state
+    const teamState = {
+      name: team_name,
+      strategy,
+      createdAt: new Date().toISOString(),
+      agents: teamAgents.map(name => ({
+        name, status: 'idle', currentTask: null
+      })),
+      tasks: []
+    };
+
+    // Save team state
+    const teamDir = path.join(process.cwd(), '.gemini', 'teams');
+    if (!fs.existsSync(teamDir)) {
+      fs.mkdirSync(teamDir, { recursive: true });
+    }
+    const teamPath = path.join(teamDir, `${team_name}.json`);
+    fs.writeFileSync(teamPath, JSON.stringify(teamState, null, 2));
+
+    return {
+      content: [{ type: 'text', text: JSON.stringify({
+        success: true,
+        team: team_name,
+        strategy,
+        agents: teamAgents,
+        message: `Team "${team_name}" created with ${teamAgents.length} agents`
+      }, null, 2) }]
+    };
+  }
+
+  /**
+   * Handle team_assign tool call
+   * @param {object} args
+   * @returns {object}
+   */
+  async handleTeamAssign(args) {
+    const { team_name, agent_name, task, context } = args;
+
+    const teamPath = path.join(process.cwd(), '.gemini', 'teams', `${team_name}.json`);
+    if (!fs.existsSync(teamPath)) {
+      return {
+        content: [{ type: 'text', text: JSON.stringify({
+          success: false, error: `Team "${team_name}" not found`
+        }, null, 2) }]
+      };
+    }
+
+    const teamState = JSON.parse(fs.readFileSync(teamPath, 'utf-8'));
+    const agent = teamState.agents.find(a => a.name === agent_name);
+    if (!agent) {
+      return {
+        content: [{ type: 'text', text: JSON.stringify({
+          success: false, error: `Agent "${agent_name}" not in team "${team_name}"`
+        }, null, 2) }]
+      };
+    }
+
+    // Create task entry
+    const taskId = teamState.tasks.length + 1;
+    const taskEntry = {
+      id: taskId, description: task, assignedTo: agent_name,
+      status: 'in_progress', createdAt: new Date().toISOString()
+    };
+    teamState.tasks.push(taskEntry);
+
+    // Update agent status
+    agent.status = 'active';
+    agent.currentTask = taskId;
+    fs.writeFileSync(teamPath, JSON.stringify(teamState, null, 2));
+
+    // Spawn agent
+    try {
+      const result = await this.handleSpawnAgent({
+        agent_name, task, context, timeout: 300000
+      });
+
+      // Update status after completion
+      const updatedState = JSON.parse(fs.readFileSync(teamPath, 'utf-8'));
+      const updatedAgent = updatedState.agents.find(a => a.name === agent_name);
+      const updatedTask = updatedState.tasks.find(t => t.id === taskId);
+      if (updatedAgent) { updatedAgent.status = 'idle'; updatedAgent.currentTask = null; }
+      if (updatedTask) { updatedTask.status = 'completed'; updatedTask.completedAt = new Date().toISOString(); }
+      fs.writeFileSync(teamPath, JSON.stringify(updatedState, null, 2));
+
+      return result;
+    } catch (error) {
+      return {
+        content: [{ type: 'text', text: JSON.stringify({
+          success: false, error: error.message, team: team_name, agent: agent_name
+        }, null, 2) }]
+      };
+    }
+  }
+
+  /**
+   * Handle team_status tool call
+   * @param {object} args
+   * @returns {object}
+   */
+  handleTeamStatus(args) {
+    const { team_name } = args;
+
+    const teamPath = path.join(process.cwd(), '.gemini', 'teams', `${team_name}.json`);
+    if (!fs.existsSync(teamPath)) {
+      return {
+        content: [{ type: 'text', text: JSON.stringify({
+          success: false, error: `Team "${team_name}" not found`
+        }, null, 2) }]
+      };
+    }
+
+    const teamState = JSON.parse(fs.readFileSync(teamPath, 'utf-8'));
+    return {
+      content: [{ type: 'text', text: JSON.stringify({
+        success: true, ...teamState
+      }, null, 2) }]
     };
   }
 

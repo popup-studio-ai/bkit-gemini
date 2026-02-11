@@ -16,6 +16,27 @@ description: |
   implementazione UI, integrazione API
 
   Do NOT use for: mockup creation, backend-only development
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: ""
+
+allowed-tools:
+  - read_file
+  - write_file
+  - replace
+  - glob_tool
+  - grep_search
+  - run_shell_command
+
+imports: []
+
+agents:
+  frontend: frontend-architect
+
+context: session
+memory: project
+pdca-phase: do
 ---
 
 # Phase 6: UI Integration

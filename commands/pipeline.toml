@@ -1,23 +1,22 @@
 description = "9-phase development pipeline management"
 prompt = """
-Activate the development-pipeline skill for pipeline guidance.
+@skills/development-pipeline/SKILL.md
 
-User command: /pipeline {{args}}
+Action: {{args}}
 
-Actions:
-- start: Begin the development pipeline
-- next: Move to next phase
-- status: Show current pipeline status
-- phase N: Jump to specific phase (1-9)
+Current pipeline status:
+!cat docs/.pdca-status.json 2>/dev/null | grep -o '"currentPhase":[0-9]*' || echo 'Phase 1'
 
 Pipeline phases:
-1. Schema/Terminology
-2. Coding Conventions
-3. Mockup Development
-4. API Design (Dynamic/Enterprise only)
-5. Design System (Dynamic/Enterprise only)
-6. UI Implementation
-7. SEO/Security
-8. Code Review
-9. Deployment
+1. Schema/Terminology → /phase-1-schema
+2. Coding Conventions → /phase-2-convention
+3. Mockup Development → /phase-3-mockup
+4. API Design → /phase-4-api (Dynamic/Enterprise)
+5. Design System → /phase-5-design-system (Dynamic/Enterprise)
+6. UI Implementation → /phase-6-ui-integration
+7. SEO/Security → /phase-7-seo-security
+8. Code Review → /phase-8-review
+9. Deployment → /phase-9-deployment
+
+Delegate to pipeline-guide agent for step-by-step guidance.
 """

@@ -3,7 +3,7 @@ prompt = """
 Display the bkit help information:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- bkit - AI Native Development Toolkit (Gemini Edition)
+ bkit v1.5.1 - AI Native Development Toolkit (Gemini Edition)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 PDCA (Document-Driven Development)
@@ -30,9 +30,20 @@ Quality Management
   /review <path>             Code review
   /qa                        Zero Script QA
 
+Output & Display
+  /output-style              Change output style
+  /output-style-setup        Install output styles
+
 Learning
   /learn                     Gemini CLI learning
   /learn setup               Analyze project setup
 
+Extension Info
+  /extensions list           List installed extensions
+  /bkit                      This help menu
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 16 Agents | 21 Skills | 10 Hook Events
+ 8 Languages | 4 Output Styles | 6 MCP Tools
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 """

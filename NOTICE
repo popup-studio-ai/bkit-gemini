@@ -1,4 +1,4 @@
-bkit - Vibecoding Kit (Gemini CLI Edition)
+bkit - Vibecoding Kit (Gemini CLI Edition) v1.5.1
 Copyright 2024-2026 POPUP STUDIO PTE. LTD.
 
 This product includes software developed by POPUP STUDIO PTE. LTD.
@@ -21,9 +21,13 @@ Contributors:
 
 Third-Party Notices:
 
-This software is designed to work with Gemini CLI by Google.
+This software is designed to work with Gemini CLI v0.28.0+ by Google.
 Gemini CLI is subject to Google's terms of service.
 https://ai.google.dev/terms
+
+For Gemini CLI documentation and updates:
+https://geminicli.com/docs/
+https://github.com/google-gemini/gemini-cli
 
 Original bkit-claude-code was designed for Claude Code by Anthropic, PBC.
 https://www.anthropic.com/terms

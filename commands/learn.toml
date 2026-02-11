@@ -1,15 +1,18 @@
 description = "Learn Gemini CLI configuration and best practices"
 prompt = """
-Activate the gemini-cli-learning skill for CLI education.
+@skills/gemini-cli-learning/SKILL.md
 
-User command: /learn {{args}}
+Action: {{args}}
+
+Current project structure:
+!ls -la GEMINI.md .gemini/ commands/ skills/ agents/ hooks/ 2>/dev/null
 
 Topics:
-- GEMINI.md context files
-- Custom commands (TOML)
-- Skills and agents
-- Hooks configuration
-- Project setup optimization
+- GEMINI.md context files and @import modularization
+- Custom commands (TOML) with @, !, {{}} advanced syntax
+- Skills (SKILL.md) and agent orchestration
+- Hooks configuration (11 events)
+- Output styles and agent memory
 
-If 'setup' is specified, analyze current project configuration.
+If 'setup' is specified, analyze and optimize current project configuration.
 """

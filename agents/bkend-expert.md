@@ -16,6 +16,19 @@ description: |
 
   Do NOT use for: static websites without backend, infrastructure tasks, pure frontend styling,
   or enterprise microservices architecture.
+
+model: gemini-2.5-flash
+tools:
+  - read_file
+  - write_file
+  - replace
+  - glob_tool
+  - grep_search
+  - run_shell_command
+  - web_fetch
+temperature: 0.3
+max_turns: 20
+timeout_mins: 10
 ---
 
 # bkend.ai Expert Agent

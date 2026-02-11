@@ -16,6 +16,23 @@ description: |
   modello, documento di piano
 
   Do NOT use for: code implementation, debugging
+
+# ──── NEW FIELDS (v1.5.1) ────
+user-invocable: true
+argument-hint: "[plan|design|analysis|report]"
+
+allowed-tools:
+  - read_file
+  - write_file
+  - glob_tool
+
+imports: []
+
+agents: {}
+
+context: session
+memory: project
+pdca-phase: all
 ---
 
 # bkit Templates

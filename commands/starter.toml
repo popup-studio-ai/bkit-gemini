@@ -1,17 +1,14 @@
 description = "Initialize a Starter-level static web project"
 prompt = """
-Activate the starter skill to help with static web development.
+@skills/starter/SKILL.md
 
-User command: /starter {{args}}
-
-Actions:
-- init [name]: Initialize new Starter project with HTML/CSS/Next.js
-- guide: Show Starter development guide
-- help: Show available commands
+Action: {{args}}
 
 For project initialization, guide the user through:
 1. Project naming and setup
 2. Technology selection (HTML/CSS or Next.js)
 3. Basic file structure creation
 4. Development pipeline (phases 1, 2, 3, 6, 9)
+
+Delegate to starter-guide agent for beginner-friendly guidance.
 """
