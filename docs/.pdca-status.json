@@ -1,8 +1,7 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-02-11T00:00:00.000Z",
+  "lastUpdated": "2026-02-12T00:30:00.000Z",
   "activeFeatures": [
-    "bkit-gemini-v151-docs-sync",
     "bkit-gemini-conversion"
   ],
   "primaryFeature": "bkit-gemini-v151-docs-sync",
@@ -29,11 +28,13 @@
       "updatedAt": "2026-02-11T21:00:00.000Z"
     },
     "bkit-gemini-v151-docs-sync": {
-      "phase": "completed",
+      "phase": "archived",
       "matchRate": 100,
       "iterationCount": 1,
       "createdAt": "2026-02-11T21:30:00.000Z",
-      "updatedAt": "2026-02-11T22:30:00.000Z"
+      "updatedAt": "2026-02-12T00:30:00.000Z",
+      "archivedAt": "2026-02-12T00:30:00.000Z",
+      "archivedTo": "docs/archive/2026-02/bkit-gemini-v151-docs-sync/"
     },
     "bkit-gemini-conversion": {
       "phase": "do",
@@ -58,8 +59,8 @@
     ]
   },
   "session": {
-    "startedAt": "2026-02-11T00:34:48.553Z",
+    "startedAt": "2026-02-12T00:21:03.559Z",
     "onboardingCompleted": true,
-    "lastActivity": "2026-02-11T00:34:48.553Z"
+    "lastActivity": "2026-02-12T00:21:03.559Z"
   }
 }

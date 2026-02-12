@@ -521,7 +521,24 @@ For local development, use the `link` command to avoid reinstalling after every 
 gemini extensions link /path/to/local/bkit-gemini
 ```
 
-Changes take effect after CLI restart.
+In Gemini CLI v0.28.2+, you can use the following command to refresh agents and skills without restarting:
+
+```bash
+/agents refresh
+```
+
+---
+
+## Security & Permissions (v0.28.2+)
+
+Gemini CLI v0.28.2 introduces strict security warnings for extensions using hooks. When installing or activating `bkit`, you may see warnings about tool interception.
+
+**Why bkit uses hooks:**
+- **PDCA Context**: To automatically track development phases and update `.pdca-status.json`.
+- **Memory Management**: To persist agent-specific context across sessions.
+- **Intent Detection**: To intelligently trigger the right agents based on your prompt.
+
+These hooks are non-interactive, performance-optimized, and essential for the Context Engineering features of bkit.
 
 ---
 
