@@ -2,9 +2,10 @@
   "version": "2.0",
   "lastUpdated": "2026-02-12T00:30:00.000Z",
   "activeFeatures": [
+    "bkend-docs-sync",
     "bkit-gemini-conversion"
   ],
-  "primaryFeature": "bkit-gemini-v151-docs-sync",
+  "primaryFeature": "bkend-docs-sync",
   "features": {
     "bkit-150-gemini-028-compatibility-test": {
       "phase": "completed",
@@ -36,6 +37,16 @@
       "archivedAt": "2026-02-12T00:30:00.000Z",
       "archivedTo": "docs/archive/2026-02/bkit-gemini-v151-docs-sync/"
     },
+    "bkend-docs-sync": {
+      "phase": "plan",
+      "matchRate": null,
+      "iterationCount": 0,
+      "createdAt": "2026-02-14T07:30:00.000Z",
+      "updatedAt": "2026-02-14T07:30:00.000Z",
+      "planDoc": "docs/01-plan/features/bkend-docs-sync.plan.md",
+      "source": "https://github.com/popup-studio-ai/bkend-docs",
+      "team": "bkend-docs-sync"
+    },
     "bkit-gemini-conversion": {
       "phase": "do",
       "matchRate": null,
@@ -59,8 +70,8 @@
     ]
   },
   "session": {
-    "startedAt": "2026-02-12T00:21:03.559Z",
+    "startedAt": "2026-02-14T07:06:18.288Z",
     "onboardingCompleted": true,
-    "lastActivity": "2026-02-12T00:21:03.559Z"
+    "lastActivity": "2026-02-14T07:06:18.288Z"
   }
 }
