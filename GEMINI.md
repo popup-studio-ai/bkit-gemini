@@ -1,4 +1,4 @@
-# bkit Vibecoding Kit v1.5.1 - Gemini CLI Edition
+# bkit Vibecoding Kit v1.5.2 - Gemini CLI Edition
 
 > AI-native development toolkit implementing PDCA methodology with Context Engineering
 
@@ -8,7 +8,7 @@ bkit is a Gemini CLI extension that provides structured development workflows th
 - **PDCA Methodology**: Plan-Do-Check-Act cycle for systematic development
 - **Context Engineering**: Systematic context curation for optimal LLM inference
 - **3 Project Levels**: Starter (static), Dynamic (fullstack), Enterprise (microservices)
-- **21 Skills**: Domain-specific knowledge activated on-demand via progressive disclosure
+- **29 Skills**: Domain-specific knowledge activated on-demand via progressive disclosure
 - **16 Agents**: Specialized AI assistants with role-based constraints (model, tools, temperature)
 - **10-Event Hook System**: Full lifecycle interception from SessionStart to SessionEnd
 
@@ -58,5 +58,5 @@ docs/
 
 ---
 
-*bkit Vibecoding Kit v1.5.1 - Empowering AI-native development*
+*bkit Vibecoding Kit v1.5.2 - Empowering AI-native development*
 *Copyright 2024-2026 POPUP STUDIO PTE. LTD.*

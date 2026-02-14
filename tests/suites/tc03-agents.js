@@ -35,6 +35,20 @@ const tests = [
         assertContains(serverCode, `'${agent}'`, `MCP server should register ${agent}`);
       }
     }
+  },
+  {
+    name: 'AGENT-14: bkend-expert agent contains critical content',
+    fn: () => {
+      const content = fs.readFileSync(path.join(PLUGIN_ROOT, 'agents', 'bkend-expert.md'), 'utf-8');
+      assertContains(content, 'bkendFetch', 'Should contain bkendFetch wrapper pattern');
+      assertContains(content, 'MongoDB Atlas', 'Should reference MongoDB Atlas');
+      assertContains(content, '28 MCP', 'Should document 28 MCP tools');
+      assertContains(content, 'Refresh Token: **30 days**', 'Should have correct 30-day refresh token lifetime');
+      assertContains(content, 'bkend-auth', 'Should reference bkend-auth skill');
+      assertContains(content, 'bkend-data', 'Should reference bkend-data skill');
+      assertContains(content, 'bkend-storage', 'Should reference bkend-storage skill');
+      assertContains(content, 'bkend-mcp', 'Should reference bkend-mcp skill');
+    }
   }
 ];
 

@@ -1,0 +1,15 @@
+description = "bkend.ai operational guides and troubleshooting"
+prompt = """
+@skills/bkend-guides/SKILL.md
+
+Action: {{args}}
+
+Guide the user through bkend.ai operational topics:
+1. Environment management (dev/staging/prod)
+2. Team collaboration and roles
+3. Monitoring and logging
+4. Migration and backup strategies
+5. Troubleshooting common issues
+
+Delegate backend tasks to bkend-expert agent.
+"""

@@ -62,11 +62,12 @@ The Dynamic skill enables fullstack web application development using bkend.ai a
 
 ## bkend.ai Features
 
-- **Authentication**: Email, OAuth, Magic Links
-- **Database**: Managed PostgreSQL
-- **Storage**: File uploads
-- **Real-time**: WebSocket subscriptions
-- **API**: Auto-generated REST & GraphQL
+- **Authentication**: Email, OAuth (Google, GitHub), Magic Links
+- **Database**: MongoDB Atlas (REST API)
+- **Storage**: S3 Presigned URL file uploads
+- **Real-time**: WebSocket subscriptions (planned)
+- **API**: REST API (`https://api-client.bkend.ai`)
+- **MCP**: 28 tools + 4 resources (`https://api.bkend.ai/mcp`)
 
 ## Project Structure
 
@@ -117,11 +118,41 @@ project/
 ## Authentication Example
 
 ```typescript
-// lib/bkend/client.ts
-import { createClient } from '@bkend/sdk';
+// lib/bkend/client.ts - REST API Direct Call Pattern
+const BKEND_API_URL = process.env.NEXT_PUBLIC_BKEND_API_URL || 'https://api-client.bkend.ai';
 
-export const bkend = createClient({
-  projectId: process.env.BKEND_PROJECT_ID!,
-  apiKey: process.env.BKEND_API_KEY!
+async function bkendFetch(path: string, options: RequestInit = {}) {
+  const response = await fetch(`${BKEND_API_URL}${path}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Project-Id': process.env.NEXT_PUBLIC_BKEND_PROJECT_ID!,
+      'X-Environment': process.env.NEXT_PUBLIC_BKEND_ENVIRONMENT || 'dev',
+      ...options.headers,
+    },
+  });
+  if (!response.ok) throw new Error(`bkend API error: ${response.status}`);
+  return response.json();
+}
+
+// Login
+const { accessToken, refreshToken, user } = await bkendFetch('/auth/email/signin', {
+  method: 'POST',
+  body: JSON.stringify({ email, password }),
 });
 ```
+
+## Available bkend Skills
+
+For detailed domain knowledge, use these dedicated skills:
+
+| Skill | Command | Domain |
+|-------|---------|--------|
+| bkend-quickstart | `/bkend-quickstart` | Onboarding, core concepts |
+| bkend-auth | `/bkend-auth` | Authentication (21 docs) |
+| bkend-data | `/bkend-data` | Database CRUD (13 docs) |
+| bkend-storage | `/bkend-storage` | File storage (10 docs) |
+| bkend-mcp | `/bkend-mcp` | MCP + AI tools (18 docs) |
+| bkend-security | `/bkend-security` | Security (8 docs) |
+| bkend-cookbook | `/bkend-cookbook` | Project tutorials (4+5) |
+| bkend-guides | `/bkend-guides` | Guides + troubleshooting (16 docs) |

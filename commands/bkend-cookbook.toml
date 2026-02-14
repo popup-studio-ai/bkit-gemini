@@ -1,0 +1,14 @@
+description = "bkend.ai practical project tutorials and examples"
+prompt = """
+@skills/bkend-cookbook/SKILL.md
+
+Action: {{args}}
+
+Guide the user through bkend.ai project tutorials:
+1. Single-project guides (todo, notes, blog, etc.)
+2. Full-guide projects (blog, recipe-app, shopping-mall, social-network)
+3. Step-by-step implementation patterns
+4. Common error solutions and FAQ
+
+Delegate backend tasks to bkend-expert agent.
+"""

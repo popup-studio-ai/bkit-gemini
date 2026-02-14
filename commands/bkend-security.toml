@@ -1,0 +1,15 @@
+description = "bkend.ai security policies and best practices"
+prompt = """
+@skills/bkend-security/SKILL.md
+
+Action: {{args}}
+
+Guide the user through bkend.ai security:
+1. 4 RLS roles (admin, user, guest, self)
+2. API key management (Public Key vs Secret Key)
+3. Encryption (Argon2id passwords, AES-256-GCM data, TLS 1.2+)
+4. CORS configuration and rate limiting
+5. Security hardening best practices
+
+Delegate backend tasks to bkend-expert agent.
+"""

@@ -1,0 +1,16 @@
+description = "bkend.ai file storage and upload guide"
+prompt = """
+@skills/bkend-storage/SKILL.md
+
+Action: {{args}}
+
+Guide the user through bkend.ai file storage:
+1. Single file upload (3-step: presigned URL, PUT binary, register metadata)
+2. Multiple file upload with batch presigned URLs
+3. Multipart upload for large files
+4. File download (CDN for public, presigned URL for private)
+5. 4 visibility levels (public, private, protected, shared)
+
+Use REST API directly - there are no MCP tools for storage.
+Delegate backend tasks to bkend-expert agent.
+"""

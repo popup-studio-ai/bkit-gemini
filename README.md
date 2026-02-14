@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-v0.28.0+-blue.svg)](https://github.com/google-gemini/gemini-cli)
-[![Version](https://img.shields.io/badge/Version-1.5.1-green.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-1.5.2-green.svg)](CHANGELOG.md)
 [![Author](https://img.shields.io/badge/Author-POPUP%20STUDIO-orange.svg)](https://popupstudio.ai)
 
 > **PDCA methodology + Context Engineering for AI-native development**
@@ -37,7 +37,7 @@ Context Engineering:
 
 | Layer | Components | Count | Purpose |
 |-------|-----------|-------|---------|
-| **Domain Knowledge** | Skills | 21 | Structured expert knowledge activated on-demand via progressive disclosure |
+| **Domain Knowledge** | Skills | 29 | Structured expert knowledge activated on-demand via progressive disclosure |
 | **Behavioral Rules** | Agents | 16 | Role-based constraints with model, tools, temperature configuration |
 | **State Management** | Hook Scripts + Lib Modules | 17 + 6 | PDCA status tracking, intent detection, permission control, memory persistence |
 
@@ -62,7 +62,7 @@ Event 10: SessionEnd           -> Session cleanup, memory persistence
 
 ```
 bkit-gemini/
-|-- gemini-extension.json         # Extension manifest (v1.5.1)
+|-- gemini-extension.json         # Extension manifest (v1.5.2)
 |-- GEMINI.md                     # Global context with 6 @import modules
 |-- bkit.config.json              # Centralized configuration (12 sections)
 |-- CHANGELOG.md                  # Version history
@@ -93,7 +93,7 @@ bkit-gemini/
 |   |-- enterprise-expert.md      # Enterprise architecture
 |   +-- infra-architect.md        # AWS/K8s/Terraform
 |
-|-- skills/                       # 21 domain skills (progressive disclosure)
+|-- skills/                       # 29 domain skills (progressive disclosure)
 |   |-- pdca/SKILL.md             # Unified PDCA management (8 actions)
 |   |-- starter/SKILL.md          # Static web development
 |   |-- dynamic/SKILL.md          # Fullstack with BaaS
@@ -106,9 +106,17 @@ bkit-gemini/
 |   |-- bkit-templates/           # PDCA document templates
 |   |-- bkit-rules/               # Core rules
 |   |-- gemini-cli-learning/      # Gemini CLI mastery
-|   +-- phase-{1..9}-*/           # 9 pipeline phase skills
+|   |-- phase-{1..9}-*/           # 9 pipeline phase skills
+|   |-- bkend-quickstart/         # bkend.ai platform onboarding
+|   |-- bkend-auth/               # bkend.ai authentication
+|   |-- bkend-data/               # bkend.ai database CRUD
+|   |-- bkend-storage/            # bkend.ai file storage
+|   |-- bkend-mcp/                # bkend.ai MCP tools & AI integration
+|   |-- bkend-security/           # bkend.ai security policies
+|   |-- bkend-cookbook/            # bkend.ai project tutorials
+|   +-- bkend-guides/             # bkend.ai operational guides
 |
-|-- commands/                     # 10 TOML custom commands
+|-- commands/                     # 18 TOML custom commands
 |   |-- bkit.toml                 # /bkit help
 |   |-- pdca.toml                 # /pdca (plan, design, do, analyze, iterate, report, status, next)
 |   |-- review.toml               # /review
@@ -118,7 +126,15 @@ bkit-gemini/
 |   |-- enterprise.toml           # /enterprise
 |   |-- pipeline.toml             # /pipeline
 |   |-- learn.toml                # /learn
-|   +-- github-stats.toml         # /github-stats
+|   |-- github-stats.toml         # /github-stats
+|   |-- bkend-quickstart.toml     # /bkend-quickstart
+|   |-- bkend-auth.toml           # /bkend-auth
+|   |-- bkend-data.toml           # /bkend-data
+|   |-- bkend-storage.toml        # /bkend-storage
+|   |-- bkend-mcp.toml            # /bkend-mcp
+|   |-- bkend-security.toml       # /bkend-security
+|   |-- bkend-cookbook.toml        # /bkend-cookbook
+|   +-- bkend-guides.toml         # /bkend-guides
 |
 |-- hooks/
 |   |-- hooks.json                # 10 hook event registrations
@@ -160,10 +176,13 @@ bkit-gemini/
 
 ## Features
 
-### v1.5.1 Highlights
+### v1.5.2 Highlights
 
+- **8 bkend.ai Domain Skills** -- quickstart, auth, data, storage, mcp, security, cookbook, guides
+- **8 bkend.ai Commands** -- TOML commands for each bkend domain skill
+- **bkend-expert Agent Rewrite** -- Complete rewrite with 28 MCP tools, bkendFetch pattern, 15 troubleshooting entries
 - **16 Specialized Agents** with Gemini native frontmatter (model, tools, temperature, max_turns, timeout_mins)
-- **21 Domain Skills** with progressive disclosure to save context tokens
+- **29 Domain Skills** with progressive disclosure to save context tokens
 - **10-Event Hook System** covering the full Gemini CLI lifecycle
 - **PDCA Methodology** with automatic phase transitions and enforcement
 - **Context Engineering** with 3-layer architecture (Domain Knowledge, Behavioral Rules, State Management)
@@ -344,7 +363,7 @@ All 16 agents remember context across sessions automatically:
 
 ### Team Mode Foundation
 
-bkit v1.5.1 includes team mode foundation with 3 MCP tools:
+bkit v1.5.2 includes team mode foundation with 3 MCP tools:
 - `team_create` -- Create agent teams with configurable strategies
 - `team_assign` -- Assign tasks to team members
 - `team_status` -- Monitor team progress
@@ -388,7 +407,7 @@ Each agent uses Gemini native frontmatter with configurable `model`, `tools`, `t
 
 ---
 
-## Skills (21)
+## Skills (29)
 
 | Skill | Category | Trigger Examples |
 |-------|----------|-----------------|
@@ -413,14 +432,22 @@ Each agent uses Gemini native frontmatter with configurable `model`, `tools`, `t
 | **phase-7-seo-security** | Pipeline | "SEO", "security hardening" |
 | **phase-8-review** | Pipeline | "architecture review", "gap analysis" |
 | **phase-9-deployment** | Pipeline | "CI/CD", "production deployment" |
+| **bkend-quickstart** | bkend.ai | "bkend setup", "first project", "MCP connect" |
+| **bkend-auth** | bkend.ai | "signup", "login", "JWT", "session" |
+| **bkend-data** | bkend.ai | "table", "CRUD", "schema", "filter" |
+| **bkend-storage** | bkend.ai | "file upload", "presigned URL", "CDN" |
+| **bkend-mcp** | bkend.ai | "MCP tools", "AI integration", "28 tools" |
+| **bkend-security** | bkend.ai | "RLS", "API keys", "encryption" |
+| **bkend-cookbook** | bkend.ai | "tutorial", "example project", "todo app" |
+| **bkend-guides** | bkend.ai | "troubleshooting", "migration", "environment" |
 
 Skills use progressive disclosure -- only metadata is loaded initially, with full instructions injected when activated.
 
 ---
 
-## TOML Commands (10)
+## TOML Commands (18)
 
-bkit provides 10 custom commands using Gemini CLI's TOML command format with advanced syntax:
+bkit provides 18 custom commands using Gemini CLI's TOML command format with advanced syntax:
 
 | Command | Description | Syntax Features |
 |---------|-------------|-----------------|
@@ -434,6 +461,14 @@ bkit provides 10 custom commands using Gemini CLI's TOML command format with adv
 | `/pipeline <action>` | Development pipeline | `@{path}` + `{{args}}` |
 | `/learn [topic]` | Gemini CLI learning | `@{path}` + `!{command}` + `{{args}}` |
 | `/github-stats` | GitHub repository statistics | Custom prompt |
+| `/bkend-quickstart` | bkend.ai platform onboarding | `@{path}` + `{{args}}` |
+| `/bkend-auth` | bkend.ai authentication guide | `@{path}` + `{{args}}` |
+| `/bkend-data` | bkend.ai database operations | `@{path}` + `{{args}}` |
+| `/bkend-storage` | bkend.ai file storage guide | `@{path}` + `{{args}}` |
+| `/bkend-mcp` | bkend.ai MCP tools & AI | `@{path}` + `{{args}}` |
+| `/bkend-security` | bkend.ai security policies | `@{path}` + `{{args}}` |
+| `/bkend-cookbook` | bkend.ai project tutorials | `@{path}` + `{{args}}` |
+| `/bkend-guides` | bkend.ai operational guides | `@{path}` + `{{args}}` |
 
 ### TOML Advanced Syntax
 
@@ -557,8 +592,8 @@ These hooks are non-interactive, performance-optimized, and essential for the Co
 | Agent frontmatter (model, tools, temperature, max_turns, timeout_mins) | All 16 agents |
 | 10 Hook Events | All 10 events registered with matcher patterns |
 | @import syntax | 6 context modules in `.gemini/context/` |
-| TOML commands with `@{}`, `!{}`, `{{}}` | 10 enhanced commands |
-| Agent Skills (experimental) | 21 skills with progressive disclosure |
+| TOML commands with `@{}`, `!{}`, `{{}}` | 18 enhanced commands |
+| Agent Skills (experimental) | 29 skills with progressive disclosure |
 | MCP servers | 6 tools via `spawn-agent-server.js` |
 | Extension manifest `settings` | 2 user-configurable options |
 | `${extensionPath}` variable | Used in hooks.json for portable paths |
@@ -570,7 +605,7 @@ These hooks are non-interactive, performance-optimized, and essential for the Co
 ### Component Reference
 
 - [Development Pipeline](skills/development-pipeline/SKILL.md) -- 9-stage pipeline skill
-- [Skills Reference](skills/) -- 21 domain skills
+- [Skills Reference](skills/) -- 29 domain skills
 - [Agents Reference](agents/) -- 16 specialized agents
 - [Changelog](CHANGELOG.md) -- Complete version history
 

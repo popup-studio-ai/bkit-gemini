@@ -38,11 +38,11 @@
       "archivedTo": "docs/archive/2026-02/bkit-gemini-v151-docs-sync/"
     },
     "bkend-docs-sync": {
-      "phase": "design",
+      "phase": "check",
       "matchRate": null,
       "iterationCount": 0,
       "createdAt": "2026-02-14T07:30:00.000Z",
-      "updatedAt": "2026-02-14T09:00:00.000Z",
+      "updatedAt": "2026-02-14T12:00:00.000Z",
       "planDoc": "docs/01-plan/features/bkend-docs-sync.plan.md",
       "designDoc": "docs/02-design/features/bkend-docs-sync.design.md",
       "source": "https://github.com/popup-studio-ai/bkend-docs",

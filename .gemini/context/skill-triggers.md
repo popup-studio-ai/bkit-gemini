@@ -18,3 +18,11 @@ Skills are activated based on context and keywords:
 | deployment, CI/CD, production, 배포, デプロイ, 部署 | `phase-9-deployment` | Production deployment |
 | mobile app, React Native, Flutter, 모바일 앱, モバイルアプリ | `mobile-app` | Mobile app development |
 | desktop app, Electron, Tauri, 데스크톱 앱, デスクトップアプリ | `desktop-app` | Desktop app development |
+| bkend setup, first project, MCP connect, bkend 시작, bkend始め方, bkend入门 | `bkend-quickstart` | bkend.ai platform onboarding |
+| signup, login, JWT, session, RBAC, 회원가입, ログイン, 登录 | `bkend-auth` | bkend.ai authentication |
+| table, column, CRUD, schema, index, filter, 테이블, テーブル, 数据表 | `bkend-data` | bkend.ai database operations |
+| file upload, presigned, bucket, storage, CDN, 파일 업로드, ストレージ | `bkend-storage` | bkend.ai file storage |
+| mcp, ai tool, mcp setup, backend tool, MCP 설정, MCP接続, MCP连接 | `bkend-mcp` | bkend.ai MCP tools & AI integration |
+| RLS, api key, encryption, rate limit, CORS, 보안정책, セキュリティ | `bkend-security` | bkend.ai security policies |
+| cookbook, tutorial, example project, todo app, 쿡북, チュートリアル, 教程 | `bkend-cookbook` | bkend.ai project tutorials |
+| guide, troubleshooting, migration, environment, 가이드, ガイド, 指南 | `bkend-guides` | bkend.ai operational guides |

@@ -12,7 +12,7 @@ Agents are auto-triggered by keywords in user messages:
 | validate design, spec check, 설계 검증, 設計検証, 设计验证 | `design-validator` | Design document completeness check |
 | QA, testing, docker logs, 테스트, 로그, テスト, ログ, 测试, 日志 | `qa-monitor` | Zero Script QA with log monitoring |
 | pipeline, where to start, 뭐부터, 어디서부터, 何から, 从哪里 | `pipeline-guide` | 9-phase development pipeline guide |
-| bkend, auth, login, database, 인증, 로그인, 認証, ログイン, 身份验证 | `bkend-expert` | bkend.ai BaaS integration |
+| bkend, BaaS, auth, login, database, CRUD, 인증, 로그인, 데이터베이스, 認証, ログイン, 身份验证, 数据库 | `bkend-expert` | bkend.ai BaaS platform expert (auth, data, storage, MCP) |
 | microservices, k8s, architecture, 마이크로서비스, アーキテクチャ, 微服务 | `enterprise-expert` | Enterprise architecture decisions |
 | AWS, terraform, infrastructure, 인프라, インフラ, 基础设施 | `infra-architect` | Cloud infrastructure design |
 | team, project lead, CTO, 팀 구성, 팀장, チームリード, 团队领导 | `cto-lead` | CTO-level team orchestration |

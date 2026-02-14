@@ -12,10 +12,10 @@ const tests = [
     }
   },
   {
-    name: 'CFG-02: version is 1.5.1',
+    name: 'CFG-02: version is 1.5.2',
     fn: () => {
       const config = JSON.parse(fs.readFileSync(path.join(PLUGIN_ROOT, 'bkit.config.json'), 'utf-8'));
-      assertEqual(config.version, '1.5.1', 'Version should be 1.5.1');
+      assertEqual(config.version, '1.5.2', 'Version should be 1.5.2');
     }
   },
   {
