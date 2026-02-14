@@ -19,6 +19,18 @@
 | `/dynamic` | Dynamic | Next.js, BaaS (bkend.ai) |
 | `/enterprise` | Enterprise | Microservices, K8s, Terraform |
 
+### bkend.ai Commands (Domain Skills)
+| Command | Description |
+|---------|-------------|
+| `/bkend-quickstart` | Platform onboarding and setup |
+| `/bkend-auth` | Authentication implementation |
+| `/bkend-data` | Database CRUD operations |
+| `/bkend-storage` | File storage and uploads |
+| `/bkend-mcp` | MCP tools and AI integration |
+| `/bkend-security` | Security policies and best practices |
+| `/bkend-cookbook` | Project tutorials and examples |
+| `/bkend-guides` | Operational guides and troubleshooting |
+
 ### Utility Commands
 | Command | Description |
 |---------|-------------|

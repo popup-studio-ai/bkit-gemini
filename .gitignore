@@ -37,3 +37,6 @@ bkit-system/philosophy
 
 # Documents
 docs/bkit-Best-Practice.pdf
+
+# Commands (private)
+commands/github-stats.toml

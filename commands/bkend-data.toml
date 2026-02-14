@@ -1,0 +1,15 @@
+description = "bkend.ai database CRUD operations guide"
+prompt = """
+@skills/bkend-data/SKILL.md
+
+Action: {{args}}
+
+Guide the user through bkend.ai database operations:
+1. Table creation with 7 column types (string, int, double, bool, date, object, array)
+2. CRUD operations via REST API and MCP tools
+3. Filtering with 10 operators ($eq, $ne, $gt, $gte, $lt, $lte, $in, $nin, $regex, $exists)
+4. Sorting, pagination, and cursor-based queries
+5. Index management for query performance
+
+Delegate backend tasks to bkend-expert agent.
+"""

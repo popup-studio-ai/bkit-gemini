@@ -1,0 +1,15 @@
+description = "bkend.ai MCP tools and AI integration guide"
+prompt = """
+@skills/bkend-mcp/SKILL.md
+
+Action: {{args}}
+
+Guide the user through bkend.ai MCP integration:
+1. 28 MCP tools catalog (Fixed 3 + Project 6 + Table 9 + Data CRUD 5 + Env 3 + Schema 2)
+2. 4 MCP resources (context, tables, schema, docs)
+3. OAuth 2.1 + PKCE authentication flow
+4. AI tool setup (Gemini CLI, Claude Code, Cursor)
+5. Auth & Storage have NO MCP tools - use REST API
+
+Delegate backend tasks to bkend-expert agent.
+"""

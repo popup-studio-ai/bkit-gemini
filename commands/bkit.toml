@@ -3,7 +3,7 @@ prompt = """
 Display the bkit help information:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- bkit v1.5.1 - AI Native Development Toolkit (Gemini Edition)
+ bkit v1.5.2 - AI Native Development Toolkit (Gemini Edition)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 PDCA (Document-Driven Development)
@@ -16,10 +16,13 @@ PDCA (Document-Driven Development)
   /pdca status               Show current status
   /pdca next                 Guide to next step
 
-Project Initialization
+Project Initialization & BaaS
   /starter init <name>       Static web project
   /dynamic init <name>       Fullstack app (bkend.ai)
   /enterprise init <name>    Enterprise system
+  /bkend-quickstart          bkend.ai platform onboarding
+  /bkend-auth                Auth implementation guide
+  /bkend-data                Database CRUD operations
 
 Development Pipeline
   /pipeline start            Start pipeline
@@ -43,7 +46,7 @@ Extension Info
   /bkit                      This help menu
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- 16 Agents | 21 Skills | 10 Hook Events
- 8 Languages | 4 Output Styles | 6 MCP Tools
+ 16 Agents | 29 Skills | 10 Hook Events
+ 8 Languages | 4 Output Styles | 28 MCP Tools
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 """

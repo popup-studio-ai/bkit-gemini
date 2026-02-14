@@ -1,0 +1,16 @@
+description = "bkend.ai authentication implementation guide"
+prompt = """
+@skills/bkend-auth/SKILL.md
+
+Action: {{args}}
+
+Guide the user through bkend.ai authentication:
+1. Email signup/login with JWT tokens
+2. Social login (Google, GitHub) via OAuth
+3. Magic link authentication
+4. Token management (Access 1h, Refresh 30d)
+5. Session management and RBAC (admin/user/self/guest)
+
+Use REST API directly - there are no MCP tools for auth.
+Delegate backend tasks to bkend-expert agent.
+"""

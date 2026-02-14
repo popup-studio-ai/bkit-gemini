@@ -1,10 +1,12 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-02-12T00:30:00.000Z",
+  "lastUpdated": "2026-02-14T09:00:00.000Z",
   "activeFeatures": [
+    "bkit-gemini-v152-full-test",
+    "bkend-docs-sync",
     "bkit-gemini-conversion"
   ],
-  "primaryFeature": "bkit-gemini-v151-docs-sync",
+  "primaryFeature": "bkit-gemini-v152-full-test",
   "features": {
     "bkit-150-gemini-028-compatibility-test": {
       "phase": "completed",
@@ -36,6 +38,30 @@
       "archivedAt": "2026-02-12T00:30:00.000Z",
       "archivedTo": "docs/archive/2026-02/bkit-gemini-v151-docs-sync/"
     },
+    "bkend-docs-sync": {
+      "phase": "completed",
+      "matchRate": 100,
+      "iterationCount": 1,
+      "createdAt": "2026-02-14T07:30:00.000Z",
+      "updatedAt": "2026-02-15T00:00:00.000Z",
+      "completedAt": "2026-02-15T00:00:00.000Z",
+      "planDoc": "docs/01-plan/features/bkend-docs-sync.plan.md",
+      "designDoc": "docs/02-design/features/bkend-docs-sync.design.md",
+      "reportDoc": "docs/04-report/features/bkend-docs-sync.report.md",
+      "source": "https://github.com/popup-studio-ai/bkend-docs",
+      "team": "bkend-docs-sync"
+    },
+    "bkit-gemini-v152-full-test": {
+      "phase": "completed",
+      "matchRate": 100,
+      "iterationCount": 1,
+      "createdAt": "2026-02-15T12:00:00.000Z",
+      "updatedAt": "2026-02-15T12:30:00.000Z",
+      "completedAt": "2026-02-15T12:30:00.000Z",
+      "planDoc": "docs/01-plan/features/bkit-gemini-v152-full-test.plan.md",
+      "reportDoc": "docs/04-report/features/bkit-gemini-v152-full-test.report.md",
+      "team": "CTO Lead & QA Team (AI Agents)"
+    },
     "bkit-gemini-conversion": {
       "phase": "do",
       "matchRate": null,
@@ -59,8 +85,8 @@
     ]
   },
   "session": {
-    "startedAt": "2026-02-12T00:21:03.559Z",
+    "startedAt": "2026-02-14T16:05:36.954Z",
     "onboardingCompleted": true,
-    "lastActivity": "2026-02-12T00:21:03.559Z"
+    "lastActivity": "2026-02-14T16:05:36.954Z"
   }
 }

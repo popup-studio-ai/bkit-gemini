@@ -1,0 +1,14 @@
+description = "bkend.ai platform onboarding and core concepts"
+prompt = """
+@skills/bkend-quickstart/SKILL.md
+
+Action: {{args}}
+
+Guide the user through bkend.ai platform setup:
+1. Resource hierarchy (Org > Project > Environment)
+2. MCP configuration for Gemini CLI
+3. First API calls with bkendFetch pattern
+4. Environment variables setup
+
+Delegate backend tasks to bkend-expert agent.
+"""

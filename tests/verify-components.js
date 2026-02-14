@@ -14,9 +14,11 @@ async function verifyComponents() {
     
     // Check specific skills from plan
     const requiredSkills = [
-      'pdca', 'starter', 'dynamic', 'enterprise', 
+      'pdca', 'starter', 'dynamic', 'enterprise',
       'development-pipeline', 'phase-1-schema', 'phase-9-deployment',
-      'code-review', 'gemini-cli-learning'
+      'code-review', 'gemini-cli-learning',
+      'bkend-quickstart', 'bkend-auth', 'bkend-data', 'bkend-storage',
+      'bkend-mcp', 'bkend-security', 'bkend-cookbook', 'bkend-guides'
     ];
     
     requiredSkills.forEach(skill => {

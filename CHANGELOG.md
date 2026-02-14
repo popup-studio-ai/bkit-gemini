@@ -5,6 +5,33 @@ All notable changes to bkit-gemini will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.2] - 2026-02-14
+
+### Added
+
+- **8 New bkend.ai Domain Skills** (29 total): bkend-quickstart, bkend-auth, bkend-data, bkend-storage, bkend-mcp, bkend-security, bkend-cookbook, bkend-guides
+- **8 New TOML Commands** (18 total): `/bkend-quickstart`, `/bkend-auth`, `/bkend-data`, `/bkend-storage`, `/bkend-mcp`, `/bkend-security`, `/bkend-cookbook`, `/bkend-guides`
+- **AGENT-14 Test**: bkend-expert content validation (bkendFetch, MongoDB Atlas, 28 MCP tools, 30-day refresh token)
+- **SKILL-21/22/23 Tests**: bkend-quickstart frontmatter, 8-skill consistency, domain content validation
+- **CMD-04 Test**: All 8 bkend-* commands reference their skill files and bkend-expert agent
+
+### Enhanced
+
+- **bkend-expert Agent**: Complete rewrite (146 -> 296 lines) with bkendFetch wrapper, 28 MCP tool catalog, REST API patterns, 15 troubleshooting entries, 8 skill references
+- **dynamic/SKILL.md**: Fixed PostgreSQL -> MongoDB Atlas, GraphQL -> REST API, @bkend/sdk -> bkendFetch pattern, added bkend-* skills reference table
+- **skill-triggers.md**: Added 8 bkend-* skill triggers with 8-language keywords
+- **agent-triggers.md**: Updated bkend-expert trigger with expanded keywords
+- **commands.md**: Added bkend.ai Commands section with 8 domain commands
+- **README.md**: Updated all counts (21->29 skills, 10->18 commands), added bkend.ai entries throughout
+- **Test Suite**: Updated ALL_SKILLS (21->29), ALL_COMMANDS (10->18), verify-components requiredSkills (+8)
+
+### Fixed
+
+- **dynamic/SKILL.md**: Corrected "Managed PostgreSQL" to "MongoDB Atlas (REST API)" (bkend uses MongoDB, not PostgreSQL)
+- **dynamic/SKILL.md**: Removed non-existent `@bkend/sdk` import, replaced with bkendFetch REST API pattern
+- **dynamic/SKILL.md**: Fixed "Auto-generated REST & GraphQL" to "REST API" (bkend does not support GraphQL)
+- **bkend-expert Agent**: Fixed refresh token lifetime from unspecified to correct 30 days (not 7 days)
+
 ## [1.5.1] - 2026-02-11
 
 ### Added
@@ -97,6 +124,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[1.5.2]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.1...v1.5.2
 [1.5.1]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.3.0...v1.4.0
