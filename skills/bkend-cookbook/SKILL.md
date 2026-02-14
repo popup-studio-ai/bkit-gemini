@@ -118,7 +118,7 @@ Create the three tables with the schemas defined above.
 
 ```bash
 # Create a user
-curl -X POST https://api.bkend.ai/v1/data/users \
+curl -X POST https://api-client.bkend.ai/v1/data/users \
   -H "Content-Type: application/json" \
   -H "X-Project-Id: <your-project-id>" \
   -H "X-Environment: dev" \
@@ -126,7 +126,7 @@ curl -X POST https://api.bkend.ai/v1/data/users \
   -d '{"name": "Alice", "email": "alice@example.com"}'
 
 # Create a post
-curl -X POST https://api.bkend.ai/v1/data/posts \
+curl -X POST https://api-client.bkend.ai/v1/data/posts \
   -H "Content-Type: application/json" \
   -H "X-Project-Id: <your-project-id>" \
   -H "X-Environment: dev" \
@@ -134,7 +134,7 @@ curl -X POST https://api.bkend.ai/v1/data/posts \
   -d '{"title": "Hello World", "content": "My first post!", "authorId": "<user-id>", "status": "published", "tags": ["intro"]}'
 
 # List all published posts
-curl "https://api.bkend.ai/v1/data/posts?filter=%7B%22status%22%3A%22published%22%7D" \
+curl "https://api-client.bkend.ai/v1/data/posts?filter=%7B%22status%22%3A%22published%22%7D" \
   -H "X-Project-Id: <your-project-id>" \
   -H "X-Environment: dev" \
   -H "X-API-Key: <your-api-key>"

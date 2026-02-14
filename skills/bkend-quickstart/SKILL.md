@@ -101,13 +101,13 @@ bkend.ai distinguishes between two identity layers:
 **Base URL:**
 
 ```
-https://api.bkend.ai
+https://api-client.bkend.ai
 ```
 
 **MCP URL:**
 
 ```
-https://mcp.bkend.ai
+https://api.bkend.ai/mcp
 ```
 
 **Required Headers for all API calls:**
@@ -163,7 +163,7 @@ Visit `https://console.bkend.ai/signup` and create your tenant account.
 ### Step 2: Create an Organization
 
 ```http
-POST https://api.bkend.ai/orgs
+POST https://api-client.bkend.ai/orgs
 Content-Type: application/json
 
 {
@@ -177,7 +177,7 @@ Or use the Console: **Dashboard > Create Organization**.
 ### Step 3: Create a Project
 
 ```http
-POST https://api.bkend.ai/projects
+POST https://api-client.bkend.ai/projects
 Content-Type: application/json
 X-Org-Id: <your-org-id>
 
@@ -201,7 +201,7 @@ X-Environment: dev
 ### Step 5: Create a Table
 
 ```http
-POST https://api.bkend.ai/tables
+POST https://api-client.bkend.ai/tables
 Content-Type: application/json
 X-Project-Id: proj_abc123
 X-Environment: dev
@@ -222,7 +222,7 @@ X-API-Key: <your-api-key>
 Navigate to **Console > Project > Settings > API Keys** and generate a new key. Or via API:
 
 ```http
-POST https://api.bkend.ai/api-keys
+POST https://api-client.bkend.ai/api-keys
 X-Project-Id: proj_abc123
 X-Environment: dev
 ```
@@ -231,7 +231,7 @@ X-Environment: dev
 
 ```bash
 # Create a record
-curl -X POST https://api.bkend.ai/data/todos \
+curl -X POST https://api-client.bkend.ai/data/todos \
   -H "Content-Type: application/json" \
   -H "X-Project-Id: proj_abc123" \
   -H "X-Environment: dev" \
@@ -239,7 +239,7 @@ curl -X POST https://api.bkend.ai/data/todos \
   -d '{"title": "Learn bkend", "completed": false}'
 
 # List records
-curl https://api.bkend.ai/data/todos \
+curl https://api-client.bkend.ai/data/todos \
   -H "X-Project-Id: proj_abc123" \
   -H "X-Environment: dev" \
   -H "X-API-Key: your-api-key"
@@ -255,7 +255,7 @@ Create or edit `~/.gemini/settings.json`:
 {
   "mcpServers": {
     "bkend": {
-      "httpUrl": "https://mcp.bkend.ai",
+      "httpUrl": "https://api.bkend.ai/mcp",
       "headers": {
         "X-Project-Id": "proj_abc123",
         "X-Environment": "dev",
@@ -283,7 +283,7 @@ Create or edit `.mcp.json` in your project root:
   "mcpServers": {
     "bkend": {
       "type": "http",
-      "url": "https://mcp.bkend.ai",
+      "url": "https://api.bkend.ai/mcp",
       "headers": {
         "X-Project-Id": "proj_abc123",
         "X-Environment": "dev",
@@ -302,7 +302,7 @@ Open **Cursor Settings > MCP Servers** and add:
 {
   "bkend": {
     "type": "http",
-    "url": "https://mcp.bkend.ai",
+    "url": "https://api.bkend.ai/mcp",
     "headers": {
       "X-Project-Id": "proj_abc123",
       "X-Environment": "dev",
@@ -319,7 +319,7 @@ Open **Cursor Settings > MCP Servers** and add:
 **Environment Variables** (`.env.local`):
 
 ```env
-NEXT_PUBLIC_BKEND_API_URL=https://api.bkend.ai
+NEXT_PUBLIC_BKEND_API_URL=https://api-client.bkend.ai
 NEXT_PUBLIC_BKEND_PROJECT_ID=proj_abc123
 NEXT_PUBLIC_BKEND_ENVIRONMENT=dev
 BKEND_API_KEY=your-api-key
@@ -444,7 +444,7 @@ class BkendClient {
     String? apiKey,
   }) {
     _dio = Dio(BaseOptions(
-      baseUrl: 'https://api.bkend.ai',
+      baseUrl: 'https://api-client.bkend.ai',
       headers: {
         'Content-Type': 'application/json',
         'X-Project-Id': projectId,
@@ -496,7 +496,7 @@ class AuthInterceptor extends Interceptor {
         try {
           final dio = Dio();
           final res = await dio.post(
-            'https://api.bkend.ai/auth/token/refresh',
+            'https://api-client.bkend.ai/auth/token/refresh',
             data: {'refreshToken': refreshToken},
             options: Options(headers: err.requestOptions.headers),
           );
@@ -538,11 +538,11 @@ The bkend.ai Console (`https://console.bkend.ai`) provides visual management for
 
 | Variable | Required | Description | Example |
 |----------|----------|-------------|---------|
-| `NEXT_PUBLIC_BKEND_API_URL` | Yes | bkend API base URL | `https://api.bkend.ai` |
+| `NEXT_PUBLIC_BKEND_API_URL` | Yes | bkend API base URL | `https://api-client.bkend.ai` |
 | `NEXT_PUBLIC_BKEND_PROJECT_ID` | Yes | Your project ID | `proj_abc123` |
 | `NEXT_PUBLIC_BKEND_ENVIRONMENT` | Yes | Target environment | `dev` |
 | `BKEND_API_KEY` | Server only | API key for server-side calls | `bk_key_...` |
-| `NEXT_PUBLIC_BKEND_MCP_URL` | Optional | MCP server URL | `https://mcp.bkend.ai` |
+| `NEXT_PUBLIC_BKEND_MCP_URL` | Optional | MCP server URL | `https://api.bkend.ai/mcp` |
 | `BKEND_WEBHOOK_SECRET` | Optional | Webhook signature secret | `whsec_...` |
 | `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Optional | Google OAuth client ID | `123...apps.googleusercontent.com` |
 | `NEXT_PUBLIC_GITHUB_CLIENT_ID` | Optional | GitHub OAuth client ID | `gh_abc123` |

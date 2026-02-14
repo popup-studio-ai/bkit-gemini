@@ -452,7 +452,7 @@ If you cannot connect to the bkend.ai API, follow these five steps:
 Ensure the `X-Project-Id` header is set to a valid project ID.
 
 ```bash
-curl -v https://api.bkend.ai/v1/data/posts \
+curl -v https://api-client.bkend.ai/v1/data/posts \
   -H "X-Project-Id: proj_abc123" \
   -H "X-Environment: dev" \
   -H "X-API-Key: <your-api-key>"
@@ -488,8 +488,8 @@ Common CORS error symptoms:
 ### Step 5: Check Network
 
 - Verify your internet connection is active
-- Check if `api.bkend.ai` is reachable: `curl -I https://api.bkend.ai/health`
-- If behind a corporate firewall or VPN, ensure `api.bkend.ai` and `mcp.bkend.ai` are not blocked
+- Check if `api-client.bkend.ai` is reachable: `curl -I https://api-client.bkend.ai/health`
+- If behind a corporate firewall or VPN, ensure `api-client.bkend.ai` and `api.bkend.ai` are not blocked
 - Check the [bkend.ai status page](https://status.bkend.ai) for any ongoing incidents
 
 ---
@@ -503,7 +503,7 @@ Common CORS error symptoms:
 **Solution:** Refresh the access token using the refresh token endpoint.
 
 ```bash
-curl -X POST https://api.bkend.ai/v1/auth/token/refresh \
+curl -X POST https://api-client.bkend.ai/v1/auth/token/refresh \
   -H "Content-Type: application/json" \
   -H "X-Project-Id: proj_abc123" \
   -H "X-Environment: dev" \
@@ -530,7 +530,7 @@ Check that your token storage and retrieval logic is working correctly.
 **Solution:** Complete the MFA verification step:
 
 ```bash
-curl -X POST https://api.bkend.ai/v1/auth/mfa/verify \
+curl -X POST https://api-client.bkend.ai/v1/auth/mfa/verify \
   -H "Content-Type: application/json" \
   -H "X-Project-Id: proj_abc123" \
   -H "X-Environment: dev" \
@@ -601,7 +601,7 @@ The MFA code is a 6-digit TOTP code from the user's authenticator app.
 **A:** Use the bkend storage API endpoint:
 
 ```bash
-curl -X POST https://api.bkend.ai/v1/storage/upload \
+curl -X POST https://api-client.bkend.ai/v1/storage/upload \
   -H "X-Project-Id: proj_abc123" \
   -H "X-Environment: dev" \
   -H "X-API-Key: <your-api-key>" \

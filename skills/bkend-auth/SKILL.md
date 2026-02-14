@@ -288,7 +288,7 @@ Magic link provides passwordless authentication via email.
 
 The user receives an email with a link like:
 ```
-https://api.bkend.ai/auth/magiclink/verify?token=ml_abc123...&redirectUri=https://myapp.com/auth/callback
+https://api-client.bkend.ai/auth/magiclink/verify?token=ml_abc123...&redirectUri=https://myapp.com/auth/callback
 ```
 
 ### 3.2 Verify Magic Link
@@ -349,7 +349,7 @@ export default function AuthCallback() {
 1. Go to **Console > Project > Settings > Auth > Social Login**
 2. Enable Google provider
 3. Enter your Google Client ID and Client Secret
-4. Set authorized redirect URI: `https://api.bkend.ai/auth/social/google/callback`
+4. Set authorized redirect URI: `https://api-client.bkend.ai/auth/social/google/callback`
 
 **Initiate Google Login:**
 
@@ -386,7 +386,7 @@ function handleGoogleLogin() {
 1. Go to **Console > Project > Settings > Auth > Social Login**
 2. Enable GitHub provider
 3. Enter your GitHub Client ID and Client Secret
-4. Set authorization callback URL: `https://api.bkend.ai/auth/social/github/callback`
+4. Set authorization callback URL: `https://api-client.bkend.ai/auth/social/github/callback`
 
 **Initiate GitHub Login:**
 

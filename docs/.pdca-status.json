@@ -39,8 +39,8 @@
     },
     "bkend-docs-sync": {
       "phase": "check",
-      "matchRate": null,
-      "iterationCount": 0,
+      "matchRate": 100,
+      "iterationCount": 1,
       "createdAt": "2026-02-14T07:30:00.000Z",
       "updatedAt": "2026-02-14T12:00:00.000Z",
       "planDoc": "docs/01-plan/features/bkend-docs-sync.plan.md",

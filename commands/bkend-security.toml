@@ -1,4 +1,4 @@
-description = "bkend.ai security policies and best practices"
+description = "bkend.ai security policies and encryption guide"
 prompt = """
 @skills/bkend-security/SKILL.md
 

@@ -321,12 +321,12 @@ Store API keys and sensitive configuration in environment variables, never in so
 
 ```bash
 # .env.development
-BKEND_API_URL=https://api.bkend.ai
+BKEND_API_URL=https://api-client.bkend.ai
 BKEND_PUBLIC_KEY=ak_dev_...
 BKEND_SECRET_KEY=ak_dev_secret_...
 
 # .env.production
-BKEND_API_URL=https://api.bkend.ai
+BKEND_API_URL=https://api-client.bkend.ai
 BKEND_PUBLIC_KEY=ak_prod_...
 BKEND_SECRET_KEY=ak_prod_secret_...
 ```
