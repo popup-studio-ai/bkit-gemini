@@ -22,9 +22,9 @@ tools:
   - read_file
   - write_file
   - replace
-  - glob_tool
+  - glob
   - grep_search
-  - web_search
+  - google_web_search
 temperature: 0.2
 max_turns: 25
 timeout_mins: 10

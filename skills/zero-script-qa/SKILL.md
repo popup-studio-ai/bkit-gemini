@@ -26,7 +26,7 @@ allowed-tools:
   - read_file
   - write_file
   - grep_search
-  - glob_tool
+  - glob
 
 imports: []
 

@@ -23,7 +23,7 @@ tools:
   - read_file
   - write_file
   - grep_search
-  - glob_tool
+  - glob
 temperature: 0.2
 max_turns: 15
 timeout_mins: 10

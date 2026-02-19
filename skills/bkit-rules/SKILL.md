@@ -23,7 +23,7 @@ argument-hint: ""
 
 allowed-tools:
   - read_file
-  - glob_tool
+  - glob
   - grep_search
 
 imports: []

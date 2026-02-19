@@ -1,7 +1,7 @@
 #!/bin/bash
 #===============================================================================
 # bkit-gemini Comprehensive Test Runner
-# Version: 1.5.0
+# Version: 1.5.3
 # Purpose: Execute all test cases defined in bkit-gemini-comprehensive-test.design.md
 # Executor: Gemini CLI
 #===============================================================================
@@ -178,10 +178,10 @@ run_commands_toml_tests() {
     echo -e "\n${YELLOW}Testing:${NC} CMD-03 - TOML File Count"
     local toml_count
     toml_count=$(find "$BKIT_DIR/commands" -name "*.toml" 2>/dev/null | wc -l | tr -d ' ')
-    if [ "$toml_count" -eq 10 ]; then
-        log_pass "CMD-03: Found 10 TOML command files"
+    if [ "$toml_count" -eq 18 ]; then
+        log_pass "CMD-03: Found 18 TOML command files"
     else
-        log_fail "CMD-03: Expected 10 TOML files, found $toml_count"
+        log_fail "CMD-03: Expected 18 TOML files, found $toml_count"
     fi
 
     # CMD-04 to CMD-13: Individual Command File Tests
@@ -268,10 +268,10 @@ run_skills_metadata_tests() {
     echo -e "\n${YELLOW}Testing:${NC} SKILL-META-04 - Skills Count"
     local skills_count
     skills_count=$(find "$BKIT_DIR/skills" -name "SKILL.md" 2>/dev/null | wc -l | tr -d ' ')
-    if [ "$skills_count" -eq 21 ]; then
-        log_pass "SKILL-META-04: Found 21 SKILL.md files"
+    if [ "$skills_count" -eq 29 ]; then
+        log_pass "SKILL-META-04: Found 29 SKILL.md files"
     else
-        log_fail "SKILL-META-04: Expected 21 SKILL.md files, found $skills_count"
+        log_fail "SKILL-META-04: Expected 29 SKILL.md files, found $skills_count"
     fi
 }
 
@@ -309,10 +309,10 @@ run_agents_metadata_tests() {
     echo -e "\n${YELLOW}Testing:${NC} AGENT-META-02 - Agents Count"
     local agents_count
     agents_count=$(find "$BKIT_DIR/agents" -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
-    if [ "$agents_count" -eq 11 ]; then
-        log_pass "AGENT-META-02: Found 11 agent files"
+    if [ "$agents_count" -eq 16 ]; then
+        log_pass "AGENT-META-02: Found 16 agent files"
     else
-        log_fail "AGENT-META-02: Expected 11 agent files, found $agents_count"
+        log_fail "AGENT-META-02: Expected 16 agent files, found $agents_count"
     fi
 }
 
@@ -341,11 +341,11 @@ run_extension_config_tests() {
 
     # EXT-02: Version check
     ((TOTAL_TESTS++))
-    echo -e "\n${YELLOW}Testing:${NC} EXT-02 - Version is 1.5.0"
-    if grep -q '"version": "1.5.0"' "$BKIT_DIR/gemini-extension.json"; then
-        log_pass "EXT-02: Version is 1.5.0"
+    echo -e "\n${YELLOW}Testing:${NC} EXT-02 - Version is 1.5.3"
+    if grep -q '"version": "1.5.3"' "$BKIT_DIR/gemini-extension.json"; then
+        log_pass "EXT-02: Version is 1.5.3"
     else
-        log_fail "EXT-02: Version is not 1.5.0"
+        log_fail "EXT-02: Version is not 1.5.3"
     fi
 
     # EXT-03: contextFileName is GEMINI.md
@@ -357,13 +357,13 @@ run_extension_config_tests() {
         log_fail "EXT-03: contextFileName is not GEMINI.md"
     fi
 
-    # EXT-04: experimental.skills is enabled
+    # EXT-04: experimental block removed (Skills/Hooks GA since v0.26.0)
     ((TOTAL_TESTS++))
-    echo -e "\n${YELLOW}Testing:${NC} EXT-04 - experimental.skills is enabled"
-    if grep -q '"skills": true' "$BKIT_DIR/gemini-extension.json"; then
-        log_pass "EXT-04: experimental.skills is enabled"
+    echo -e "\n${YELLOW}Testing:${NC} EXT-04 - experimental block removed (GA)"
+    if ! grep -q '"experimental"' "$BKIT_DIR/gemini-extension.json"; then
+        log_pass "EXT-04: experimental block removed (Skills/Hooks GA)"
     else
-        log_fail "EXT-04: experimental.skills is not enabled"
+        log_fail "EXT-04: experimental block should be removed"
     fi
 }
 
@@ -558,7 +558,7 @@ print_summary() {
 main() {
     echo ""
     echo -e "${BLUE}╔══════════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BLUE}║     bkit-gemini Comprehensive Test Suite v1.5.0                  ║${NC}"
+    echo -e "${BLUE}║     bkit-gemini Comprehensive Test Suite v1.5.3                  ║${NC}"
     echo -e "${BLUE}║     Testing: Commands TOML, Skills, Agents, Hooks, Library       ║${NC}"
     echo -e "${BLUE}╚══════════════════════════════════════════════════════════════════╝${NC}"
     echo ""

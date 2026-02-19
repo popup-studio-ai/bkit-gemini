@@ -25,7 +25,7 @@ allowed-tools:
   - read_file
   - write_file
   - replace
-  - glob_tool
+  - glob
   - grep_search
   - run_shell_command
   - web_fetch

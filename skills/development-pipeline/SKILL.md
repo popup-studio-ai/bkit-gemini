@@ -22,7 +22,7 @@ argument-hint: "[start|next|status]"
 
 allowed-tools:
   - read_file
-  - glob_tool
+  - glob
   - grep_search
   - write_file
 

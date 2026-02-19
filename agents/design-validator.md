@@ -22,7 +22,7 @@ tools:
   - read_file
   - read_many_files
   - grep_search
-  - glob_tool
+  - glob
   - list_directory
 temperature: 0.1
 max_turns: 15

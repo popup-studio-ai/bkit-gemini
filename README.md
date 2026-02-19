@@ -1,8 +1,8 @@
 # bkit - Vibecoding Kit (Gemini CLI Edition)
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-v0.28.0+-blue.svg)](https://github.com/google-gemini/gemini-cli)
-[![Version](https://img.shields.io/badge/Version-1.5.2-green.svg)](CHANGELOG.md)
+[![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-v0.29.0+-blue.svg)](https://github.com/google-gemini/gemini-cli)
+[![Version](https://img.shields.io/badge/Version-1.5.3-green.svg)](CHANGELOG.md)
 [![Author](https://img.shields.io/badge/Author-POPUP%20STUDIO-orange.svg)](https://popupstudio.ai)
 
 > **PDCA methodology + Context Engineering for AI-native development**
@@ -62,7 +62,7 @@ Event 10: SessionEnd           -> Session cleanup, memory persistence
 
 ```
 bkit-gemini/
-|-- gemini-extension.json         # Extension manifest (v1.5.2)
+|-- gemini-extension.json         # Extension manifest (v1.5.3)
 |-- GEMINI.md                     # Global context with 6 @import modules
 |-- bkit.config.json              # Centralized configuration (12 sections)
 |-- CHANGELOG.md                  # Version history
@@ -165,6 +165,8 @@ bkit-gemini/
 |   |   |-- agent-memory.js       # Per-agent persistence (214 lines)
 |   |   +-- permission.js         # Glob pattern permission engine (381 lines)
 |   +-- adapters/gemini/
+|       |-- index.js              # Platform adapter with TOOL_MAP
+|       |-- tool-registry.js      # Centralized tool name registry (v0.29.0+ verified)
 |       |-- context-fork.js       # Snapshot isolation, LRU(10) (477 lines)
 |       +-- import-resolver.js    # @import resolution (118 lines)
 |
@@ -175,6 +177,13 @@ bkit-gemini/
 ---
 
 ## Features
+
+### v1.5.3 Highlights
+
+- **Gemini CLI v0.29.0+ Compatibility** -- All tool names verified from source code (Issue #5 fix)
+- **Tool Registry Module** -- Centralized tool name management for future-proof maintenance
+- **17 Built-in Tools Mapped** -- Including new Plan Mode tools (enter_plan_mode, exit_plan_mode)
+- **v0.30.0 Readiness** -- Policy Engine detection layer for smooth migration
 
 ### v1.5.2 Highlights
 
@@ -206,7 +215,7 @@ bkit-gemini/
 
 ### Prerequisites
 
-- [Gemini CLI](https://github.com/google-gemini/gemini-cli) v0.28.0 or later
+- [Gemini CLI](https://github.com/google-gemini/gemini-cli) v0.29.0 or later
 - [Git](https://git-scm.com/) installed on your machine
 
 ### Installation
@@ -238,7 +247,7 @@ gemini extensions list
 
 ### Hooks Configuration
 
-Hooks are **enabled by default** in Gemini CLI v0.28.0+. If you need to manually configure:
+Hooks are **enabled by default** in Gemini CLI v0.29.0+. If you need to manually configure:
 
 ```json
 // ~/.gemini/settings.json
@@ -363,7 +372,7 @@ All 16 agents remember context across sessions automatically:
 
 ### Team Mode Foundation
 
-bkit v1.5.2 includes team mode foundation with 3 MCP tools:
+bkit v1.5.3 includes team mode foundation with 3 MCP tools:
 - `team_create` -- Create agent teams with configurable strategies
 - `team_assign` -- Assign tasks to team members
 - `team_status` -- Monitor team progress
@@ -487,7 +496,7 @@ Current status:
 
 ## Tool Name Mapping
 
-bkit uses Gemini CLI native tool names:
+bkit uses Gemini CLI native tool names (v0.29.0+ verified from source):
 
 | Claude Code Tool | Gemini CLI Tool |
 |------------------|-----------------|
@@ -496,12 +505,15 @@ bkit uses Gemini CLI native tool names:
 | Read | read_file |
 | Bash | run_shell_command |
 | Glob | glob |
-| Grep | grep |
-| WebSearch | web_search |
+| Grep | grep_search |
+| WebSearch | google_web_search |
 | WebFetch | web_fetch |
-| Task | spawn_agent |
-| TodoWrite | task_write |
-| TodoRead | task_read |
+| AskUserQuestion | ask_user |
+| Skill | activate_skill |
+| TodoWrite | write_todos |
+| SaveMemory | save_memory |
+| EnterPlanMode | enter_plan_mode |
+| ExitPlanMode | exit_plan_mode |
 
 ---
 
@@ -581,7 +593,7 @@ These hooks are non-interactive, performance-optimized, and essential for the Co
 
 | Requirement | Version |
 |-------------|---------|
-| Gemini CLI | v0.28.0+ |
+| Gemini CLI | v0.29.0+ |
 | Node.js | v18+ (for hook scripts) |
 | Git | Any recent version |
 
@@ -593,7 +605,7 @@ These hooks are non-interactive, performance-optimized, and essential for the Co
 | 10 Hook Events | All 10 events registered with matcher patterns |
 | @import syntax | 6 context modules in `.gemini/context/` |
 | TOML commands with `@{}`, `!{}`, `{{}}` | 18 enhanced commands |
-| Agent Skills (experimental) | 29 skills with progressive disclosure |
+| Agent Skills (GA since v0.26.0) | 29 skills with progressive disclosure |
 | MCP servers | 6 tools via `spawn-agent-server.js` |
 | Extension manifest `settings` | 2 user-configurable options |
 | `${extensionPath}` variable | Used in hooks.json for portable paths |
@@ -629,7 +641,7 @@ bkit-gemini is a fork of [bkit-claude-code](https://github.com/popup-studio-ai/b
 | Variables | N/A | `${extensionPath}`, `${workspacePath}` |
 | Hooks | Claude Code hooks | Gemini CLI 10-event hook system |
 | Commands | Slash commands | TOML commands with `@`, `!`, `{{}}` syntax |
-| Skills | Native skills | Experimental skills (enabled via manifest) |
+| Skills | Native skills | Skills (GA since v0.26.0) |
 | Agent format | .md with custom fields | .md with Gemini native frontmatter |
 
 ---

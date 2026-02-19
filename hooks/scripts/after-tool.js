@@ -24,7 +24,7 @@ function main() {
     // Handle by tool type
     if (['write_file', 'replace'].includes(toolName) || ['Write', 'Edit'].includes(claudeToolName)) {
       handlePostWrite(adapter, toolInput);
-    } else if (toolName === 'skill' || claudeToolName === 'Skill') {
+    } else if (toolName === 'activate_skill' || claudeToolName === 'Skill') {
       handlePostSkill(adapter, toolInput);
     } else {
       adapter.outputEmpty();

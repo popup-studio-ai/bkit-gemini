@@ -26,8 +26,8 @@ tools:
   - read_file
   - read_many_files
   - grep_search
-  - glob_tool
-  - web_search
+  - glob
+  - google_web_search
 temperature: 0.1
 max_turns: 20
 timeout_mins: 10

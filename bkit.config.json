@@ -1,6 +1,6 @@
 {
   "$schema": "./bkit.config.schema.json",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "platform": "gemini",
 
   "sourceDirectories": ["src", "lib", "app", "components", "pages", "features", "services"],

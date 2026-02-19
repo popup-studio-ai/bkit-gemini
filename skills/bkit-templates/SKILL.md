@@ -24,7 +24,7 @@ argument-hint: "[plan|design|analysis|report]"
 allowed-tools:
   - read_file
   - write_file
-  - glob_tool
+  - glob
 
 imports: []
 

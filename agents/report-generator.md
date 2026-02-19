@@ -22,7 +22,7 @@ tools:
   - read_file
   - read_many_files
   - write_file
-  - glob_tool
+  - glob
 temperature: 0.5
 max_turns: 10
 timeout_mins: 10

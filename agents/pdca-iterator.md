@@ -31,7 +31,7 @@ tools:
   - write_file
   - replace
   - grep_search
-  - glob_tool
+  - glob
   - run_shell_command
 temperature: 0.3
 max_turns: 30

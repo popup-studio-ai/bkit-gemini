@@ -25,9 +25,9 @@ allowed-tools:
   - read_file
   - write_file
   - replace
-  - glob_tool
+  - glob
   - grep_search
-  - web_search
+  - google_web_search
 
 imports: []
 

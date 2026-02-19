@@ -5,6 +5,43 @@ All notable changes to bkit-gemini will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.3] - 2026-02-19
+
+### Added
+
+- **Tool Registry Module**: `lib/adapters/gemini/tool-registry.js` - Centralized Source of Truth for all 17 Gemini CLI built-in tool names, verified from source code
+- **v0.30.0 Policy Engine Detection**: Compatibility layer that detects Policy Engine TOML files and logs warnings for future migration
+- **Plan Mode Tool Mapping**: `enter_plan_mode`, `exit_plan_mode` added to TOOL_MAP (v0.29.0+ new tools)
+- **New TOOL_MAP Entries**: `SaveMemory` -> `save_memory`, `TodoWrite` -> `write_todos`
+
+### Fixed
+
+- **CRITICAL: All 16 Agents Loading Failure** (Issue #5): `glob_tool` was never a valid Gemini CLI tool name - corrected to `glob` across all 16 agent frontmatter files
+- **7 Agents Web Search Failure**: `web_search` corrected to `google_web_search` (cto-lead, enterprise-expert, frontend-architect, gap-detector, product-manager, security-architect, starter-guide)
+- **29 Skills Tool Name Errors**: `glob_tool` -> `glob` in all skill `allowed-tools` frontmatter
+- **11 Skills Web Search Errors**: `web_search` -> `google_web_search` in affected skill frontmatter
+- **TOOL_MAP Corrections**: `Grep: 'grep'` -> `'grep_search'`, `WebSearch: 'web_search'` -> `'google_web_search'`, `Skill: 'skill'` -> `'activate_skill'`
+- **Hook Scripts**: `before-tool-selection.js` readOnlyTools array updated to use Tool Registry (removed invalid `glob_tool`, `web_search`, `task_write`, `spawn_agent`)
+- **hooks.json Matcher**: `"skill"` -> `"activate_skill"` for AfterTool skill matcher
+- **after-tool.js**: `toolName === 'skill'` -> `toolName === 'activate_skill'`
+- **cto-lead Agent**: Removed non-existent `spawn_agent` from tools (not a built-in tool)
+- **pdca Skill**: Removed non-existent `spawn_agent` from allowed-tools
+
+### Changed
+
+- **Minimum Gemini CLI Version**: v0.28.0 -> **v0.29.0** (tool name changes require v0.29.0+)
+- **gemini-extension.json**: Removed `experimental.skills` block (Skills/Hooks GA since v0.26.0)
+- **TOOL_MAP Architecture**: Now imports from Tool Registry instead of hardcoded values
+- **before-tool-selection.js**: Uses `getReadOnlyTools()` from Tool Registry instead of hardcoded array
+- **hooks.json**: Version description updated to v1.5.3
+- **README.md**: Updated version badges, tool mapping table, compatibility requirements, component map
+
+### Documentation
+
+- **tool-reference.md**: Complete rewrite with all 17 built-in tools (v0.29.0+ verified)
+- **README.md**: Added v1.5.3 highlights section, updated all version references
+- **Philosophy Docs**: Updated bkit-system/philosophy for v1.5.3 Tool Registry and Context Engineering principles
+
 ## [1.5.2] - 2026-02-14
 
 ### Added
@@ -124,6 +161,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[1.5.3]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.2...v1.5.3
 [1.5.2]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.1...v1.5.2
 [1.5.1]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.4.0...v1.5.0
