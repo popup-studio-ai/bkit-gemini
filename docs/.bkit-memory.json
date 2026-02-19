@@ -13,12 +13,15 @@
   "currentFeature": "gemini-cli-029-compatibility-fix",
   "pdca": {
     "feature": "gemini-cli-029-compatibility-fix",
-    "phase": "plan",
+    "phase": "completed",
     "status": "completed",
-    "matchRate": null,
+    "matchRate": 100,
     "planDocument": "docs/01-plan/features/gemini-cli-029-compatibility-fix.plan.md",
+    "reportDocument": "docs/04-report/features/gemini-cli-029-compatibility-fix.report.md",
     "relatedReport": "docs/04-report/gemini-cli-029-030-upgrade-impact-analysis.report.md",
     "relatedIssue": "https://github.com/popup-studio-ai/bkit-gemini/issues/5",
+    "relatedPR": "https://github.com/popup-studio-ai/bkit-gemini/pull/6",
+    "relatedRelease": "https://github.com/popup-studio-ai/bkit-gemini/releases/tag/v1.5.3",
     "version": "v1.5.3",
     "updatedAt": "2026-02-19"
   }
