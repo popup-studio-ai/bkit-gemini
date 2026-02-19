@@ -1,6 +1,6 @@
 ## Tool Name Reference
 
-bkit uses Gemini CLI native tool names:
+bkit uses Gemini CLI native tool names (v0.29.0+ verified):
 
 | Tool | Purpose | Example |
 |------|---------|---------|
@@ -10,10 +10,14 @@ bkit uses Gemini CLI native tool names:
 | `read_many_files` | Read multiple files | Batch analysis |
 | `run_shell_command` | Execute shell commands | Git, npm, docker |
 | `glob` | Find files by pattern | `**/*.tsx` |
-| `grep` | Search file contents | Finding definitions |
+| `grep_search` | Search file contents | Finding definitions |
 | `list_directory` | List directory contents | Exploring structure |
-| `web_search` | Search the web | Finding documentation |
+| `google_web_search` | Search the web | Finding documentation |
 | `web_fetch` | Fetch URL content | Reading web pages |
-| `spawn_agent` | Launch sub-agent | Complex multi-step tasks |
-| `task_write` | Manage tasks | Task tracking |
 | `activate_skill` | Load skill context | On-demand expertise |
+| `write_todos` | Manage task lists | Task tracking |
+| `save_memory` | Save to long-term memory | Cross-session persistence |
+| `ask_user` | Ask user a question | Clarifying requirements |
+| `get_internal_docs` | Get extension docs | Internal reference |
+| `enter_plan_mode` | Enter planning mode | Structured planning (v0.29.0+) |
+| `exit_plan_mode` | Exit planning mode | Plan completion (v0.29.0+) |

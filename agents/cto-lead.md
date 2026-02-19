@@ -28,12 +28,11 @@ tools:
   - write_file
   - replace
   - grep_search
-  - glob_tool
+  - glob
   - list_directory
   - run_shell_command
-  - web_search
+  - google_web_search
   - web_fetch
-  - spawn_agent
 temperature: 0.3
 max_turns: 30
 timeout_mins: 15

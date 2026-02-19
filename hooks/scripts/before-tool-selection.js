@@ -7,6 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 const libPath = path.resolve(__dirname, '..', '..', 'lib');
+const toolRegistryPath = path.join(libPath, 'adapters', 'gemini', 'tool-registry');
 
 function main() {
   try {
@@ -84,16 +85,11 @@ function getCurrentPdcaPhase(projectDir) {
 function getPhaseToolFilter(phase) {
   if (!phase) return null;
 
-  const readOnlyTools = [
-    'read_file', 'read_many_files', 'grep_search', 'glob_tool',
-    'list_directory', 'web_search', 'web_fetch', 'activate_skill',
-    'task_write', 'spawn_agent'
-  ];
+  // Tool names from centralized registry (v0.29.0+ verified)
+  const { getReadOnlyTools, getAllTools } = require(toolRegistryPath);
+  const readOnlyTools = getReadOnlyTools();
 
-  const allTools = [
-    ...readOnlyTools,
-    'write_file', 'replace', 'run_shell_command'
-  ];
+  const allTools = getAllTools();
 
   const phaseFilters = {
     plan: readOnlyTools,     // Read-only during planning

@@ -1,5 +1,5 @@
 {
-  "description": "bkit Vibecoding Kit v1.5.1 - Gemini CLI Edition",
+  "description": "bkit Vibecoding Kit v1.5.3 - Gemini CLI Edition",
   "hooks": {
     "SessionStart": [
       {
@@ -109,7 +109,7 @@
         ]
       },
       {
-        "matcher": "skill",
+        "matcher": "activate_skill",
         "hooks": [
           {
             "name": "bkit-post-skill",

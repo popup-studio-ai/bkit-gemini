@@ -24,7 +24,7 @@ argument-hint: ""
 allowed-tools:
   - read_file
   - read_many_files
-  - glob_tool
+  - glob
   - grep_search
   - list_directory
 

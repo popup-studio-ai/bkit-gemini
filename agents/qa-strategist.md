@@ -24,7 +24,7 @@ description: |
 model: gemini-2.5-pro
 tools:
   - read_file
-  - glob_tool
+  - glob
   - grep_search
   - run_shell_command
 temperature: 0.2

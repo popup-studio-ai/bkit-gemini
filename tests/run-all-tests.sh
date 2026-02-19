@@ -357,13 +357,13 @@ run_extension_config_tests() {
         log_fail "EXT-03: contextFileName is not GEMINI.md"
     fi
 
-    # EXT-04: experimental.skills is enabled
+    # EXT-04: experimental block removed (Skills/Hooks GA since v0.26.0)
     ((TOTAL_TESTS++))
-    echo -e "\n${YELLOW}Testing:${NC} EXT-04 - experimental.skills is enabled"
-    if grep -q '"skills": true' "$BKIT_DIR/gemini-extension.json"; then
-        log_pass "EXT-04: experimental.skills is enabled"
+    echo -e "\n${YELLOW}Testing:${NC} EXT-04 - experimental block removed (GA)"
+    if ! grep -q '"experimental"' "$BKIT_DIR/gemini-extension.json"; then
+        log_pass "EXT-04: experimental block removed (Skills/Hooks GA)"
     else
-        log_fail "EXT-04: experimental.skills is not enabled"
+        log_fail "EXT-04: experimental block should be removed"
     fi
 }
 

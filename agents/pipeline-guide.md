@@ -21,7 +21,7 @@ description: |
 model: gemini-2.5-flash
 tools:
   - read_file
-  - glob_tool
+  - glob
   - grep_search
   - write_file
 temperature: 0.3

@@ -24,9 +24,9 @@ model: gemini-2.5-flash
 tools:
   - read_file
   - write_file
-  - glob_tool
+  - glob
   - grep_search
-  - web_search
+  - google_web_search
   - web_fetch
 temperature: 0.5
 max_turns: 15
