@@ -1,6 +1,6 @@
 {
   "$schema": "./bkit.config.schema.json",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "platform": "gemini",
 
   "sourceDirectories": ["src", "lib", "app", "components", "pages", "features", "services"],
@@ -113,6 +113,15 @@
     "run_shell_command(rm -r*)": "ask",
     "run_shell_command(git push --force*)": "deny",
     "run_shell_command(git reset --hard*)": "ask"
+  },
+
+  "compatibility": {
+    "minGeminiCliVersion": "0.29.0",
+    "testedVersions": ["0.29.0", "0.29.5", "0.30.0-preview.3"],
+    "policyEngine": {
+      "autoGenerate": true,
+      "outputDir": ".gemini/policies/"
+    }
   },
 
   "context": {

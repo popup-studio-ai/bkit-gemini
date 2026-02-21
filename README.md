@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-v0.29.0+-blue.svg)](https://github.com/google-gemini/gemini-cli)
-[![Version](https://img.shields.io/badge/Version-1.5.3-green.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-1.5.4-green.svg)](CHANGELOG.md)
 [![Author](https://img.shields.io/badge/Author-POPUP%20STUDIO-orange.svg)](https://popupstudio.ai)
 
 > **PDCA methodology + Context Engineering for AI-native development**
@@ -62,7 +62,7 @@ Event 10: SessionEnd           -> Session cleanup, memory persistence
 
 ```
 bkit-gemini/
-|-- gemini-extension.json         # Extension manifest (v1.5.3)
+|-- gemini-extension.json         # Extension manifest (v1.5.4)
 |-- GEMINI.md                     # Global context with 6 @import modules
 |-- bkit.config.json              # Centralized configuration (12 sections)
 |-- CHANGELOG.md                  # Version history
@@ -177,6 +177,14 @@ bkit-gemini/
 ---
 
 ## Features
+
+### v1.5.4 Highlights
+
+- **Gemini 3 Model Migration** -- All 16 agents updated to `gemini-3-pro` (9) and `gemini-3-flash` (7)
+- **Version Detector** -- 3-strategy Gemini CLI version detection with feature flags and caching
+- **Policy Engine Migrator** -- Auto-converts bkit permissions to v0.30.0 TOML policy format
+- **Forward Alias Layer** -- Pre-mapped future tool name changes for seamless CLI upgrades
+- **v0.30.0 Forward Compatibility** -- Policy Engine support with auto-generate and fallback
 
 ### v1.5.3 Highlights
 
@@ -372,7 +380,7 @@ All 16 agents remember context across sessions automatically:
 
 ### Team Mode Foundation
 
-bkit v1.5.3 includes team mode foundation with 3 MCP tools:
+bkit v1.5.4 includes team mode foundation with 3 MCP tools:
 - `team_create` -- Create agent teams with configurable strategies
 - `team_assign` -- Assign tasks to team members
 - `team_status` -- Monitor team progress
@@ -593,7 +601,7 @@ These hooks are non-interactive, performance-optimized, and essential for the Co
 
 | Requirement | Version |
 |-------------|---------|
-| Gemini CLI | v0.29.0+ |
+| Gemini CLI | v0.29.0+ (forward-compatible with v0.30.0 Policy Engine) |
 | Node.js | v18+ (for hook scripts) |
 | Git | Any recent version |
 

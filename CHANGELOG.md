@@ -5,6 +5,29 @@ All notable changes to bkit-gemini will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.4] - 2026-02-21
+
+### Added
+
+- **Version Detector Module**: `lib/adapters/gemini/version-detector.js` - Gemini CLI version detection with 3-strategy fallback (env var, npm, CLI), feature flags, caching
+- **Policy Migrator Module**: `lib/adapters/gemini/policy-migrator.js` - Converts bkit.config.json permissions to Gemini CLI v0.30.0 Policy Engine TOML format
+- **Forward Alias Layer**: `FORWARD_ALIASES` in tool-registry.js for future tool name changes (`replace`->`edit_file`, `glob`->`find_files`, etc.)
+- **Compatibility Config**: `bkit.config.json` new `compatibility` section with version tracking and Policy Engine settings
+
+### Changed
+
+- **16 Agents Model Update**: `gemini-2.5-pro` -> `gemini-3-pro` (9 agents), `gemini-2.5-flash` -> `gemini-3-flash` (7 agents)
+- **16 Agents Temperature Optimization**: Adjusted for Gemini 3 recommended ranges (minimum +0.1 from previous values to prevent looping)
+- **gemini-extension.json**: Removed deprecated `excludeTools` field (v0.30.0 Policy Engine migration)
+- **GeminiAdapter Version**: `1.0.0` -> `1.5.4` with `getCliVersion()` and `getFeatureFlags()` methods
+- **Permission Manager**: Added Policy Engine fallback - defers to native TOML policies when `.gemini/policies/*.toml` detected
+- **Minimum Gemini CLI Version**: v0.29.0 (unchanged, forward-compatible with v0.30.0)
+
+### Documentation
+
+- **tool-reference.md**: Added Forward Aliases table for future tool naming compatibility
+- **README.md**: Updated version badges and compatibility section for v1.5.4
+
 ## [1.5.3] - 2026-02-19
 
 ### Added
@@ -161,6 +184,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[1.5.4]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.3...v1.5.4
 [1.5.3]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.2...v1.5.3
 [1.5.2]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.1...v1.5.2
 [1.5.1]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.0...v1.5.1

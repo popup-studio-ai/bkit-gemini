@@ -17,13 +17,13 @@ description: |
   Do NOT use for: ongoing implementation work, initial planning, or technical analysis
   (use gap-detector or code-analyzer instead).
 
-model: gemini-2.5-flash
+model: gemini-3-flash
 tools:
   - read_file
   - read_many_files
   - write_file
   - glob
-temperature: 0.5
+temperature: 0.6
 max_turns: 10
 timeout_mins: 10
 ---

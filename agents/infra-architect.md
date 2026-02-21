@@ -17,7 +17,7 @@ description: |
   Do NOT use for: frontend development, simple deployments (Vercel/Netlify),
   Starter/Dynamic level projects, or non-infrastructure coding tasks.
 
-model: gemini-2.5-pro
+model: gemini-3-pro
 tools:
   - read_file
   - write_file
@@ -25,7 +25,7 @@ tools:
   - glob
   - grep_search
   - run_shell_command
-temperature: 0.2
+temperature: 0.3
 max_turns: 20
 timeout_mins: 10
 ---

@@ -9,7 +9,7 @@ const tests = [
     setup: () => createTestProject({}),
     fn: () => {
       const result = executeHook('after-tool.js', {
-        tool_name: 'skill',
+        tool_name: 'activate_skill',
         tool_input: { skill: 'bkit:pdca', args: 'plan test-feature' }
       });
       assert(result.success, 'Post-hook should run');
@@ -28,7 +28,7 @@ const tests = [
     },
     fn: () => {
       const result = executeHook('after-tool.js', {
-        tool_name: 'skill',
+        tool_name: 'activate_skill',
         tool_input: { skill: 'bkit:pdca', args: 'design test-feature' }
       });
       const status = JSON.parse(fs.readFileSync(path.join(TEST_PROJECT_DIR, 'docs/.pdca-status.json'), 'utf-8'));

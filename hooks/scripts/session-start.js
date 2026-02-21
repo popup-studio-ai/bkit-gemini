@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * SessionStart Hook - Enhanced Session Initialization (v1.5.1)
+ * SessionStart Hook - Enhanced Session Initialization (v1.5.4)
  * Dynamic context injection, output style loading, returning user detection,
  * agent triggers injection, PDCA rules injection, feature report template
  */
@@ -45,7 +45,7 @@ function main() {
       context: dynamicContext,
       hookEvent: 'SessionStart',
       metadata: {
-        version: '1.5.1',
+        version: '1.5.4',
         platform: 'gemini',
         level: level,
         primaryFeature: pdcaStatus.primaryFeature,
@@ -64,7 +64,7 @@ function main() {
     // Graceful degradation
     console.log(JSON.stringify({
       status: 'allow',
-      context: 'bkit Vibecoding Kit v1.5.1 activated (Gemini CLI)',
+      context: 'bkit Vibecoding Kit v1.5.4 activated (Gemini CLI)',
       hookEvent: 'SessionStart'
     }));
     process.exit(0);
@@ -219,7 +219,7 @@ function generateDynamicContext(pdcaStatus, level, memory, returningInfo, output
   const sections = [];
 
   // Header
-  sections.push('# bkit Vibecoding Kit v1.5.1 - Session Start');
+  sections.push('# bkit Vibecoding Kit v1.5.4 - Session Start');
   sections.push('');
 
   // Core Rules (dynamically injected to address GEMINI.md ignore issue #13852)

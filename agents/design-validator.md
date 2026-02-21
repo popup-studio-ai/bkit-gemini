@@ -17,14 +17,14 @@ description: |
   Do NOT use for: implementation code review, gap analysis (use gap-detector instead),
   or initial planning phase.
 
-model: gemini-2.5-pro
+model: gemini-3-pro
 tools:
   - read_file
   - read_many_files
   - grep_search
   - glob
   - list_directory
-temperature: 0.1
+temperature: 0.2
 max_turns: 15
 timeout_mins: 10
 ---

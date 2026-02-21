@@ -18,13 +18,13 @@ description: |
   Do NOT use for: ongoing implementation work, existing feature modifications, bug fixes,
   or when experienced developers want to proceed freely.
 
-model: gemini-2.5-flash
+model: gemini-3-flash
 tools:
   - read_file
   - glob
   - grep_search
   - write_file
-temperature: 0.3
+temperature: 0.4
 max_turns: 15
 timeout_mins: 10
 ---

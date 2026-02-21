@@ -21,7 +21,7 @@ description: |
   Do NOT use for: simple bug fixes, single-file edits, routine CRUD operations,
   or tasks that a single specialized agent can handle independently.
 
-model: gemini-2.5-pro
+model: gemini-3-pro
 tools:
   - read_file
   - read_many_files
@@ -33,7 +33,7 @@ tools:
   - run_shell_command
   - google_web_search
   - web_fetch
-temperature: 0.3
+temperature: 0.4
 max_turns: 30
 timeout_mins: 15
 ---

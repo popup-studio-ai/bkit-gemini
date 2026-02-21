@@ -21,3 +21,19 @@ bkit uses Gemini CLI native tool names (v0.29.0+ verified):
 | `get_internal_docs` | Get extension docs | Internal reference |
 | `enter_plan_mode` | Enter planning mode | Structured planning (v0.29.0+) |
 | `exit_plan_mode` | Exit planning mode | Plan completion (v0.29.0+) |
+
+## Tool Alias Reference (v1.5.4)
+
+### Forward Aliases (Future Compatibility)
+
+These aliases are pre-mapped for potential future Gemini CLI tool renames:
+
+| Current Name (v0.29.0) | Potential Future Name | Status |
+|------------------------|----------------------|--------|
+| `replace` | `edit_file` | Proposed (Issue #1391) |
+| `glob` | `find_files` | Proposed (Issue #1391) |
+| `grep_search` | `find_in_file` | Proposed (Issue #1391) |
+| `google_web_search` | `web_search` | Proposed (Issue #1391) |
+| `read_many_files` | `read_files` | Proposed (Issue #1391) |
+
+bkit-gemini resolves both current and future names automatically via `tool-registry.js`.
