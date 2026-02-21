@@ -1,28 +1,13 @@
 {
-  "sessionCount": 76,
+  "sessionCount": 78,
   "platform": "gemini",
   "level": "Starter",
-  "lastSessionStarted": "2026-02-14T17:40:38.819Z",
+  "lastSessionStarted": "2026-02-19T02:01:24.777Z",
   "outputStyle": null,
-  "lastSessionEnded": "2026-02-15T06:52:07.085Z",
+  "lastSessionEnded": "2026-02-19T02:43:23.849Z",
   "lastSession": {
-    "startedAt": "2026-02-19T01:03:53.716Z",
+    "startedAt": "2026-02-20T20:36:12.729Z",
     "platform": "claude",
     "level": "Starter"
-  },
-  "currentFeature": "gemini-cli-029-compatibility-fix",
-  "pdca": {
-    "feature": "gemini-cli-029-compatibility-fix",
-    "phase": "completed",
-    "status": "completed",
-    "matchRate": 100,
-    "planDocument": "docs/01-plan/features/gemini-cli-029-compatibility-fix.plan.md",
-    "reportDocument": "docs/04-report/features/gemini-cli-029-compatibility-fix.report.md",
-    "relatedReport": "docs/04-report/gemini-cli-029-030-upgrade-impact-analysis.report.md",
-    "relatedIssue": "https://github.com/popup-studio-ai/bkit-gemini/issues/5",
-    "relatedPR": "https://github.com/popup-studio-ai/bkit-gemini/pull/6",
-    "relatedRelease": "https://github.com/popup-studio-ai/bkit-gemini/releases/tag/v1.5.3",
-    "version": "v1.5.3",
-    "updatedAt": "2026-02-19"
   }
 }
