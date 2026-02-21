@@ -6,14 +6,16 @@
     "bkend-docs-sync",
     "bkit-gemini-conversion"
   ],
-  "primaryFeature": "gemini-cli-version-upgrade-impact",
+  "primaryFeature": "gemini-cli-v160-migration",
   "features": {
-    "gemini-cli-version-upgrade-impact": {
-      "phase": "analyze",
+    "gemini-cli-v160-migration": {
+      "phase": "design",
       "matchRate": null,
       "iterationCount": 0,
       "createdAt": "2026-02-21T10:00:00.000Z",
-      "updatedAt": "2026-02-21T12:00:00.000Z",
+      "updatedAt": "2026-02-21T13:00:00.000Z",
+      "planDoc": "docs/01-plan/features/gemini-cli-v160-migration.plan.md",
+      "designDoc": "docs/02-design/features/gemini-cli-v160-migration.design.md",
       "analysisDoc": "docs/03-analysis/gemini-cli-version-upgrade-impact-analysis.analysis.md"
     },
     "bkit-150-gemini-028-compatibility-test": {
