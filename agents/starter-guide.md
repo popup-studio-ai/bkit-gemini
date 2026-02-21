@@ -18,7 +18,7 @@ description: |
   Do NOT use for: experienced developers, enterprise-level projects, backend development,
   microservices architecture, or complex fullstack applications.
 
-model: gemini-2.5-flash
+model: gemini-3-flash
 tools:
   - read_file
   - write_file
@@ -26,7 +26,7 @@ tools:
   - glob
   - grep_search
   - google_web_search
-temperature: 0.7
+temperature: 0.8
 max_turns: 20
 timeout_mins: 10
 ---

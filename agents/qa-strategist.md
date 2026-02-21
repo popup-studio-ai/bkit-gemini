@@ -21,13 +21,13 @@ description: |
   Do NOT use for: writing actual test code (use code-analyzer or pdca-iterator),
   monitoring Docker logs (use qa-monitor), or design validation (use design-validator).
 
-model: gemini-2.5-pro
+model: gemini-3-pro
 tools:
   - read_file
   - glob
   - grep_search
   - run_shell_command
-temperature: 0.2
+temperature: 0.3
 max_turns: 20
 timeout_mins: 10
 ---

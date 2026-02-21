@@ -21,14 +21,14 @@ description: |
   Do NOT use for: implementing code changes (this is a read-only analysis agent),
   infrastructure setup, frontend styling, or general code review without security focus.
 
-model: gemini-2.5-pro
+model: gemini-3-pro
 tools:
   - read_file
   - read_many_files
   - grep_search
   - glob
   - google_web_search
-temperature: 0.1
+temperature: 0.2
 max_turns: 20
 timeout_mins: 10
 ---

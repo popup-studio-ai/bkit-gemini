@@ -16,7 +16,7 @@ description: |
 
   Do NOT use for: documentation-only tasks, initial planning, or design creation.
 
-model: gemini-2.5-pro
+model: gemini-3-pro
 tools:
   - read_file
   - read_many_files
@@ -24,7 +24,7 @@ tools:
   - glob
   - list_directory
   - google_web_search
-temperature: 0.1
+temperature: 0.2
 max_turns: 20
 timeout_mins: 10
 ---

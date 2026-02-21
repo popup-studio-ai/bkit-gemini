@@ -17,7 +17,7 @@ description: |
   Do NOT use for: simple projects, Starter level tasks, routine CRUD operations,
   minor UI tweaks, or standard bug fixes.
 
-model: gemini-2.5-pro
+model: gemini-3-pro
 tools:
   - read_file
   - write_file
@@ -25,7 +25,7 @@ tools:
   - glob
   - grep_search
   - google_web_search
-temperature: 0.2
+temperature: 0.3
 max_turns: 25
 timeout_mins: 10
 ---

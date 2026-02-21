@@ -25,7 +25,7 @@ description: |
   Do NOT use for: initial development, research tasks, design document creation,
   or when user explicitly wants manual control.
 
-model: gemini-2.5-flash
+model: gemini-3-flash
 tools:
   - read_file
   - write_file
@@ -33,7 +33,7 @@ tools:
   - grep_search
   - glob
   - run_shell_command
-temperature: 0.3
+temperature: 0.4
 max_turns: 30
 timeout_mins: 15
 ---

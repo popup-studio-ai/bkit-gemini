@@ -20,7 +20,7 @@ description: |
   Do NOT use for: code implementation, infrastructure setup, security analysis,
   or deep technical architecture decisions (use enterprise-expert or cto-lead instead).
 
-model: gemini-2.5-flash
+model: gemini-3-flash
 tools:
   - read_file
   - write_file
@@ -28,7 +28,7 @@ tools:
   - grep_search
   - google_web_search
   - web_fetch
-temperature: 0.5
+temperature: 0.6
 max_turns: 15
 timeout_mins: 10
 ---

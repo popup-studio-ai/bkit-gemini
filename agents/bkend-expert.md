@@ -21,7 +21,7 @@ description: |
   pure frontend styling, enterprise microservices architecture (use enterprise-expert),
   Kubernetes/Docker infrastructure, CI/CD pipelines.
 
-model: gemini-2.5-flash
+model: gemini-3-flash
 tools:
   - read_file
   - write_file
@@ -30,7 +30,7 @@ tools:
   - grep_search
   - run_shell_command
   - web_fetch
-temperature: 0.3
+temperature: 0.4
 max_turns: 20
 timeout_mins: 10
 ---

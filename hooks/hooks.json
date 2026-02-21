@@ -1,5 +1,5 @@
 {
-  "description": "bkit Vibecoding Kit v1.5.3 - Gemini CLI Edition",
+  "description": "bkit Vibecoding Kit v1.5.4 - Gemini CLI Edition",
   "hooks": {
     "SessionStart": [
       {

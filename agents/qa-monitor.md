@@ -17,14 +17,14 @@ description: |
   Do NOT use for: unit testing with test scripts, frontend-only testing without Docker,
   or design document validation.
 
-model: gemini-2.5-flash
+model: gemini-3-flash
 tools:
   - run_shell_command
   - read_file
   - write_file
   - grep_search
   - glob
-temperature: 0.2
+temperature: 0.3
 max_turns: 15
 timeout_mins: 10
 ---
