@@ -15,8 +15,8 @@ function main() {
 
     // Read input
     const input = adapter.readHookInput();
-    const toolName = input.tool_name || '';
-    const toolInput = input.tool_input || {};
+    const toolName = input.tool_name || input.toolName || '';
+    const toolInput = input.tool_input || input.toolInput || {};
 
     // Map tool name
     const claudeToolName = adapter.reverseMapToolName(toolName);
@@ -36,7 +36,7 @@ function main() {
 }
 
 function handlePostWrite(adapter, toolInput) {
-  const filePath = toolInput.file_path || toolInput.path || '';
+  const filePath = toolInput.file_path || toolInput.path || toolInput.filePath || '';
   const projectDir = adapter.getProjectDir();
 
   // Update PDCA status if writing source code

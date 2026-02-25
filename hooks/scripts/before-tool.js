@@ -156,7 +156,15 @@ function handleBash(toolInput) {
     /dd\s+if=.*of=\/dev/,
     />\s*\/dev\/sd[a-z]/,
     /curl.*\|\s*(?:bash|sh)/,
-    /wget.*\|\s*(?:bash|sh)/
+    /wget.*\|\s*(?:bash|sh)/,
+    // Reverse shell patterns (v1.5.5)
+    /\b(bash|sh|nc|ncat)\s+-[ie]\s+/i,
+    // Policy file tampering (v1.5.5)
+    /\.gemini\/policies\//,
+    // Remote code execution via pipes (v1.5.5)
+    /(curl|wget)\s+.*\|\s*(bash|sh|python|node)/i,
+    // Sensitive file patterns (v1.5.5)
+    /\.(pem|key|cert|p12|pfx|jks)\s*$/i
   ];
 
   for (const pattern of blockPatterns) {

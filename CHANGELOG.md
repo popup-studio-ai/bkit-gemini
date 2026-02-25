@@ -5,6 +5,39 @@ All notable changes to bkit-gemini will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.5] - 2026-02-25
+
+### Added
+
+- **Policy TOML Auto-Generation**: `session-start.js` now triggers `policy-migrator.js` when Gemini CLI >= v0.30.0 detected, creating `.gemini/policies/bkit-permissions.toml` automatically
+- **SemVer Validation**: `version-detector.js` validates `GEMINI_CLI_VERSION` env var format and rejects implausible values (>= 2.0.0) to prevent feature flag injection
+- **TOML Structural Validation**: `policy-migrator.js` validates generated TOML before writing (rule count vs decision count match)
+- **TOML String Escaping**: `escapeTomlString()` prevents TOML injection via backslash, quote, and newline characters
+- **Version-Aware Approval Flag**: `spawn-agent-server.js` uses `--approval-mode=yolo` for v0.30.0+ and `--yolo` for older versions
+- **Team Name Sanitization**: Path traversal prevention in `team_create` - only alphanumeric, hyphens, underscores allowed
+- **Enhanced Dangerous Patterns**: `before-tool.js` blocks reverse shells, policy file tampering, remote code execution via pipes, sensitive file access
+- **Feature Flags**: `hasGemini31Pro` (v0.29.7+), `hasApprovalMode` (v0.30.0+)
+
+### Changed
+
+- **Agent Model Upgrades**: `cto-lead` and `gap-detector` upgraded to `gemini-3.1-pro` (ARC-AGI-2 77.1%)
+- **Agent Cost Optimization**: `report-generator` and `qa-monitor` switched to `gemini-3-flash-lite` (60% cost reduction)
+- **AfterTool Resilience**: Defensive field access supports both `tool_name`/`toolName` and `tool_input`/`toolInput` variants
+- **Tested Versions**: Added `0.29.7` and `0.30.0` to `bkit.config.json` testedVersions
+- **Policy Migrator Version Guard**: `generatePolicyFile()` checks `hasPolicyEngine` flag before generation
+
+### Documentation
+
+- **model-selection.md**: Added Gemini 3.1 Pro + customtools variant documentation, updated all model recommendations
+- **PDCA Analysis**: `gemini-cli-030-upgrade-impact-analysis.analysis.md` - comprehensive v0.30.0 impact analysis (82/100 score)
+
+### Security
+
+- **CRITICAL**: Fixed unconditional `--yolo` flag in sub-agent spawning (bypassed all safety prompts)
+- **HIGH**: Fixed `team_name` path traversal vulnerability in `team_create` handler
+- **HIGH**: Added SemVer format validation to block env var injection (`GEMINI_CLI_VERSION=99.99.99`)
+- **MEDIUM**: Added TOML string escaping to prevent policy injection
+
 ## [1.5.4] - 2026-02-21
 
 ### Added

@@ -1,7 +1,7 @@
 # Model Selection Guide
 
-> **Version**: 1.5.0
-> **Updated**: 2026-02-01
+> **Version**: 1.5.5
+> **Updated**: 2026-02-25
 > **Author**: POPUP STUDIO
 
 This guide provides recommendations for selecting the optimal Gemini model for different bkit agents and workflows.
@@ -12,17 +12,18 @@ This guide provides recommendations for selecting the optimal Gemini model for d
 
 | Agent | Recommended Model | Complexity | Reason |
 |-------|-------------------|------------|--------|
-| gap-detector | Gemini 2.5 Pro / Gemini 3 Pro | High | Complex analysis requiring deep reasoning, design-implementation comparison |
-| design-validator | Gemini 2.5 Pro | High | Document analysis and validation, requires understanding of specifications |
-| pdca-iterator | Gemini Flash | Medium | Fast iteration cycles, code modifications based on clear patterns |
-| code-analyzer | Gemini 2.5 Pro | High | Security analysis, architecture compliance, quality assessment |
-| report-generator | Gemini Flash Lite | Low | Template-based generation, straightforward content creation |
-| qa-monitor | Gemini Flash Lite | Low | Log parsing and pattern detection, structured output |
-| starter-guide | Gemini Flash | Medium | Quick, friendly responses, simple explanations |
-| pipeline-guide | Gemini Flash | Medium | Guidance and suggestions, workflow assistance |
-| bkend-expert | Gemini Flash | Medium | BaaS integration patterns, API usage guidance |
-| enterprise-expert | Gemini 2.5 Pro | High | Complex architecture decisions, strategic planning |
-| infra-architect | Gemini 2.5 Pro | High | Infrastructure design, Kubernetes/Terraform expertise |
+| cto-lead | **Gemini 3.1 Pro** (customtools) | Very High | CTO-level orchestration, multi-agent coordination, complex reasoning |
+| gap-detector | **Gemini 3.1 Pro** | High | Complex analysis requiring deep reasoning, design-implementation comparison |
+| design-validator | Gemini 3 Pro | High | Document analysis and validation, requires understanding of specifications |
+| pdca-iterator | Gemini 3 Flash | Medium | Fast iteration cycles, code modifications based on clear patterns |
+| code-analyzer | Gemini 3 Pro | High | Security analysis, architecture compliance, quality assessment |
+| report-generator | **Gemini 3 Flash Lite** | Low | Template-based generation, straightforward content creation (60% cost reduction) |
+| qa-monitor | **Gemini 3 Flash Lite** | Low | Log parsing and pattern detection, structured output (60% cost reduction) |
+| starter-guide | Gemini 3 Flash | Medium | Quick, friendly responses, simple explanations |
+| pipeline-guide | Gemini 3 Flash | Medium | Guidance and suggestions, workflow assistance |
+| bkend-expert | Gemini 3 Flash | Medium | BaaS integration patterns, API usage guidance |
+| enterprise-expert | Gemini 3 Pro | High | Complex architecture decisions, strategic planning |
+| infra-architect | Gemini 3 Pro | High | Infrastructure design, Kubernetes/Terraform expertise |
 
 ---
 
@@ -30,10 +31,25 @@ This guide provides recommendations for selecting the optimal Gemini model for d
 
 | Model | Speed | Cost | Best For |
 |-------|:-----:|:----:|----------|
-| Gemini 3 Pro | ★☆☆ | ★★★ | Most complex reasoning, multi-step analysis, architecture decisions |
-| Gemini 2.5 Pro | ★★☆ | ★★☆ | Balanced performance, code analysis, design validation |
-| Gemini Flash | ★★★ | ★☆☆ | Fast responses, iteration, general guidance |
-| Gemini Flash Lite | ★★★ | ★☆☆ | Simple tasks, template generation, log parsing |
+| **Gemini 3.1 Pro** | ★☆☆ | ★★★ | Most complex reasoning, tool-heavy agents (ARC-AGI-2: 77.1%) |
+| Gemini 3.1 Pro (customtools) | ★☆☆ | ★★★ | MCP tool-based orchestration, prioritizes registered tools over bash |
+| Gemini 3 Pro | ★★☆ | ★★☆ | Balanced performance, code analysis, design validation |
+| Gemini 3 Flash | ★★★ | ★☆☆ | Fast responses, iteration, general guidance |
+| Gemini 3 Flash Lite | ★★★ | ★☆☆ | Simple tasks, template generation, log parsing (60% cheaper than Flash) |
+
+### Gemini 3.1 Pro (NEW - 2026-02-19)
+
+| Attribute | Value |
+|-----------|-------|
+| Model ID | `gemini-3.1-pro-preview` |
+| Customtools Variant | `gemini-3.1-pro-preview-customtools` |
+| Context Window | 1,000,000 tokens |
+| ARC-AGI-2 Score | 77.1% |
+| Best For | Complex reasoning, tool-heavy agents (cto-lead, gap-detector) |
+| Cost | Input: $2.00/1M, Output: $12.00/1M |
+
+The `customtools` variant prioritizes registered MCP tools over bash commands,
+making it ideal for bkit's tool-based agent orchestration.
 
 ---
 
@@ -98,12 +114,13 @@ This is recommended for most cases as it balances cost and performance.
 
 | PDCA Phase | Recommended Model | Agents Involved |
 |------------|-------------------|-----------------|
-| Plan | Gemini Flash | pipeline-guide, starter-guide |
-| Design | Gemini 2.5 Pro | design-validator |
-| Do | Gemini Flash | pdca-iterator, bkend-expert |
-| Check | Gemini 2.5 Pro | gap-detector, code-analyzer, qa-monitor |
-| Act | Gemini Flash | pdca-iterator |
-| Report | Gemini Flash Lite | report-generator |
+| Plan | Gemini 3 Flash | pipeline-guide, starter-guide |
+| Design | Gemini 3 Pro | design-validator |
+| Do | Gemini 3 Flash | pdca-iterator, bkend-expert |
+| Check | **Gemini 3.1 Pro** | gap-detector, code-analyzer, qa-monitor |
+| Act | Gemini 3 Flash | pdca-iterator |
+| Report | **Gemini 3 Flash Lite** | report-generator |
+| Team | **Gemini 3.1 Pro (customtools)** | cto-lead (orchestration) |
 
 ---
 
@@ -190,14 +207,15 @@ metadata:
 
 ```bash
 # Use specific model for entire session
-gemini --model gemini-2.5-pro
+gemini --model gemini-3.1-pro
 
 # Available models:
-# - gemini-3-pro       (Most capable, highest cost)
-# - gemini-2.5-pro     (Balanced)
-# - gemini-flash       (Fast, lower cost)
-# - gemini-flash-lite  (Fastest, lowest cost)
-# - auto               (Let CLI decide)
+# - gemini-3.1-pro                   (Most capable, highest cost - NEW)
+# - gemini-3.1-pro-preview-customtools  (MCP tool-optimized - NEW)
+# - gemini-3-pro                     (Previous generation)
+# - gemini-3-flash                   (Fast, lower cost)
+# - gemini-3-flash-lite              (Fastest, lowest cost)
+# - auto                             (Let CLI decide)
 ```
 
 ### Environment Variable
@@ -238,4 +256,5 @@ If API costs are too high:
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.1 | 2026-02-25 | Added Gemini 3.1 Pro + customtools variant, updated agent recommendations, cost optimization with Flash Lite |
 | 1.0 | 2026-02-01 | Initial guide |

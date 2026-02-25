@@ -17,7 +17,7 @@ description: |
   Do NOT use for: unit testing with test scripts, frontend-only testing without Docker,
   or design document validation.
 
-model: gemini-3-flash
+model: gemini-3-flash-lite
 tools:
   - run_shell_command
   - read_file

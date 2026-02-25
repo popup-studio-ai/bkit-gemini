@@ -17,7 +17,7 @@ description: |
   Do NOT use for: ongoing implementation work, initial planning, or technical analysis
   (use gap-detector or code-analyzer instead).
 
-model: gemini-3-flash
+model: gemini-3-flash-lite
 tools:
   - read_file
   - read_many_files

@@ -1,7 +1,7 @@
 #!/bin/bash
 #===============================================================================
 # bkit-gemini Comprehensive Test Runner
-# Version: 1.5.4
+# Version: 1.5.5
 # Purpose: Execute all test cases defined in bkit-gemini-comprehensive-test.design.md
 # Executor: Gemini CLI
 #===============================================================================
@@ -341,11 +341,11 @@ run_extension_config_tests() {
 
     # EXT-02: Version check
     ((TOTAL_TESTS++))
-    echo -e "\n${YELLOW}Testing:${NC} EXT-02 - Version is 1.5.4"
-    if grep -q '"version": "1.5.4"' "$BKIT_DIR/gemini-extension.json"; then
-        log_pass "EXT-02: Version is 1.5.4"
+    echo -e "\n${YELLOW}Testing:${NC} EXT-02 - Version is 1.5.5"
+    if grep -q '"version": "1.5.5"' "$BKIT_DIR/gemini-extension.json"; then
+        log_pass "EXT-02: Version is 1.5.5"
     else
-        log_fail "EXT-02: Version is not 1.5.4"
+        log_fail "EXT-02: Version is not 1.5.5"
     fi
 
     # EXT-03: contextFileName is GEMINI.md
@@ -558,7 +558,7 @@ print_summary() {
 main() {
     echo ""
     echo -e "${BLUE}╔══════════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BLUE}║     bkit-gemini Comprehensive Test Suite v1.5.4                  ║${NC}"
+    echo -e "${BLUE}║     bkit-gemini Comprehensive Test Suite v1.5.5                  ║${NC}"
     echo -e "${BLUE}║     Testing: Commands TOML, Skills, Agents, Hooks, Library       ║${NC}"
     echo -e "${BLUE}╚══════════════════════════════════════════════════════════════════╝${NC}"
     echo ""
