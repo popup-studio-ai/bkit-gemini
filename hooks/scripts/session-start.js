@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * SessionStart Hook - Enhanced Session Initialization (v1.5.4)
+ * SessionStart Hook - Enhanced Session Initialization (v1.5.5)
  * Dynamic context injection, output style loading, returning user detection,
  * agent triggers injection, PDCA rules injection, feature report template
  */
@@ -27,6 +27,21 @@ function main() {
     // 3. Save updated PDCA status
     savePdcaStatus(projectDir, pdcaStatus);
 
+    // 3.5. Auto-generate Policy Engine TOML (v0.30.0+)
+    try {
+      const vd = require(path.join(libPath, 'adapters', 'gemini', 'version-detector'));
+      const flags = vd.getFeatureFlags();
+      if (flags.hasPolicyEngine) {
+        const pm = require(path.join(libPath, 'adapters', 'gemini', 'policy-migrator'));
+        const result = pm.generatePolicyFile(projectDir, pluginRoot);
+        if (result && result.created) {
+          // Policy TOML auto-generated successfully
+        }
+      }
+    } catch (e) {
+      // Policy TOML generation skipped - non-fatal
+    }
+
     // 4. Load/Update memory store
     const memory = loadMemoryStore(projectDir, level);
 
@@ -45,7 +60,7 @@ function main() {
       context: dynamicContext,
       hookEvent: 'SessionStart',
       metadata: {
-        version: '1.5.4',
+        version: '1.5.5',
         platform: 'gemini',
         level: level,
         primaryFeature: pdcaStatus.primaryFeature,
@@ -64,7 +79,7 @@ function main() {
     // Graceful degradation
     console.log(JSON.stringify({
       status: 'allow',
-      context: 'bkit Vibecoding Kit v1.5.4 activated (Gemini CLI)',
+      context: 'bkit Vibecoding Kit v1.5.5 activated (Gemini CLI)',
       hookEvent: 'SessionStart'
     }));
     process.exit(0);
@@ -219,7 +234,7 @@ function generateDynamicContext(pdcaStatus, level, memory, returningInfo, output
   const sections = [];
 
   // Header
-  sections.push('# bkit Vibecoding Kit v1.5.4 - Session Start');
+  sections.push('# bkit Vibecoding Kit v1.5.5 - Session Start');
   sections.push('');
 
   // Core Rules (dynamically injected to address GEMINI.md ignore issue #13852)

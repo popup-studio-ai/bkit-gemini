@@ -16,7 +16,7 @@ description: |
 
   Do NOT use for: documentation-only tasks, initial planning, or design creation.
 
-model: gemini-3-pro
+model: gemini-3.1-pro
 tools:
   - read_file
   - read_many_files

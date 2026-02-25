@@ -12,17 +12,17 @@ const tests = [
     }
   },
   {
-    name: 'CFG-02: version is 1.5.4',
+    name: 'CFG-02: version is 1.5.5',
     fn: () => {
       const config = JSON.parse(fs.readFileSync(path.join(PLUGIN_ROOT, 'bkit.config.json'), 'utf-8'));
-      assertEqual(config.version, '1.5.4', 'Version should be 1.5.4');
+      assertEqual(config.version, '1.5.5', 'Version should be 1.5.5');
     }
   },
   {
     name: 'CFG-03: gemini-extension.json no experimental block',
     fn: () => {
       const ext = JSON.parse(fs.readFileSync(path.join(PLUGIN_ROOT, 'gemini-extension.json'), 'utf-8'));
-      assertEqual(ext.version, '1.5.4', 'Extension version should be 1.5.4');
+      assertEqual(ext.version, '1.5.5', 'Extension version should be 1.5.5');
       assert(!ext.experimental, 'experimental block should be removed (Skills/Hooks GA since v0.26.0)');
     }
   },

@@ -21,7 +21,7 @@ description: |
   Do NOT use for: simple bug fixes, single-file edits, routine CRUD operations,
   or tasks that a single specialized agent can handle independently.
 
-model: gemini-3-pro
+model: gemini-3.1-pro
 tools:
   - read_file
   - read_many_files

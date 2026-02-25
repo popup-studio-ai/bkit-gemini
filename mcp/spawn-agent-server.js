@@ -569,7 +569,15 @@ class SpawnAgentServer {
     if (!fs.existsSync(teamDir)) {
       fs.mkdirSync(teamDir, { recursive: true });
     }
-    const teamPath = path.join(teamDir, `${team_name}.json`);
+    const sanitizedName = team_name.replace(/[^a-zA-Z0-9_-]/g, '');
+    if (sanitizedName !== team_name || sanitizedName.length === 0) {
+      return {
+        content: [{ type: 'text', text: JSON.stringify({
+          success: false, error: `Invalid team name: "${team_name}". Use only alphanumeric, hyphens, underscores.`
+        }, null, 2) }]
+      };
+    }
+    const teamPath = path.join(teamDir, `${sanitizedName}.json`);
     fs.writeFileSync(teamPath, JSON.stringify(teamState, null, 2));
 
     return {
@@ -685,10 +693,14 @@ class SpawnAgentServer {
       const startTime = Date.now();
 
       // Build gemini CLI command
-      // Using gemini with extension flag and yolo mode for non-interactive execution
+      // Using gemini with extension flag and approval mode for non-interactive execution
+      const { getFeatureFlags } = require(path.join(__dirname, '..', 'lib', 'adapters', 'gemini', 'version-detector'));
+      const flags = getFeatureFlags();
+      const approvalFlag = flags.hasApprovalMode ? '--approval-mode=yolo' : '--yolo';
+
       const args = [
         '-e', agentPath,
-        '--yolo',
+        approvalFlag,
         task
       ];
 

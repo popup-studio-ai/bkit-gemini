@@ -56,7 +56,13 @@ function executeHook(scriptName, stdinInput = {}, env = {}) {
       timeout: 10000,
       encoding: 'utf-8'
     });
-    return { success: true, output: JSON.parse(result.trim()), raw: result.trim() };
+    const trimmed = result.trim();
+    return { 
+      success: true, 
+      output: trimmed ? JSON.parse(trimmed) : {}, 
+      raw: trimmed,
+      exitCode: 0
+    };
   } catch (error) {
     if (process.env.BKIT_DEBUG === 'true') {
       console.log(`Hook ${scriptName} failed with exit code ${error.status}`);

@@ -1,6 +1,6 @@
 {
   "name": "bkit",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "bkit Vibecoding Kit - PDCA methodology + Context Engineering for AI-native development with Gemini CLI",
   "author": "POPUP STUDIO PTE. LTD.",
   "license": "Apache-2.0",
@@ -8,6 +8,11 @@
   "keywords": ["vibecoding", "pdca", "ai-native", "fullstack", "context-engineering", "agentic", "agents", "workflow"],
 
   "contextFileName": "GEMINI.md",
+
+  "excludeTools": [
+    "run_shell_command(rm -rf*)",
+    "run_shell_command(git push --force*)"
+  ],
 
   "settings": [
     {
