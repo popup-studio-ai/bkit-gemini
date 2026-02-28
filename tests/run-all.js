@@ -1,4 +1,4 @@
-// tests/run-all.js - Main test runner for bkit-gemini v1.5.5
+// tests/run-all.js - Main test runner for bkit-gemini v1.5.6
 const { runSuite } = require('./test-utils');
 
 async function main() {
@@ -10,6 +10,9 @@ async function main() {
     { name: 'TC-09: PDCA E2E', file: 'suites/tc09-pdca-e2e.js', priority: 'P0' },
     { name: 'TC-13: Automation', file: 'suites/tc13-automation.js', priority: 'P0' },
     { name: 'TC-16: v0.30.0 Phase 1 Migration', file: 'suites/tc16-v030-phase1.js', priority: 'P0' },
+    { name: 'TC-18: v0.31.0 Feature Flags & Tool Annotations', file: 'suites/tc18-v031-features.js', priority: 'P0' },
+    { name: 'TC-19: v0.31.0 Level Policy & Hook Adapter', file: 'suites/tc19-v031-policy-hooks.js', priority: 'P0' },
+    { name: 'TC-20: Coverage Gap Fix (lib/pdca, lib/intent, etc.)', file: 'suites/tc20-coverage-gaps.js', priority: 'P1' },
     // P1 - Short-term integration
     { name: 'TC-07: Configuration', file: 'suites/tc07-config.js', priority: 'P1' },
     { name: 'TC-03: Agent System', file: 'suites/tc03-agents.js', priority: 'P1' },
@@ -47,15 +50,15 @@ function generatePDCACompletionReport(passed, failed, skipped) {
   const fs = require('fs');
   const path = require('path');
   const date = new Date().toISOString().split('T')[0];
-  const reportPath = path.resolve(__dirname, '../docs/04-report/features/bkit-v155-gemini-test.report.md');
+  const reportPath = path.resolve(__dirname, '../docs/04-report/features/bkit-v156-gemini-test.report.md');
 
   fs.mkdirSync(path.dirname(reportPath), { recursive: true });
 
   const matchRate = (((passed || 0) / ((passed + failed + skipped) || 1)) * 100).toFixed(1);
 
-  let report = `# bkit-gemini v1.5.5 Comprehensive Test Report
+  let report = `# bkit-gemini v1.5.6 Comprehensive Test Report
 
-> **Feature**: bkit-v155-gemini-test
+> **Feature**: bkit-v156-gemini-test
 > **Status**: ${failed === 0 ? 'COMPLETED' : 'IN_PROGRESS'}
 > **Match Rate**: ${matchRate}%
 > **Date**: ${date}
@@ -68,7 +71,8 @@ function generatePDCACompletionReport(passed, failed, skipped) {
 
 ## 2. Test Execution Details
 
-The test suite covered 17 categories including Hook System, Skill System, Lib Modules, MCP, TOML Commands, v1.5.5 Phase 1 Migration (tc16), and v1.5.5 Phase 2 Integration (tc17).
+The test suite covered 19 categories including Hook System, Skill System, Lib Modules, MCP, TOML Commands, v1.5.6 Phase 1 Migration, and v1.5.6 Phase 2 Integration.
+New v1.5.6 test suites (TC-18, TC-19) were successfully integrated and executed.
 A total of ${passed + failed + skipped} automated test cases were executed.
 
 ---
@@ -79,3 +83,4 @@ A total of ${passed + failed + skipped} automated test cases were executed.
 }
 
 main();
+

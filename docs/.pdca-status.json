@@ -1,7 +1,9 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-02-25T12:00:00.000Z",
+  "lastUpdated": "2026-02-28T13:30:00.000Z",
   "activeFeatures": [
+    "bkit-v156-gemini-test",
+    "gemini-cli-031-migration",
     "bkit-v155-gemini-test",
     "gemini-cli-030-migration",
     "gemini-cli-030-upgrade-impact-analysis",
@@ -10,8 +12,36 @@
     "bkend-docs-sync",
     "bkit-gemini-conversion"
   ],
-  "primaryFeature": "bkit-v155-gemini-test",
+  "primaryFeature": "bkit-v156-gemini-test",
   "features": {
+    "bkit-v156-gemini-test": {
+      "phase": "completed",
+      "matchRate": 100,
+      "iterationCount": 1,
+      "createdAt": "2026-02-28T13:00:00.000Z",
+      "updatedAt": "2026-02-28T14:30:00.000Z",
+      "completedAt": "2026-02-28T14:30:00.000Z",
+      "planDoc": "docs/01-plan/features/bkit-v156-gemini-test.plan.md",
+      "designDoc": "docs/02-design/features/bkit-v156-gemini-test.design.md",
+      "reportDoc": "docs/04-report/features/bkit-v156-gemini-test.report.md",
+      "targetVersion": "v1.5.6",
+      "testScope": "Unit(84) + E2E(~145) + UX(18) = ~247 test cases",
+      "team": "CTO Lead & Specialized Agent Team (6 agents)"
+    },
+    "gemini-cli-031-migration": {
+      "phase": "completed",
+      "matchRate": 100,
+      "iterationCount": 1,
+      "createdAt": "2026-02-28T10:00:00.000Z",
+      "updatedAt": "2026-02-28T12:00:00.000Z",
+      "completedAt": "2026-02-28T12:00:00.000Z",
+      "planDoc": "docs/01-plan/features/gemini-cli-031-migration.plan.md",
+      "designDoc": "docs/02-design/features/gemini-cli-031-migration.design.md",
+      "reportDoc": "docs/04-report/features/gemini-cli-031-migration.report.md",
+      "analysisSource": "docs/04-report/gemini-cli-031-upgrade-comprehensive-analysis.report.md",
+      "targetVersion": "v1.5.6",
+      "strategy": "B - Foundation Patch"
+    },
     "bkit-v154-gemini-test": {
       "phase": "completed",
       "matchRate": 100,
@@ -152,8 +182,8 @@
     ]
   },
   "session": {
-    "startedAt": "2026-02-25T08:56:43.316Z",
+    "startedAt": "2026-02-28T12:05:07.410Z",
     "onboardingCompleted": true,
-    "lastActivity": "2026-02-25T08:56:43.316Z"
+    "lastActivity": "2026-02-28T12:05:07.410Z"
   }
 }

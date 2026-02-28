@@ -1,0 +1,53 @@
+# bkit-gemini v1.5.6 - Auto-generated Policy File
+# Source: bkit.config.json permissions
+# Generated: 2026-02-28
+
+# --- Deny Rules (highest priority) ---
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "rm -rf"
+decision = "deny"
+priority = 100
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "git push --force"
+decision = "deny"
+priority = 100
+
+# --- Ask Rules ---
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "rm -r"
+decision = "ask_user"
+priority = 50
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "git reset --hard"
+decision = "ask_user"
+priority = 50
+
+# --- Allow Rules ---
+
+[[rule]]
+toolName = "write_file"
+decision = "allow"
+priority = 10
+
+[[rule]]
+toolName = "replace"
+decision = "allow"
+priority = 10
+
+[[rule]]
+toolName = "read_file"
+decision = "allow"
+priority = 10
+
+[[rule]]
+toolName = "run_shell_command"
+decision = "allow"
+priority = 10
