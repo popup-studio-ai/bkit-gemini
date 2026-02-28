@@ -1,17 +1,10 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-02-28T13:30:00.000Z",
+  "lastUpdated": "2026-02-28T16:00:00.000Z",
   "activeFeatures": [
     "bkit-v156-doc-sync",
     "bkit-v156-gemini-test",
-    "gemini-cli-031-migration",
-    "bkit-v155-gemini-test",
-    "gemini-cli-030-migration",
-    "gemini-cli-030-upgrade-impact-analysis",
-    "bkit-v154-gemini-test",
-    "bkit-gemini-v152-full-test",
-    "bkend-docs-sync",
-    "bkit-gemini-conversion"
+    "gemini-cli-031-migration"
   ],
   "primaryFeature": "bkit-v156-doc-sync",
   "features": {
@@ -57,129 +50,61 @@
       "targetVersion": "v1.5.6",
       "strategy": "B - Foundation Patch"
     },
-    "bkit-v154-gemini-test": {
-      "phase": "completed",
-      "matchRate": 100,
-      "iterationCount": 1,
-      "createdAt": "2026-02-21T20:00:00.000Z",
-      "updatedAt": "2026-02-21T04:00:38Z",
-      "planDoc": "docs/01-plan/features/bkit-v154-gemini-test.plan.md",
-      "designDoc": "docs/02-design/features/bkit-v154-gemini-test.design.md",
-      "completedAt": "2026-02-21T04:00:38Z",
-      "team": "CTO Lead & Specialized QA Agent Team (6 agents)"
-    },
-    "gemini-cli-v160-migration": {
-      "phase": "completed",
-      "matchRate": 100,
-      "iterationCount": 1,
-      "createdAt": "2026-02-21T10:00:00.000Z",
-      "updatedAt": "2026-02-21T18:00:00.000Z",
-      "completedAt": "2026-02-21T18:00:00.000Z",
-      "planDoc": "docs/01-plan/features/gemini-cli-v160-migration.plan.md",
-      "designDoc": "docs/02-design/features/gemini-cli-v160-migration.design.md",
-      "analysisDoc": "docs/03-analysis/gemini-cli-v160-migration.analysis.md",
-      "team": "v154-migration (6 agents)"
-    },
-    "bkit-150-gemini-028-compatibility-test": {
-      "phase": "completed",
-      "matchRate": 100,
-      "iterationCount": 1,
-      "createdAt": "2026-02-04T01:00:00.000Z",
-      "updatedAt": "2026-02-04T01:50:00.000Z"
-    },
-    "bkit-gemini-enhancement": {
-      "phase": "completed",
-      "matchRate": 100,
-      "iterationCount": 1,
-      "createdAt": "2026-02-11T00:00:00.000Z",
-      "updatedAt": "2026-02-11T18:00:00.000Z"
-    },
-    "bkit-gemini-v151-test": {
-      "phase": "completed",
-      "matchRate": 100,
-      "iterationCount": 1,
-      "createdAt": "2026-02-11T19:00:00.000Z",
-      "updatedAt": "2026-02-11T21:00:00.000Z"
-    },
-    "bkit-gemini-v151-docs-sync": {
+    "bkit-v155-gemini-test": {
       "phase": "archived",
       "matchRate": 100,
       "iterationCount": 1,
-      "createdAt": "2026-02-11T21:30:00.000Z",
-      "updatedAt": "2026-02-12T00:30:00.000Z",
-      "archivedAt": "2026-02-12T00:30:00.000Z",
-      "archivedTo": "docs/archive/2026-02/bkit-gemini-v151-docs-sync/"
-    },
-    "bkend-docs-sync": {
-      "phase": "completed",
-      "matchRate": 100,
-      "iterationCount": 1,
-      "createdAt": "2026-02-14T07:30:00.000Z",
-      "updatedAt": "2026-02-15T00:00:00.000Z",
-      "completedAt": "2026-02-15T00:00:00.000Z",
-      "planDoc": "docs/01-plan/features/bkend-docs-sync.plan.md",
-      "designDoc": "docs/02-design/features/bkend-docs-sync.design.md",
-      "reportDoc": "docs/04-report/features/bkend-docs-sync.report.md",
-      "source": "https://github.com/popup-studio-ai/bkend-docs",
-      "team": "bkend-docs-sync"
-    },
-    "bkit-gemini-v152-full-test": {
-      "phase": "completed",
-      "matchRate": 100,
-      "iterationCount": 1,
-      "createdAt": "2026-02-15T12:00:00.000Z",
-      "updatedAt": "2026-02-15T12:30:00.000Z",
-      "completedAt": "2026-02-15T12:30:00.000Z",
-      "planDoc": "docs/01-plan/features/bkit-gemini-v152-full-test.plan.md",
-      "reportDoc": "docs/04-report/features/bkit-gemini-v152-full-test.report.md",
-      "team": "CTO Lead & QA Team (AI Agents)"
-    },
-    "bkit-gemini-conversion": {
-      "phase": "do",
-      "matchRate": null,
-      "iterationCount": 0,
-      "createdAt": "2026-02-01T12:00:00.000Z",
-      "updatedAt": "2026-02-01T04:46:23.092Z"
-    },
-    "gemini-cli-030-upgrade-impact-analysis": {
-      "phase": "completed",
-      "matchRate": 100,
-      "iterationCount": 0,
-      "createdAt": "2026-02-25T12:00:00.000Z",
-      "updatedAt": "2026-02-25T12:00:00.000Z",
-      "completedAt": "2026-02-25T12:00:00.000Z",
-      "analysisDoc": "docs/03-analysis/gemini-cli-030-upgrade-impact-analysis.analysis.md",
-      "team": "CTO Team (6 specialist agents)"
+      "startedAt": "2026-02-25T18:30:00.000Z",
+      "archivedAt": "2026-02-28T16:00:00.000Z",
+      "archivedTo": "docs/archive/2026-02/bkit-v155-gemini-test/"
     },
     "gemini-cli-030-migration": {
-      "phase": "completed",
+      "phase": "archived",
       "matchRate": 100,
       "iterationCount": 0,
-      "createdAt": "2026-02-25T12:00:00.000Z",
-      "updatedAt": "2026-02-25T18:00:00.000Z",
-      "completedAt": "2026-02-25T18:00:00.000Z",
-      "planDoc": "docs/01-plan/features/gemini-cli-030-migration.plan.md",
-      "designDoc": "docs/02-design/features/gemini-cli-030-migration.design.md",
-      "analysisSource": "docs/03-analysis/gemini-cli-030-upgrade-impact-analysis.analysis.md",
-      "analysisDoc": "docs/03-analysis/features/gemini-cli-030-v155-implementation.analysis.md",
-      "reportDoc": "docs/04-report/features/gemini-cli-030-migration.report.md",
-      "testStrategy": "docs/05-test/gemini-cli-030-migration-test-strategy.md",
-      "team": "CTO Team (17 specialist agents across 3 sessions)",
-      "targetVersion": "v1.5.5",
-      "strategy": "B - Incremental Migration"
+      "startedAt": "2026-02-25T12:00:00.000Z",
+      "archivedAt": "2026-02-28T16:00:00.000Z",
+      "archivedTo": "docs/archive/2026-02/gemini-cli-030-migration/"
     },
-    "bkit-v155-gemini-test": {
-      "phase": "completed",
+    "gemini-cli-030-upgrade-impact-analysis": {
+      "phase": "archived",
+      "matchRate": 100,
+      "iterationCount": 0,
+      "startedAt": "2026-02-25T12:00:00.000Z",
+      "archivedAt": "2026-02-28T16:00:00.000Z",
+      "archivedTo": "docs/archive/2026-02/gemini-cli-030-upgrade-impact-analysis/"
+    },
+    "bkit-v154-gemini-test": {
+      "phase": "archived",
       "matchRate": 100,
       "iterationCount": 1,
-      "createdAt": "2026-02-25T18:30:00.000Z",
-      "updatedAt": "2026-02-25T19:30:00.000Z",
-      "completedAt": "2026-02-25T19:30:00.000Z",
-      "planDoc": "docs/01-plan/features/bkit-v155-gemini-test.plan.md",
-      "reportDoc": "docs/04-report/features/bkit-v155-gemini-test.report.md",
-      "team": "CTO Team",
-      "targetVersion": "v1.5.5",
-      "testScope": "Unit(~65) + E2E(~232) + UX(16) = ~313 test cases"
+      "startedAt": "2026-02-21T20:00:00.000Z",
+      "archivedAt": "2026-02-28T16:00:00.000Z",
+      "archivedTo": "docs/archive/2026-02/bkit-v154-gemini-test/"
+    },
+    "gemini-cli-v160-migration": {
+      "phase": "archived",
+      "matchRate": 100,
+      "iterationCount": 1,
+      "startedAt": "2026-02-21T10:00:00.000Z",
+      "archivedAt": "2026-02-28T16:00:00.000Z",
+      "archivedTo": "docs/archive/2026-02/gemini-cli-v160-migration/"
+    },
+    "bkend-docs-sync": {
+      "phase": "archived",
+      "matchRate": 100,
+      "iterationCount": 1,
+      "startedAt": "2026-02-14T07:30:00.000Z",
+      "archivedAt": "2026-02-28T16:00:00.000Z",
+      "archivedTo": "docs/archive/2026-02/bkend-docs-sync/"
+    },
+    "bkit-gemini-v152-full-test": {
+      "phase": "archived",
+      "matchRate": 100,
+      "iterationCount": 1,
+      "startedAt": "2026-02-15T12:00:00.000Z",
+      "archivedAt": "2026-02-28T16:00:00.000Z",
+      "archivedTo": "docs/archive/2026-02/bkit-gemini-v152-full-test/"
     }
   },
   "pipeline": {
@@ -199,6 +124,6 @@
   "session": {
     "startedAt": "2026-02-28T12:05:07.410Z",
     "onboardingCompleted": true,
-    "lastActivity": "2026-02-28T12:05:07.410Z"
+    "lastActivity": "2026-02-28T16:00:00.000Z"
   }
 }
