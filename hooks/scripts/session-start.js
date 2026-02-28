@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * SessionStart Hook - Enhanced Session Initialization (v1.5.5)
+ * SessionStart Hook - Enhanced Session Initialization (v1.5.6)
  * Dynamic context injection, output style loading, returning user detection,
  * agent triggers injection, PDCA rules injection, feature report template
  */
@@ -34,8 +34,10 @@ function main() {
       if (flags.hasPolicyEngine) {
         const pm = require(path.join(libPath, 'adapters', 'gemini', 'policy-migrator'));
         const result = pm.generatePolicyFile(projectDir, pluginRoot);
-        if (result && result.created) {
-          // Policy TOML auto-generated successfully
+
+        // 3.6. Generate level-specific policy (v0.31.0+)
+        if (flags.hasProjectLevelPolicy) {
+          pm.generateLevelPolicy(level, projectDir);
         }
       }
     } catch (e) {
@@ -60,7 +62,7 @@ function main() {
       context: dynamicContext,
       hookEvent: 'SessionStart',
       metadata: {
-        version: '1.5.5',
+        version: '1.5.6',
         platform: 'gemini',
         level: level,
         primaryFeature: pdcaStatus.primaryFeature,
@@ -68,7 +70,8 @@ function main() {
           pdcaStatus.features[pdcaStatus.primaryFeature]?.phase : null,
         outputStyle: outputStyle?.name || 'default',
         isReturningUser: returningInfo.isReturning,
-        sessionCount: memory.sessionCount || 1
+        sessionCount: memory.sessionCount || 1,
+        geminiCliFeatures: getGeminiCliFeatures()
       }
     };
 
@@ -79,7 +82,7 @@ function main() {
     // Graceful degradation
     console.log(JSON.stringify({
       status: 'allow',
-      context: 'bkit Vibecoding Kit v1.5.5 activated (Gemini CLI)',
+      context: 'bkit Vibecoding Kit v1.5.6 activated (Gemini CLI)',
       hookEvent: 'SessionStart'
     }));
     process.exit(0);
@@ -234,7 +237,7 @@ function generateDynamicContext(pdcaStatus, level, memory, returningInfo, output
   const sections = [];
 
   // Header
-  sections.push('# bkit Vibecoding Kit v1.5.5 - Session Start');
+  sections.push('# bkit Vibecoding Kit v1.5.6 - Session Start');
   sections.push('');
 
   // Core Rules (dynamically injected to address GEMINI.md ignore issue #13852)
@@ -402,6 +405,24 @@ function buildAutoTriggerSection() {
     '| mobile app, React Native, 모바일 앱 | mobile-app | All |',
     ''
   ].join('\n');
+}
+
+// ─── Gemini CLI Feature Detection ────────────────────────────
+
+function getGeminiCliFeatures() {
+  try {
+    const vd = require(path.join(libPath, 'adapters', 'gemini', 'version-detector'));
+    const version = vd.detectVersion();
+    const flags = vd.getFeatureFlags();
+    return {
+      version: version.raw,
+      isPreview: version.isPreview,
+      flagCount: Object.values(flags).filter(Boolean).length,
+      totalFlags: Object.keys(flags).length
+    };
+  } catch (e) {
+    return { version: 'unknown', isPreview: false, flagCount: 0, totalFlags: 0 };
+  }
 }
 
 main();

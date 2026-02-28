@@ -1,8 +1,8 @@
 # bkit - Vibecoding Kit (Gemini CLI Edition)
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-v0.29.0+-blue.svg)](https://github.com/google-gemini/gemini-cli)
-[![Version](https://img.shields.io/badge/Version-1.5.5-green.svg)](CHANGELOG.md)
+[![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-v0.29.0~v0.31.0-blue.svg)](https://github.com/google-gemini/gemini-cli)
+[![Version](https://img.shields.io/badge/Version-1.5.6-green.svg)](CHANGELOG.md)
 [![Author](https://img.shields.io/badge/Author-POPUP%20STUDIO-orange.svg)](https://popupstudio.ai)
 
 > **PDCA methodology + Context Engineering for AI-native development**
@@ -62,7 +62,7 @@ Event 10: SessionEnd           -> Session cleanup, memory persistence
 
 ```
 bkit-gemini/
-|-- gemini-extension.json         # Extension manifest (v1.5.5)
+|-- gemini-extension.json         # Extension manifest (v1.5.6)
 |-- GEMINI.md                     # Global context with 6 @import modules
 |-- bkit.config.json              # Centralized configuration (12 sections)
 |-- CHANGELOG.md                  # Version history
@@ -166,7 +166,10 @@ bkit-gemini/
 |   |   +-- permission.js         # Glob pattern permission engine (381 lines)
 |   +-- adapters/gemini/
 |       |-- index.js              # Platform adapter with TOOL_MAP
-|       |-- tool-registry.js      # Centralized tool name registry (v0.29.0+ verified)
+|       |-- tool-registry.js      # Tool name registry + Annotations (v0.29.0~v0.31.0)
+|       |-- version-detector.js   # 3-strategy CLI version detection + 17 feature flags
+|       |-- policy-migrator.js    # Permission -> TOML Policy + Level Policy (v0.30.0+)
+|       |-- hook-adapter.js       # RuntimeHook function detection (v0.31.0 prep)
 |       |-- context-fork.js       # Snapshot isolation, LRU(10) (477 lines)
 |       +-- import-resolver.js    # @import resolution (118 lines)
 |
@@ -177,6 +180,14 @@ bkit-gemini/
 ---
 
 ## Features
+
+### v1.5.6 Highlights
+
+- **Gemini CLI v0.31.0 Compatibility** -- 9 new feature flags including RuntimeHook functions, Browser Agent, Tool Annotations, and Project-Level Policy
+- **Tool Annotations** -- readOnlyHint, destructiveHint, idempotentHint metadata for all 17 built-in tools enabling trust model and parallel execution optimization
+- **Level-Specific Policy Engine** -- Auto-generated Tier 3 TOML policies per project level (Starter: restrictive, Dynamic: balanced, Enterprise: permissive)
+- **Hook Adapter Module** -- RuntimeHook function detection and SDK migration preparation for v1.6.0
+- **Enhanced Version Detector** -- 17 feature flags organized by CLI version (v0.26.0+, v0.29.0+, v0.30.0+, v0.31.0+)
 
 ### v1.5.5 Highlights
 
@@ -380,7 +391,7 @@ All 16 agents remember context across sessions automatically:
 
 ### Team Mode Foundation
 
-bkit v1.5.5 includes team mode foundation with 3 MCP tools:
+bkit v1.5.6 includes team mode foundation with 3 MCP tools:
 - `team_create` -- Create agent teams with configurable strategies
 - `team_assign` -- Assign tasks to team members
 - `team_status` -- Monitor team progress
@@ -601,7 +612,7 @@ These hooks are non-interactive, performance-optimized, and essential for the Co
 
 | Requirement | Version |
 |-------------|---------|
-| Gemini CLI | v0.29.0+ (forward-compatible with v0.30.0 Policy Engine) |
+| Gemini CLI | v0.29.0+ (forward-compatible with v0.31.0 Policy Engine + Tool Annotations) |
 | Node.js | v18+ (for hook scripts) |
 | Git | Any recent version |
 

@@ -1,7 +1,7 @@
 {
   "name": "bkit",
-  "version": "1.5.5",
-  "description": "bkit Vibecoding Kit - PDCA methodology + Context Engineering for AI-native development with Gemini CLI",
+  "version": "1.5.6",
+  "description": "bkit Vibecoding Kit v1.5.6 - PDCA methodology + Context Engineering for AI-native development with Gemini CLI",
   "author": "POPUP STUDIO PTE. LTD.",
   "license": "Apache-2.0",
   "repository": "https://github.com/popup-studio-ai/bkit-gemini",

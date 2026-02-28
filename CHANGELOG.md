@@ -5,6 +5,38 @@ All notable changes to bkit-gemini will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.6] - 2026-02-28
+
+### Added
+
+- **Hook Adapter Module**: `lib/adapters/gemini/hook-adapter.js` - RuntimeHook function detection, SDK event name mapping (PascalCase -> snake_case), execution mode info for v1.6.0 migration preparation (84 lines)
+- **Tool Annotations**: `TOOL_ANNOTATIONS` in tool-registry.js - readOnlyHint, destructiveHint, idempotentHint metadata for all 17 built-in tools (v0.31.0+ trust model)
+- **Tool Annotation Queries**: `getToolAnnotations()`, `isReadOnlyTool()`, `getStrictReadOnlyTools()` for annotation-based tool classification
+- **9 New Feature Flags (v0.31.0+)**: `hasRuntimeHookFunctions`, `hasBrowserAgent`, `hasProjectLevelPolicy`, `hasMcpProgress`, `hasParallelReadCalls`, `hasPlanModeCustomStorage`, `hasToolAnnotations`, `hasExtensionFolderTrust`, `hasAllowMultipleReplace`
+- **Level Policy Templates**: `LEVEL_POLICY_TEMPLATES` in policy-migrator.js - Starter (restrictive), Dynamic (balanced), Enterprise (permissive) policy presets for Tier 3 project-level policies
+- **Level Policy Generator**: `generateLevelPolicy()` creates project-level TOML policies per detected project level (v0.31.0+ only)
+- **Gemini CLI Feature Detection**: `getGeminiCliFeatures()` in session-start.js - reports CLI version, preview status, and flag counts in session metadata
+- **3 New Test Suites**: tc18-v031-features.js (Tool Annotations, feature flags), tc19-v031-policy-hooks.js (level policy, hook adapter), tc20-coverage-gaps.js (lib/pdca, lib/intent coverage)
+- **Policy File**: `.gemini/policies/bkit-permissions.toml` - auto-generated base policy for Gemini CLI v0.30.0+
+
+### Changed
+
+- **Version Detector Grouping**: Feature flags in `getFeatureFlags()` organized by CLI version milestone (v0.26.0+, v0.29.0+, v0.30.0+, v0.31.0+) for clarity
+- **Session Start**: Level-specific policy generation via `generateLevelPolicy()` when `hasProjectLevelPolicy` flag is true
+- **Session Metadata**: Added `geminiCliFeatures` object to session start metadata output
+- **Test Runner**: Added TC-18, TC-19, TC-20 to P0/P1 test suites, report path updated to v1.5.6
+- **TC-04 Permission Tests**: LIB-26 and LIB-27 now use `createTestProject()`/`cleanupTestProject()` for isolated testing
+- **Tested Versions**: Added `0.31.0` to `bkit.config.json` testedVersions array
+- **Level Policy Config**: Added `levelPolicies` section to `bkit.config.json` compatibility.policyEngine
+
+### Documentation
+
+- **Plan**: bkit-v156-gemini-test plan and gemini-cli-031-migration plan
+- **Design**: bkit-v156-gemini-test design and gemini-cli-031-migration design
+- **Report**: bkit-v156-gemini-test report and gemini-cli-031-migration report
+- **Analysis**: gemini-cli-031-feature-enhancement-proposals analysis
+- **Upgrade Analysis**: gemini-cli-031-upgrade-comprehensive-analysis report (CTO Team 9-agent)
+
 ## [1.5.5] - 2026-02-25
 
 ### Added
@@ -217,6 +249,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[1.5.6]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.5...v1.5.6
+[1.5.5]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.4...v1.5.5
 [1.5.4]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.3...v1.5.4
 [1.5.3]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.2...v1.5.3
 [1.5.2]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.1...v1.5.2

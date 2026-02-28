@@ -11,7 +11,7 @@ const tests = [
       const { ContextHierarchy } = require(path.join(PLUGIN_ROOT, 'lib', 'context-hierarchy'));
       const hierarchy = new ContextHierarchy(PLUGIN_ROOT, TEST_PROJECT_DIR);
       const version = hierarchy.get('version');
-      assertEqual(version, '1.5.5', 'Should load plugin version');
+      assertEqual(version, '1.5.6', 'Should load plugin version');
     }
   },
   {
@@ -129,19 +129,23 @@ const tests = [
   },
   {
     name: 'LIB-26: rm -rf / → deny',
+    setup: () => createTestProject({}),
     fn: () => {
       const { checkPermission } = require(path.join(PLUGIN_ROOT, 'lib', 'core', 'permission'));
-      const result = checkPermission('run_shell_command', { command: 'rm -rf /' }, PLUGIN_ROOT);
+      const result = checkPermission('run_shell_command', { command: 'rm -rf /' }, TEST_PROJECT_DIR);
       assertEqual(result.level, 'deny', 'Should deny rm -rf /');
-    }
+    },
+    teardown: cleanupTestProject
   },
   {
     name: 'LIB-27: git push --force → deny (from DEFAULT_PATTERNS)',
+    setup: () => createTestProject({}),
     fn: () => {
       const { checkPermission } = require(path.join(PLUGIN_ROOT, 'lib', 'core', 'permission'));
-      const result = checkPermission('run_shell_command', { command: 'git push --force main' }, PLUGIN_ROOT);
+      const result = checkPermission('run_shell_command', { command: 'git push --force main' }, TEST_PROJECT_DIR);
       assertEqual(result.level, 'ask', 'Should ask for git push --force');
-    }
+    },
+    teardown: cleanupTestProject
   },
   {
     name: 'LIB-30: Normal write → allow',
