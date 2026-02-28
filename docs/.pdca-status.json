@@ -2,6 +2,7 @@
   "version": "2.0",
   "lastUpdated": "2026-02-28T13:30:00.000Z",
   "activeFeatures": [
+    "bkit-v156-doc-sync",
     "bkit-v156-gemini-test",
     "gemini-cli-031-migration",
     "bkit-v155-gemini-test",
@@ -12,8 +13,22 @@
     "bkend-docs-sync",
     "bkit-gemini-conversion"
   ],
-  "primaryFeature": "bkit-v156-gemini-test",
+  "primaryFeature": "bkit-v156-doc-sync",
   "features": {
+    "bkit-v156-doc-sync": {
+      "phase": "completed",
+      "matchRate": 100,
+      "iterationCount": 1,
+      "createdAt": "2026-02-28T15:00:00.000Z",
+      "updatedAt": "2026-02-28T15:30:00.000Z",
+      "completedAt": "2026-02-28T15:30:00.000Z",
+      "planDoc": "docs/01-plan/features/bkit-v156-doc-sync.plan.md",
+      "designDoc": "docs/02-design/features/bkit-v156-doc-sync.design.md",
+      "analysisDoc": "docs/03-analysis/bkit-v156-doc-sync.analysis.md",
+      "targetVersion": "v1.5.6",
+      "scope": "5 files, ~110 lines - documentation synchronization",
+      "filesModified": ["README.md", "GEMINI.md", "CHANGELOG.md", "docs/guides/model-selection.md", ".gemini/context/tool-reference.md"]
+    },
     "bkit-v156-gemini-test": {
       "phase": "completed",
       "matchRate": 100,
