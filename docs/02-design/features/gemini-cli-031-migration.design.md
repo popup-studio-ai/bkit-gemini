@@ -6,7 +6,7 @@
 > **Plan Reference**: [gemini-cli-031-migration.plan.md](../../01-plan/features/gemini-cli-031-migration.plan.md)
 > **Author**: CTO Team (Architects)
 > **Created**: 2026-02-28
-> **Status**: Draft
+> **Status**: Revised (gemini-031-researcher corrections applied)
 
 ---
 
@@ -21,8 +21,8 @@ Phase 1: Core Updates (P0) ─── 순서 의존성 있음
 Phase 2: Feature Enhancements (P1) ─── 병렬 가능
 ├── 2.1 policy-migrator.js (version-detector 의존)
 ├── 2.2 tool-registry.js (독립)
-├── 2.3 hook-adapter.js [NEW] (독립)
-└── 2.4 hook scripts dual-mode (hook-adapter 의존)
+├── 2.3 hook-adapter.js [NEW] (version-detector 의존, SDK 감지만)
+└── 2.4 hook scripts (version string 업데이트만, 구조 변경 없음)
 
 Phase 3: Integration (P0+P1)
 ├── 3.1 session-start.js (모든 변경 통합)
@@ -200,14 +200,41 @@ v0.30.0에서 deprecated 되었으나 v0.31.0에서도 하위호환으로 동작
 
 `convertToToml()` 함수 앞에 추가:
 
+> **IMPORTANT (gemini-031-researcher 발견사항 반영)**:
+> v0.31.0 Policy Engine에는 5-tier hierarchy가 있으며, **Extension tier (Tier 2)에서는
+> `allow` decision이 차단**됩니다 (보안 제약). bkit의 level policy는 **Workspace tier
+> (Tier 3, `.gemini/policies/`)에 생성**되므로 `allow`를 사용할 수 있습니다.
+>
+> **Policy Tier Hierarchy**:
+> | Tier | Location | `allow` | `deny` | `ask_user` |
+> |:---:|---|:---:|:---:|:---:|
+> | 1 (Default) | CLI built-in | O | O | O |
+> | 2 (Extension) | `gemini-extension.json` policies | **X** | O | O |
+> | 3 (Workspace) | `.gemini/policies/*.toml` | O | O | O |
+> | 4 (User) | `~/.gemini/policies/*.toml` | O | O | O |
+> | 5 (Admin) | `--policy-dir` flag | O | O | O |
+>
+> bkit의 `generateLevelPolicy()`는 Tier 3에 생성하므로 `allow` 사용 가능.
+> 단, `generatePolicyFile()` (기존 함수)이 Extension tier에 직접 정책을 넣는 경우에는
+> `allow`를 사용하면 안 됨 → 기존 코드 검증 필요.
+>
+> **v0.31.0 새로운 TOML 필드**:
+> - `toolAnnotations` - 도구별 readOnly/destructive/idempotent 힌트
+> - `modes` - Plan Mode 등 모드별 정책
+> - `commandRegex` - 정규식 기반 명령어 매칭 (commandPrefix 대안)
+
 ```javascript
 /**
  * Level-specific policy templates
- * Tier 3 (project-level) policies auto-generated based on bkit project level
+ * Generated at Tier 3 (workspace-level, .gemini/policies/) where `allow` decision IS permitted.
+ * NOTE: Extension tier (Tier 2) blocks `allow` decisions - these templates MUST NOT be
+ * used in Extension tier policies.
+ *
  * @since 1.5.6 (Gemini CLI v0.31.0 project-level policy support)
  */
 const LEVEL_POLICY_TEMPLATES = Object.freeze({
   Starter: {
+    tier: 3,  // Workspace tier - allow IS permitted
     description: 'Restrictive policy for beginners - safe defaults',
     rules: [
       { toolName: 'write_file', decision: 'ask_user', priority: 30 },
@@ -223,6 +250,7 @@ const LEVEL_POLICY_TEMPLATES = Object.freeze({
     ]
   },
   Dynamic: {
+    tier: 3,
     description: 'Balanced policy for fullstack development',
     rules: [
       { toolName: 'write_file', decision: 'allow', priority: 10 },
@@ -235,6 +263,7 @@ const LEVEL_POLICY_TEMPLATES = Object.freeze({
     ]
   },
   Enterprise: {
+    tier: 3,
     description: 'Permissive policy with security audit for enterprise projects',
     rules: [
       { toolName: 'write_file', decision: 'allow', priority: 10 },
@@ -500,12 +529,36 @@ function getStrictReadOnlyTools() {
 **Change Type**: New
 **Priority**: P1
 
+> **IMPORTANT (gemini-031-researcher 발견사항 반영)**:
+> v0.31.0의 RuntimeHook Function은 `hooks.json`의 `type: "function"`이 **아니라**,
+> SDK 기반 프로그래밍 방식인 `HookSystem.registerHook(hookConfig)` API를 사용합니다.
+>
+> ```javascript
+> // SDK-based RuntimeHook API (v0.31.0+)
+> import { HookSystem } from '@anthropic-ai/gemini-cli-sdk';
+>
+> HookSystem.registerHook({
+>   event: 'session_start',
+>   action: async (context) => { /* ... */ return result; },
+>   timeout: 30000
+> });
+> ```
+>
+> 따라서 `hooks.json`의 구조 변경은 불필요하며, v1.5.6에서는 SDK 연동을 위한
+> 추상화 레이어만 준비합니다. 실제 SDK 기반 전환은 v1.6.0에서 수행합니다.
+
 ```javascript
 /**
  * Hook Adapter - RuntimeHook Function Support Utilities
- * Provides detection and routing for Gemini CLI v0.31.0+ function hooks
+ * Abstraction layer for future SDK-based RuntimeHook migration.
  *
- * v1.5.6: Preparation layer only. Actual type:"function" transition in v1.6.0.
+ * v0.31.0 RuntimeHook API: HookSystem.registerHook({ event, action, timeout })
+ * - SDK-based programmatic registration (NOT hooks.json type change)
+ * - 99% faster execution (in-process vs child_process spawn)
+ * - Direct context object access (no stdin/stdout serialization)
+ *
+ * v1.5.6: Detection + preparation only. Hooks remain type:"command" in hooks.json.
+ * v1.6.0: Migrate top 3 hooks to SDK-based RuntimeHook functions.
  *
  * @version 1.5.6
  */
@@ -513,7 +566,7 @@ function getStrictReadOnlyTools() {
 const { getFeatureFlags } = require('./version-detector');
 
 /**
- * Check if RuntimeHook functions are supported
+ * Check if RuntimeHook functions are supported (SDK-based API)
  * @returns {boolean}
  */
 function supportsRuntimeHookFunctions() {
@@ -525,43 +578,60 @@ function supportsRuntimeHookFunctions() {
 }
 
 /**
- * Get the appropriate hook configuration for the detected CLI version
- * In v1.5.6, always returns 'command' type. In v1.6.0+, will return 'function' when supported.
+ * Get hook execution mode info for the detected CLI version
+ * v1.5.6: Always 'command'. Reports SDK availability for diagnostics.
  *
- * @param {string} hookName - Hook script name (e.g., 'session-start')
- * @returns {{ type: string, command?: string, module?: string, function?: string }}
+ * @param {string} hookEvent - Hook event name (e.g., 'session_start')
+ * @returns {{ mode: 'command'|'sdk', sdkAvailable: boolean, hookEvent: string }}
  */
-function getHookConfig(hookName) {
-  // v1.5.6: Always command type (preparation only)
+function getHookExecutionInfo(hookEvent) {
+  const sdkAvailable = supportsRuntimeHookFunctions();
   return {
-    type: 'command',
-    useFunction: supportsRuntimeHookFunctions()
+    mode: 'command',  // v1.5.6: always command mode
+    sdkAvailable,     // true when CLI >= 0.31.0 (for diagnostics/metadata)
+    hookEvent
   };
 }
 
 /**
- * Wrap a hook handler for dual-mode support
- * When called as a command (stdin/stdout), reads input and writes output.
- * When called as a function, receives context directly.
+ * Get RuntimeHook config template for future SDK migration (v1.6.0+)
+ * Returns the config shape that HookSystem.registerHook() expects.
+ * Used for planning/documentation purposes in v1.5.6.
  *
- * @param {Function} handler - The hook handler function (context) => result
- * @returns {void}
+ * @param {string} hookEvent - Hook event name
+ * @param {number} [timeout=30000] - Timeout in ms
+ * @returns {{ event: string, timeout: number, _note: string }}
  */
-function dualModeEntry(handler) {
-  // Check if running as a module import (function mode) or CLI (command mode)
-  if (require.main !== module) {
-    // Function mode - export handler for future RuntimeHook function use
-    return;
-  }
-
-  // Command mode (current v1.5.5/v1.5.6 behavior)
-  // The calling script handles its own stdin/stdout
+function getRuntimeHookTemplate(hookEvent, timeout = 30000) {
+  return {
+    event: hookEvent,
+    timeout,
+    _note: 'v1.5.6 preparation - action function to be provided in v1.6.0 migration'
+  };
 }
+
+/**
+ * Map hooks.json event names to SDK event names
+ * hooks.json uses kebab-case, SDK uses snake_case
+ */
+const HOOK_EVENT_MAP = Object.freeze({
+  'session-start': 'session_start',
+  'session-end': 'session_end',
+  'before-tool': 'before_tool',
+  'after-tool': 'after_tool',
+  'before-model': 'before_model',
+  'after-model': 'after_model',
+  'before-skill': 'before_skill',
+  'after-skill': 'after_skill',
+  'before-permission': 'before_permission',
+  'notification': 'notification'
+});
 
 module.exports = {
   supportsRuntimeHookFunctions,
-  getHookConfig,
-  dualModeEntry
+  getHookExecutionInfo,
+  getRuntimeHookTemplate,
+  HOOK_EVENT_MAP
 };
 ```
 
@@ -759,6 +829,111 @@ function getGeminiCliFeatures() {
 - [Current policy-migrator.js](../../lib/adapters/gemini/policy-migrator.js) (273 lines)
 - [Current tool-registry.js](../../lib/adapters/gemini/tool-registry.js) (210 lines)
 - [Current session-start.js](../../hooks/scripts/session-start.js) (407 lines)
+
+---
+
+## Appendix A: v0.31.0 Breaking Change Details
+
+> **gemini-031-researcher 발견사항 (2026-02-28)**:
+> 이전 분석에서 "preview only"로 분류했던 항목들이 v0.31.0 stable에서 **ACTIVE**임이 확인됨.
+
+### A.1 read_file 파라미터 변경 (ACTIVE in v0.31.0)
+
+| Parameter | v0.30.0 (Old) | v0.31.0 (New) | Behavior |
+|:---:|:---:|:---:|---|
+| `offset` | 0-based byte offset | **Removed** | → `start_line` |
+| `limit` | Max bytes to read | **Removed** | → `end_line` |
+| `start_line` | N/A | **1-based line number** | Inclusive start |
+| `end_line` | N/A | **1-based line number** | Inclusive end |
+
+**bkit 영향 분석**:
+- bkit hooks/skills에서 `read_file`을 직접 호출하는 코드는 없음 (Gemini CLI가 자체 처리)
+- `tool-registry.js`의 `BUILTIN_TOOLS.READ_FILE` 정의는 이름만 등록하므로 영향 없음
+- `before-tool.js`에서 `read_file` 이벤트를 가로채지만, 파라미터를 수정하지 않으므로 영향 없음
+- **결론**: bkit v1.5.6에서 코드 변경 불필요. 단, `version-detector.js`에 모니터링 플래그 추가 완료 (`hasAllowMultipleReplace`)
+
+### A.2 replace tool 파라미터 변경 (ACTIVE in v0.31.0)
+
+| Parameter | v0.30.0 (Old) | v0.31.0 (New) |
+|:---:|:---:|:---:|
+| `expected_replacements` | Number (정확한 치환 수) | **Removed** |
+| `allow_multiple` | N/A | **Boolean** (다중 치환 허용 여부) |
+
+**bkit 영향 분석**:
+- bkit에서 `replace` tool을 직접 호출하는 코드 없음
+- `tool-registry.js`에 이름만 등록, 파라미터 전달 없음
+- **결론**: 코드 변경 불필요. Feature flag `hasAllowMultipleReplace`로 추적
+
+### A.3 RuntimeHook Architecture Clarification
+
+v0.31.0의 RuntimeHook은 **SDK-based programmatic API**입니다:
+
+```javascript
+// 올바른 API (SDK-based)
+import { HookSystem } from '@anthropic-ai/gemini-cli-sdk';
+
+HookSystem.registerHook({
+  event: 'session_start',       // snake_case event name
+  action: async (context) => {  // Direct function, not command
+    // In-process execution - no child_process spawn
+    return { output: '...' };
+  },
+  timeout: 30000
+});
+```
+
+**이전 설계의 오류 (수정됨)**:
+- ~~`hooks.json`에 `type: "function"` 추가~~ → hooks.json 구조 변경 아님
+- ~~`module` + `function` 필드로 함수 참조~~ → SDK의 `action` 콜백으로 직접 등록
+
+**v1.5.6 접근 방식**: `hook-adapter.js`에서 SDK 가용성 감지 + 이벤트 이름 매핑만 제공.
+실제 SDK 기반 전환은 v1.6.0에서 `@anthropic-ai/gemini-cli-sdk` 의존성 추가 후 수행.
+
+### A.4 Policy Engine 신규 TOML 필드 (v0.31.0+)
+
+`generateLevelPolicy()` 향후 확장 시 사용 가능한 새 필드:
+
+```toml
+# v0.31.0+ 새 필드 (v1.5.6에서는 미사용, v1.6.0 검토)
+
+# Tool Annotations in policy
+[[rule]]
+toolName = "run_shell_command"
+decision = "ask_user"
+toolAnnotations = { destructiveHint = true }  # NEW
+
+# Mode-specific rules
+[[rule]]
+toolName = "write_file"
+modes = ["plan_mode"]  # NEW: Plan Mode에서만 적용
+decision = "deny"
+
+# Regex-based command matching
+[[rule]]
+toolName = "run_shell_command"
+commandRegex = "^(rm|del|rmdir)\\s"  # NEW: commandPrefix 대안
+decision = "deny"
+```
+
+**v1.5.6 결정**: 이 필드들은 사용하지 않음. 기존 `commandPrefix` 방식 유지.
+v1.6.0에서 `commandRegex` 도입 검토 (더 정밀한 매칭 가능).
+
+---
+
+## Appendix B: Implementation Phase 2 Updated Notes
+
+Section 2.6 `hook-adapter.js`의 설계가 수정됨에 따라 Phase 2의 의존 관계 업데이트:
+
+```
+Phase 2: Feature Enhancements (P1) ─── 병렬 가능
+├── 2.1 policy-migrator.js (version-detector 의존)
+├── 2.2 tool-registry.js (독립)
+├── 2.3 hook-adapter.js [NEW] (version-detector 의존, hooks.json 변경 없음)
+└── 2.4 hook scripts (version string 업데이트만, hook-adapter 의존 없음)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^
+                        수정: hook-adapter에 대한 구조적 의존성 제거됨
+                        (hooks.json의 type은 "command" 그대로 유지)
+```
 
 ---
 
