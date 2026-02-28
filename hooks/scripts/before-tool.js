@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * BeforeTool Hook - Pre-execution Validation (v1.5.1)
+ * BeforeTool Hook - Pre-execution Validation (v1.5.6)
  * Validates tool calls, checks permissions via PermissionManager,
  * applies PDCA phase restrictions, and provides guidance
  */

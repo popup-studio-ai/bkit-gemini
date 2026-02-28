@@ -1,6 +1,6 @@
 {
   "$schema": "./bkit.config.schema.json",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "platform": "gemini",
 
   "sourceDirectories": ["src", "lib", "app", "components", "pages", "features", "services"],
@@ -117,10 +117,18 @@
 
   "compatibility": {
     "minGeminiCliVersion": "0.29.0",
-    "testedVersions": ["0.29.0", "0.29.5", "0.29.7", "0.30.0-preview.3", "0.30.0"],
+    "testedVersions": ["0.29.0", "0.29.5", "0.29.7", "0.30.0-preview.3", "0.30.0", "0.31.0"],
     "policyEngine": {
       "autoGenerate": true,
-      "outputDir": ".gemini/policies/"
+      "outputDir": ".gemini/policies/",
+      "levelPolicies": {
+        "enabled": true,
+        "templates": {
+          "Starter": "bkit-starter-policy",
+          "Dynamic": "bkit-dynamic-policy",
+          "Enterprise": "bkit-enterprise-policy"
+        }
+      }
     }
   },
 
