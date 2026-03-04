@@ -25,6 +25,8 @@ allowed-tools:
   - glob
   - grep_search
   - write_file
+  - tracker_list_tasks
+  - tracker_visualize
 
 imports: []
 

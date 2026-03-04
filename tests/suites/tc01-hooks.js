@@ -1,5 +1,9 @@
 // tests/suites/tc01-hooks.js
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, executeHook, assert, assertEqual, assertContains } = require('../test-utils');
+const { 
+  PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, 
+  executeHook, assert, assertEqual, assertContains, 
+  readPdcaStatus, readGlobalMemory 
+} = require('../test-utils');
 const { PDCA_STATUS_FIXTURE, BKIT_MEMORY_FIXTURE, BKIT_MEMORY_RETURNING } = require('../fixtures');
 const fs = require('fs');
 const path = require('path');
@@ -48,8 +52,9 @@ const tests = [
     setup: () => createTestProject({ 'docs/.bkit-memory.json': { sessionCount: 3, platform: 'gemini', level: 'Starter' } }),
     fn: () => {
       executeHook('session-start.js');
-      const memory = JSON.parse(fs.readFileSync(path.join(TEST_PROJECT_DIR, 'docs/.bkit-memory.json'), 'utf-8'));
-      assertEqual(memory.sessionCount, 4, 'Should increment sessionCount');
+      const memory = readGlobalMemory();
+      const sessionCount = memory.session?.sessionCount !== undefined ? memory.session.sessionCount : memory.sessionCount;
+      assertEqual(sessionCount, 4, 'Should increment sessionCount');
     },
     teardown: cleanupTestProject
   },
@@ -181,7 +186,7 @@ const tests = [
     },
     fn: () => {
       executeHook('after-tool.js', { tool_name: 'write_file', tool_input: { file_path: 'src/main.js', content: '...' } });
-      const status = JSON.parse(fs.readFileSync(path.join(TEST_PROJECT_DIR, 'docs/.pdca-status.json'), 'utf-8'));
+      const status = readPdcaStatus();
       assertEqual(status.features['test-feature'].phase, 'do', 'Should move to do phase');
     },
     teardown: cleanupTestProject

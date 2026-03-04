@@ -4,22 +4,19 @@
 const fs = require('fs');
 const path = require('path');
 
+const libPath = path.resolve(__dirname, '..', '..', '..', 'lib');
+const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
+
 function loadPdcaStatus(projectDir) {
-  const statusPath = path.join(projectDir, 'docs', '.pdca-status.json');
   try {
-    if (fs.existsSync(statusPath)) {
-      return JSON.parse(fs.readFileSync(statusPath, 'utf-8'));
-    }
+    return pdcaStatusModule.loadPdcaStatus(projectDir);
   } catch (e) { /* ignore */ }
   return null;
 }
 
 function savePdcaStatus(projectDir, status) {
   try {
-    const statusPath = path.join(projectDir, 'docs', '.pdca-status.json');
-    status.lastUpdated = new Date().toISOString();
-    status.session.lastActivity = new Date().toISOString();
-    fs.writeFileSync(statusPath, JSON.stringify(status, null, 2));
+    pdcaStatusModule.savePdcaStatus(status, projectDir);
   } catch (e) { /* silently fail */ }
 }
 

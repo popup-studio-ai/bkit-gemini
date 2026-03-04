@@ -33,6 +33,10 @@ tools:
   - run_shell_command
   - google_web_search
   - web_fetch
+  - tracker_create_task
+  - tracker_update_task
+  - tracker_list_tasks
+  - tracker_visualize
 temperature: 0.4
 max_turns: 30
 timeout_mins: 15

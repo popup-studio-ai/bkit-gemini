@@ -1,0 +1,27 @@
+# bkit-gemini v1.5.7 - Extension Policy (Tier 2)
+# Replaces deprecated excludeTools in gemini-extension.json
+# Extension tier: DENY and ASK_USER decisions only (ALLOW not permitted at Tier 2)
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "rm -rf"
+decision = "deny"
+priority = 100
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "git push --force"
+decision = "deny"
+priority = 100
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "git reset --hard"
+decision = "ask_user"
+priority = 50
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "rm -r"
+decision = "ask_user"
+priority = 50

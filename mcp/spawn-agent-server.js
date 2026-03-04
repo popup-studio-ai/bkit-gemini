@@ -710,6 +710,11 @@ class SpawnAgentServer {
         env.BKIT_AGENT_CONTEXT = JSON.stringify(context);
       }
 
+      // v0.32.0+ sub-agent hang prevention: force non-interactive (WS-07)
+      if (flags.hasTaskTracker) {
+        env.GEMINI_NON_INTERACTIVE = '1';
+      }
+
       console.error(`Executing: gemini ${args.join(' ')}`);
 
       const proc = spawn('gemini', args, {
@@ -742,16 +747,22 @@ class SpawnAgentServer {
         reject(err);
       });
 
-      // Set timeout
+      // Enhanced timeout with absolute cap (WS-07)
+      const MAX_TIMEOUT = 600000; // 10 min absolute max
+      const effectiveTimeout = Math.min(timeout, MAX_TIMEOUT);
+
       const timeoutId = setTimeout(() => {
+        console.error(`Agent timeout after ${effectiveTimeout}ms, sending SIGTERM`);
+        proc.stdin.end();
         proc.kill('SIGTERM');
         setTimeout(() => {
           if (!proc.killed) {
+            console.error('Agent did not exit after SIGTERM, sending SIGKILL');
             proc.kill('SIGKILL');
           }
         }, 5000);
-        reject(new Error(`Agent execution timed out after ${timeout}ms`));
-      }, timeout);
+        reject(new Error(`Agent execution timed out after ${effectiveTimeout}ms`));
+      }, effectiveTimeout);
 
       proc.on('close', () => {
         clearTimeout(timeoutId);

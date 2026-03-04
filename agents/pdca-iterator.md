@@ -33,6 +33,8 @@ tools:
   - grep_search
   - glob
   - run_shell_command
+  - tracker_update_task
+  - tracker_get_task
 temperature: 0.4
 max_turns: 30
 timeout_mins: 15

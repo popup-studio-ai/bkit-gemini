@@ -5,7 +5,7 @@ prompt = """
 Execute PDCA action: {{args}}
 
 Current project status:
-!cat docs/.pdca-status.json 2>/dev/null || echo '{"primaryFeature": null}'
+!cat .pdca-status.json 2>/dev/null || cat docs/.pdca-status.json 2>/dev/null || echo '{"primaryFeature": null}'
 
 Available actions:
 - plan <feature>: Create plan document using @templates/plan.template.md

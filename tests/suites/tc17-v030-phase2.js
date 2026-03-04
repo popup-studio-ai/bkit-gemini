@@ -6,7 +6,7 @@
 const {
   PLUGIN_ROOT, TEST_PROJECT_DIR,
   createTestProject, cleanupTestProject,
-  executeHook, assert, assertEqual, assertContains
+  executeHook, assert, assertEqual, assertContains, readPdcaStatus
 } = require('../test-utils');
 const { PDCA_STATUS_FIXTURE } = require('../fixtures');
 const path = require('path');
@@ -153,35 +153,29 @@ const tests = [
         tool_name: 'write_file',
         tool_input: { file_path: 'src/app.js', content: '// implementation' }
       });
-      const statusPath = path.join(TEST_PROJECT_DIR, 'docs', '.pdca-status.json');
-      if (fs.existsSync(statusPath)) {
-        const status = JSON.parse(fs.readFileSync(statusPath, 'utf-8'));
-        // Phase transition from design -> do should have occurred
-        assertEqual(
-          status.features['test-feature']?.phase, 'do',
-          'PDCA tracking must transition from design to do after writing to src/'
-        );
-      }
-      // If status file was not updated, the hook must at least have exited cleanly
+      const status = readPdcaStatus();
+      assertEqual(
+        status.features['test-feature']?.phase, 'do',
+        'PDCA tracking must transition from design to do after writing to src/'
+      );
     },
     teardown: cleanupTestProject
   },
 
   // ─────────────────────────────────────────────────────────────────
-  // P2-11: excludeTools in gemini-extension.json
-  // Analysis recommendation: add as second defense layer
+  // P2-11: excludeTools removed in v1.5.7 (replaced by Extension Policy)
+  // v0.32.0 deprecated excludeTools in favor of Policy Engine
   // ─────────────────────────────────────────────────────────────────
   {
-    name: 'P2-11: gemini-extension.json has excludeTools field for defense-in-depth',
+    name: 'P2-11: gemini-extension.json excludeTools removed (replaced by Extension Policy in v1.5.7)',
     fn: () => {
       const ext = JSON.parse(fs.readFileSync(
         path.join(PLUGIN_ROOT, 'gemini-extension.json'), 'utf-8'
       ));
-      // Analysis recommendation (7.2): add excludeTools to gemini-extension.json
-      // as a secondary defense layer alongside Policy Engine
+      // v1.5.7: excludeTools removed per WS-04 (BC-2), replaced by Extension Policy Engine
       assert(
-        Array.isArray(ext.excludeTools),
-        'gemini-extension.json must have excludeTools array (defense-in-depth per analysis 7.2)'
+        !ext.excludeTools,
+        'gemini-extension.json should NOT have excludeTools (removed in v1.5.7, replaced by Extension Policy)'
       );
     }
   },

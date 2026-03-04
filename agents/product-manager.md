@@ -28,6 +28,8 @@ tools:
   - grep_search
   - google_web_search
   - web_fetch
+  - tracker_create_task
+  - tracker_list_tasks
 temperature: 0.6
 max_turns: 15
 timeout_mins: 10

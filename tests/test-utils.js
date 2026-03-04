@@ -29,6 +29,64 @@ function createTestProject(fixtures = {}) {
 }
 
 /**
+ * Create a temporary test project with specified fixtures (v2 - root status path)
+ */
+function createTestProjectV2(fixtures = {}) {
+  if (fs.existsSync(TEST_PROJECT_DIR)) {
+    fs.rmSync(TEST_PROJECT_DIR, { recursive: true });
+  }
+  fs.mkdirSync(TEST_PROJECT_DIR, { recursive: true });
+  fs.mkdirSync(path.join(TEST_PROJECT_DIR, 'src'), { recursive: true });
+  fs.mkdirSync(path.join(TEST_PROJECT_DIR, '.bkit', 'state'), { recursive: true });
+
+  // Write fixture files
+  for (const [filePath, content] of Object.entries(fixtures)) {
+    const fullPath = path.join(TEST_PROJECT_DIR, filePath);
+    fs.mkdirSync(path.dirname(fullPath), { recursive: true });
+    fs.writeFileSync(fullPath, typeof content === 'object' ? JSON.stringify(content, null, 2) : content);
+  }
+
+  return TEST_PROJECT_DIR;
+}
+
+/**
+ * Set Gemini CLI version for testing with auto-cleanup
+ */
+function withVersion(version, fn) {
+  const vd = require(path.join(PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'version-detector'));
+  vd.resetCache();
+  const original = process.env.GEMINI_CLI_VERSION;
+  process.env.GEMINI_CLI_VERSION = version;
+  try {
+    const result = fn();
+    if (result instanceof Promise) {
+      return result.finally(() => {
+        vd.resetCache();
+        if (original !== undefined) process.env.GEMINI_CLI_VERSION = original;
+        else delete process.env.GEMINI_CLI_VERSION;
+      });
+    }
+    vd.resetCache();
+    if (original !== undefined) process.env.GEMINI_CLI_VERSION = original;
+    else delete process.env.GEMINI_CLI_VERSION;
+    return result;
+  } catch (error) {
+    vd.resetCache();
+    if (original !== undefined) process.env.GEMINI_CLI_VERSION = original;
+    else delete process.env.GEMINI_CLI_VERSION;
+    throw error;
+  }
+}
+
+/**
+ * Count regex matches in string
+ */
+function countMatches(str, pattern) {
+  if (!str) return 0;
+  return (str.match(new RegExp(pattern, 'g')) || []).length;
+}
+
+/**
  * Clean up test project
  */
 function cleanupTestProject() {
@@ -168,10 +226,44 @@ async function runSuite(suite) {
   return { passed, failed, skipped };
 }
 
+/**
+ * Read PDCA status with path resolution
+ */
+function readPdcaStatus(projectDir = TEST_PROJECT_DIR) {
+  const rootPath = path.join(projectDir, '.pdca-status.json');
+  const legacyPath = path.join(projectDir, 'docs', '.pdca-status.json');
+  const statusPath = fs.existsSync(rootPath) ? rootPath : legacyPath;
+  
+  if (!fs.existsSync(statusPath)) {
+    throw new Error(`PDCA status file not found in ${projectDir}`);
+  }
+  
+  return JSON.parse(fs.readFileSync(statusPath, 'utf8'));
+}
+
+/**
+ * Read global memory with path resolution
+ */
+function readGlobalMemory(projectDir = TEST_PROJECT_DIR) {
+  const rootPath = path.join(projectDir, '.bkit', 'state', 'memory.json');
+  const legacyPath = path.join(projectDir, 'docs', '.bkit-memory.json');
+  const memoryPath = fs.existsSync(rootPath) ? rootPath : legacyPath;
+  
+  if (!fs.existsSync(memoryPath)) {
+    throw new Error(`Memory file not found in ${projectDir}`);
+  }
+  
+  const content = fs.readFileSync(memoryPath, 'utf8');
+  const memory = JSON.parse(content);
+  // Support both old flat structure and new nested data structure
+  return memory.data || memory;
+}
+
 module.exports = {
   PLUGIN_ROOT, TEST_PROJECT_DIR,
-  createTestProject, cleanupTestProject,
+  createTestProject, createTestProjectV2, cleanupTestProject,
   executeHook, sendMcpRequest,
   assert, assertEqual, assertContains, assertExists,
-  runSuite
+  runSuite, withVersion, countMatches,
+  readPdcaStatus, readGlobalMemory
 };

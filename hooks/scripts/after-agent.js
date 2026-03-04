@@ -24,7 +24,23 @@ const SKILL_HANDLERS = {
   'phase-8-review': handlePhase8Complete
 };
 
+// Loop guard: prevent AfterAgent from triggering itself infinitely (WS-07, Issue #20426)
+const LOOP_GUARD_KEY = '__BKIT_AFTER_AGENT_DEPTH';
+const MAX_REENTRY = 3;
+
 function main() {
+  const depth = parseInt(process.env[LOOP_GUARD_KEY] || '0');
+  if (depth >= MAX_REENTRY) {
+    try {
+      const { getAdapter } = require(path.join(libPath, 'adapters'));
+      getAdapter().outputEmpty();
+    } catch (e) {
+      process.exit(0);
+    }
+    return;
+  }
+  process.env[LOOP_GUARD_KEY] = String(depth + 1);
+
   try {
     const { getAdapter } = require(path.join(libPath, 'adapters'));
     const adapter = getAdapter();
@@ -56,6 +72,8 @@ function main() {
 
   } catch (error) {
     process.exit(0);
+  } finally {
+    process.env[LOOP_GUARD_KEY] = String(Math.max(0, depth));
   }
 }
 

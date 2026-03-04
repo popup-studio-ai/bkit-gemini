@@ -1,8 +1,8 @@
 # bkit - Vibecoding Kit (Gemini CLI Edition)
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-v0.29.0~v0.31.0-blue.svg)](https://github.com/google-gemini/gemini-cli)
-[![Version](https://img.shields.io/badge/Version-1.5.6-green.svg)](CHANGELOG.md)
+[![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-v0.29.0~v0.32.1-blue.svg)](https://github.com/google-gemini/gemini-cli)
+[![Version](https://img.shields.io/badge/Version-1.5.7-green.svg)](CHANGELOG.md)
 [![Author](https://img.shields.io/badge/Author-POPUP%20STUDIO-orange.svg)](https://popupstudio.ai)
 
 > **PDCA methodology + Context Engineering for AI-native development**
@@ -62,7 +62,7 @@ Event 10: SessionEnd           -> Session cleanup, memory persistence
 
 ```
 bkit-gemini/
-|-- gemini-extension.json         # Extension manifest (v1.5.6)
+|-- gemini-extension.json         # Extension manifest (v1.5.7)
 |-- GEMINI.md                     # Global context with 6 @import modules
 |-- bkit.config.json              # Centralized configuration (12 sections)
 |-- CHANGELOG.md                  # Version history
@@ -166,10 +166,11 @@ bkit-gemini/
 |   |   +-- permission.js         # Glob pattern permission engine (381 lines)
 |   +-- adapters/gemini/
 |       |-- index.js              # Platform adapter with TOOL_MAP
-|       |-- tool-registry.js      # Tool name registry + Annotations (v0.29.0~v0.31.0)
-|       |-- version-detector.js   # 3-strategy CLI version detection + 17 feature flags
-|       |-- policy-migrator.js    # Permission -> TOML Policy + Level Policy (v0.30.0+)
-|       |-- hook-adapter.js       # RuntimeHook function detection (v0.31.0 prep)
+|       |-- tool-registry.js      # Tool name registry + Annotations (v0.29.0~v0.32.1, 23 tools)
+|       |-- version-detector.js   # 3-strategy CLI version detection + 34 feature flags
+|       |-- policy-migrator.js    # Permission -> TOML Policy + Extension/Level Policy (v0.30.0+)
+|       |-- hook-adapter.js       # RuntimeHook SDK integration (v0.31.0+)
+|       |-- tracker-bridge.js     # Task Tracker - PDCA Bridge (v0.32.0+)
 |       |-- context-fork.js       # Snapshot isolation, LRU(10) (477 lines)
 |       +-- import-resolver.js    # @import resolution (118 lines)
 |
@@ -180,6 +181,16 @@ bkit-gemini/
 ---
 
 ## Features
+
+### v1.5.7 Highlights
+
+- **Gemini CLI v0.32.x Compatibility** -- 11 new feature flags for Task Tracker, Extension Policies, Model Family Toolsets, A2A Streaming, and more
+- **23 Built-in Tools** -- 6 new Task Tracker tools registered (tracker_create_task, tracker_update_task, tracker_get_task, tracker_list_tasks, tracker_add_dependency, tracker_visualize)
+- **SDK RuntimeHook Dual-Mode** -- 6 hot-path hooks converted to SDK function export + stdin command fallback for 40-97% latency reduction
+- **Extension Policy Engine** -- Tier 2 TOML extension policy replacing deprecated excludeTools in gemini-extension.json
+- **Task Tracker - PDCA Bridge** -- Instruction-based bridge connecting PDCA workflow to native Task Tracker (v0.32.0+)
+- **Bug Guards** -- AfterAgent loop guard (Issue #20426) and sub-agent timeout cap (600s) with SIGTERM→SIGKILL escalation
+- **Nightly Version Parsing** -- parseVersion() now handles `0.34.0-nightly.20260304` format
 
 ### v1.5.6 Highlights
 
@@ -391,7 +402,7 @@ All 16 agents remember context across sessions automatically:
 
 ### Team Mode Foundation
 
-bkit v1.5.6 includes team mode foundation with 3 MCP tools:
+bkit includes team mode foundation with 3 MCP tools:
 - `team_create` -- Create agent teams with configurable strategies
 - `team_assign` -- Assign tasks to team members
 - `team_status` -- Monitor team progress
@@ -533,6 +544,10 @@ bkit uses Gemini CLI native tool names (v0.29.0+ verified from source):
 | SaveMemory | save_memory |
 | EnterPlanMode | enter_plan_mode |
 | ExitPlanMode | exit_plan_mode |
+| TaskCreate | tracker_create_task |
+| TaskUpdate | tracker_update_task |
+| TaskGet | tracker_get_task |
+| TaskList | tracker_list_tasks |
 
 ---
 
@@ -612,7 +627,7 @@ These hooks are non-interactive, performance-optimized, and essential for the Co
 
 | Requirement | Version |
 |-------------|---------|
-| Gemini CLI | v0.29.0+ (forward-compatible with v0.31.0 Policy Engine + Tool Annotations) |
+| Gemini CLI | v0.29.0+ (forward-compatible with v0.32.1 Task Tracker + Extension Policies) |
 | Node.js | v18+ (for hook scripts) |
 | Git | Any recent version |
 

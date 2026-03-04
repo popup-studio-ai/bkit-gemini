@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * BeforeTool Hook - Pre-execution Validation (v1.5.6)
+ * BeforeTool Hook - Pre-execution Validation (v1.5.7)
+ * Dual-mode: handler export (v0.31.0+ SDK) + stdin command (legacy)
  * Validates tool calls, checks permissions via PermissionManager,
  * applies PDCA phase restrictions, and provides guidance
  */
@@ -9,60 +10,74 @@ const path = require('path');
 
 const libPath = path.resolve(__dirname, '..', '..', 'lib');
 
-function main() {
+// --- Core processing logic ---
+function processHook(input) {
   try {
-    const { getAdapter } = require(path.join(libPath, 'adapters'));
-    const adapter = getAdapter();
-
-    // Read input
-    const input = adapter.readHookInput();
     const toolName = input.tool_name || '';
     const toolInput = input.tool_input || {};
+    const projectDir = input.projectDir || process.cwd();
 
-    // Map tool name
-    const claudeToolName = adapter.reverseMapToolName(toolName);
+    // Resolve Claude tool name mapping
+    let claudeToolName = '';
+    try {
+      const { CLAUDE_TO_GEMINI_MAP } = require(path.join(libPath, 'adapters', 'gemini', 'tool-registry'));
+      const reverseMap = Object.fromEntries(Object.entries(CLAUDE_TO_GEMINI_MAP).map(([k, v]) => [v, k]));
+      claudeToolName = reverseMap[toolName] || '';
+    } catch (e) { /* ignore */ }
 
-    const projectDir = adapter.getProjectDir();
-
-    // 1. Check PermissionManager (integrated from lib/core/permission.js)
     const permResult = checkPermissionManager(toolName, toolInput, projectDir);
     if (permResult.level === 'deny') {
-      adapter.outputBlock(`Permission denied: ${permResult.reason || 'Blocked by permission policy'}`);
-      return;
+      return { status: 'block', message: `Permission denied: ${permResult.reason || 'Blocked by permission policy'}` };
     }
 
     const contexts = [];
-
-    // Add permission warnings
     if (permResult.level === 'ask') {
       contexts.push(`**Permission Warning**: ${permResult.reason || 'This action requires caution.'}`);
     }
 
-    // 2. Check PDCA phase restrictions
     const pdcaWarning = checkPdcaPhaseRestriction(toolName, projectDir);
-    if (pdcaWarning) {
-      contexts.push(pdcaWarning);
-    }
+    if (pdcaWarning) { contexts.push(pdcaWarning); }
 
-    // 3. Handle by tool type (existing logic)
     if (['write_file', 'replace'].includes(toolName) || ['Write', 'Edit'].includes(claudeToolName)) {
-      const writeContexts = handleWriteEdit(toolInput);
-      contexts.push(...writeContexts);
+      contexts.push(...handleWriteEdit(toolInput));
     } else if (toolName === 'run_shell_command' || claudeToolName === 'Bash') {
       const bashResult = handleBash(toolInput);
       if (bashResult.block) {
-        adapter.outputBlock(bashResult.message);
-        return;
+        return { status: 'block', message: bashResult.message };
       }
       contexts.push(...bashResult.warnings);
     }
 
     if (contexts.length > 0) {
-      adapter.outputAllow(contexts.join('\n'), 'BeforeTool');
+      return { status: 'allow', message: contexts.join('\n'), hookEvent: 'BeforeTool' };
+    }
+    return { status: 'allow' };
+  } catch (error) {
+    return { status: 'allow' };
+  }
+}
+
+// --- RuntimeHook function export (v0.31.0+ SDK) ---
+async function handler(event) {
+  return processHook(event);
+}
+
+// --- Legacy command mode ---
+function main() {
+  try {
+    const { getAdapter } = require(path.join(libPath, 'adapters'));
+    const adapter = getAdapter();
+    const input = adapter.readHookInput();
+    input.projectDir = adapter.getProjectDir();
+    const result = processHook(input);
+
+    if (result.status === 'block') {
+      adapter.outputBlock(result.message);
+    } else if (result.message) {
+      adapter.outputAllow(result.message, result.hookEvent || 'BeforeTool');
     } else {
       adapter.outputEmpty();
     }
-
   } catch (error) {
     process.exit(0);
   }
@@ -86,10 +101,8 @@ function checkPermissionManager(toolName, toolInput, projectDir) {
  */
 function checkPdcaPhaseRestriction(toolName, projectDir) {
   try {
-    const statusPath = path.join(projectDir, 'docs', '.pdca-status.json');
-    if (!fs.existsSync(statusPath)) return null;
-
-    const status = JSON.parse(fs.readFileSync(statusPath, 'utf-8'));
+    const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
+    const status = pdcaStatusModule.loadPdcaStatus(projectDir);
     const feature = status.primaryFeature;
     if (!feature || !status.features[feature]) return null;
 
@@ -192,4 +205,6 @@ function handleBash(toolInput) {
   return { block: false, message: '', warnings };
 }
 
-main();
+if (require.main === module) { main(); }
+
+module.exports = { handler };
