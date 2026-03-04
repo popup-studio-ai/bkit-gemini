@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * SessionStart Hook - Enhanced Session Initialization (v1.5.6)
+ * SessionStart Hook - Enhanced Session Initialization (v1.5.7)
  * Dynamic context injection, output style loading, returning user detection,
  * agent triggers injection, PDCA rules injection, feature report template
  */
@@ -18,14 +18,15 @@ function main() {
     const pluginRoot = adapter.getPluginRoot();
 
     // 1. Load/Initialize PDCA status
-    const pdcaStatus = loadPdcaStatus(projectDir);
+    const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
+    const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
 
     // 2. Detect project level
     const level = detectProjectLevel(projectDir);
     pdcaStatus.pipeline.level = level;
 
     // 3. Save updated PDCA status
-    savePdcaStatus(projectDir, pdcaStatus);
+    pdcaStatusModule.savePdcaStatus(pdcaStatus, projectDir);
 
     // 3.5. Auto-generate Policy Engine TOML (v0.30.0+)
     try {
@@ -39,13 +40,27 @@ function main() {
         if (flags.hasProjectLevelPolicy) {
           pm.generateLevelPolicy(level, projectDir);
         }
+
+        // 3.7. Generate extension policy (v0.32.0+)
+        if (flags.hasExtensionPolicies) {
+          pm.generateExtensionPolicy(pluginRoot);
+        }
       }
     } catch (e) {
       // Policy TOML generation skipped - non-fatal
     }
 
     // 4. Load/Update memory store
-    const memory = loadMemoryStore(projectDir, level);
+    const { getMemory } = require(path.join(libPath, 'core', 'memory'));
+    const memoryManager = getMemory(projectDir);
+    const memoryCount = memoryManager.startSession();
+    const memory = {
+      sessionCount: memoryCount,
+      platform: memoryManager.get('session.platform', 'gemini'),
+      level: level,
+      lastSessionStarted: memoryManager.get('session.lastSessionStarted'),
+      outputStyle: memoryManager.get('data.pdca.outputStyle')
+    };
 
     // 5. Load output style
     const outputStyle = loadOutputStyle(pluginRoot, level, memory);
@@ -53,8 +68,18 @@ function main() {
     // 6. Detect returning user
     const returningInfo = detectReturningUser(pdcaStatus, memory);
 
+    // 6.5. Get tracker context (v0.32.0+)
+    let trackerContext = '';
+    try {
+      const { getTrackerContextInjection } = require(path.join(libPath, 'adapters', 'gemini', 'tracker-bridge'));
+      if (pdcaStatus.primaryFeature) {
+        const phase = pdcaStatus.features[pdcaStatus.primaryFeature]?.phase || 'plan';
+        trackerContext = getTrackerContextInjection(pdcaStatus.primaryFeature, phase);
+      }
+    } catch (e) { /* tracker bridge not available */ }
+
     // 7. Generate dynamic context
-    const dynamicContext = generateDynamicContext(pdcaStatus, level, memory, returningInfo, outputStyle, pluginRoot);
+    const dynamicContext = generateDynamicContext(pdcaStatus, level, memory, returningInfo, outputStyle, pluginRoot, trackerContext);
 
     // 8. Output result
     const output = {
@@ -62,7 +87,7 @@ function main() {
       context: dynamicContext,
       hookEvent: 'SessionStart',
       metadata: {
-        version: '1.5.6',
+        version: '1.5.7',
         platform: 'gemini',
         level: level,
         primaryFeature: pdcaStatus.primaryFeature,
@@ -80,9 +105,12 @@ function main() {
 
   } catch (error) {
     // Graceful degradation
+    if (process.env.BKIT_DEBUG === 'true') {
+      console.error('SessionStart hook error:', error);
+    }
     console.log(JSON.stringify({
       status: 'allow',
-      context: 'bkit Vibecoding Kit v1.5.6 activated (Gemini CLI)',
+      context: 'bkit Vibecoding Kit v1.5.7 activated (Gemini CLI)',
       hookEvent: 'SessionStart'
     }));
     process.exit(0);
@@ -90,41 +118,7 @@ function main() {
 }
 
 // ─── PDCA Status ───────────────────────────────────────────────
-
-function loadPdcaStatus(projectDir) {
-  const pdcaStatusPath = path.join(projectDir, 'docs', '.pdca-status.json');
-  let pdcaStatus = {
-    version: '2.0',
-    lastUpdated: new Date().toISOString(),
-    activeFeatures: [],
-    primaryFeature: null,
-    features: {},
-    pipeline: { currentPhase: 1, level: 'Starter', phaseHistory: [] },
-    session: { startedAt: new Date().toISOString(), onboardingCompleted: false, lastActivity: new Date().toISOString() }
-  };
-
-  if (fs.existsSync(pdcaStatusPath)) {
-    try {
-      pdcaStatus = JSON.parse(fs.readFileSync(pdcaStatusPath, 'utf-8'));
-      pdcaStatus.session.startedAt = new Date().toISOString();
-      pdcaStatus.session.lastActivity = new Date().toISOString();
-    } catch (e) { /* use default */ }
-  } else {
-    const docsDir = path.dirname(pdcaStatusPath);
-    if (!fs.existsSync(docsDir)) {
-      fs.mkdirSync(docsDir, { recursive: true });
-    }
-  }
-
-  return pdcaStatus;
-}
-
-function savePdcaStatus(projectDir, pdcaStatus) {
-  try {
-    const pdcaStatusPath = path.join(projectDir, 'docs', '.pdca-status.json');
-    fs.writeFileSync(pdcaStatusPath, JSON.stringify(pdcaStatus, null, 2));
-  } catch (e) { /* silently fail */ }
-}
+// Managed by lib/pdca/status.js
 
 // ─── Level Detection ───────────────────────────────────────────
 
@@ -162,28 +156,7 @@ function detectProjectLevel(projectDir) {
 }
 
 // ─── Memory Store ──────────────────────────────────────────────
-
-function loadMemoryStore(projectDir, level) {
-  const memoryPath = path.join(projectDir, 'docs', '.bkit-memory.json');
-  let memory = {
-    sessionCount: 1,
-    platform: 'gemini',
-    level: level,
-    lastSessionStarted: new Date().toISOString()
-  };
-
-  if (fs.existsSync(memoryPath)) {
-    try {
-      const existing = JSON.parse(fs.readFileSync(memoryPath, 'utf-8'));
-      memory.sessionCount = (existing.sessionCount || 0) + 1;
-      memory.outputStyle = existing.outputStyle || null;
-      memory.lastSessionEnded = existing.lastSessionEnded || null;
-    } catch (e) { /* use default */ }
-  }
-
-  fs.writeFileSync(memoryPath, JSON.stringify(memory, null, 2));
-  return memory;
-}
+// Managed by lib/core/memory.js
 
 // ─── Output Style ──────────────────────────────────────────────
 
@@ -233,11 +206,11 @@ function detectReturningUser(pdcaStatus, memory) {
 
 // ─── Dynamic Context Generation ────────────────────────────────
 
-function generateDynamicContext(pdcaStatus, level, memory, returningInfo, outputStyle, pluginRoot) {
+function generateDynamicContext(pdcaStatus, level, memory, returningInfo, outputStyle, pluginRoot, trackerContext) {
   const sections = [];
 
   // Header
-  sections.push('# bkit Vibecoding Kit v1.5.6 - Session Start');
+  sections.push('# bkit Vibecoding Kit v1.5.7 - Session Start');
   sections.push('');
 
   // Core Rules (dynamically injected to address GEMINI.md ignore issue #13852)
@@ -249,6 +222,11 @@ function generateDynamicContext(pdcaStatus, level, memory, returningInfo, output
   // Output Style
   if (outputStyle.rules) {
     sections.push(buildOutputStyleSection(outputStyle));
+  }
+
+  // Tracker Integration (v0.32.0+)
+  if (trackerContext) {
+    sections.push(trackerContext);
   }
 
   // PDCA Status

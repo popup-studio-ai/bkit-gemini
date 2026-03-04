@@ -8,7 +8,7 @@ const { TOOL_ANNOTATIONS, getToolAnnotations, isReadOnlyTool, getStrictReadOnlyT
 module.exports = {
   tests: [
     {
-      name: 'V156-01: v0.31.0 has 18 feature flags all true',
+      name: 'V156-01: v0.31.0 has 18 true feature flags (29 total with v0.32.0 flags)',
       fn: () => {
         resetCache();
         const original = process.env.GEMINI_CLI_VERSION;
@@ -16,10 +16,9 @@ module.exports = {
         try {
           const flags = getFeatureFlags();
           const keys = Object.keys(flags);
-          assertEqual(keys.length, 18, 'Should have exactly 18 feature flags');
-          keys.forEach(key => {
-            assertEqual(flags[key], true, `${key} should be true for v0.31.0`);
-          });
+          assertEqual(keys.length, 29, 'Should have 29 feature flags (18 v0.31.0 + 11 v0.32.0)');
+          const trueFlags = keys.filter(k => flags[k] === true);
+          assertEqual(trueFlags.length, 18, 'Should have 18 true flags for v0.31.0');
         } finally {
           if (original !== undefined) process.env.GEMINI_CLI_VERSION = original;
           else delete process.env.GEMINI_CLI_VERSION;
@@ -204,24 +203,24 @@ module.exports = {
       }
     },
     {
-      name: 'V156-14: getFeatureFlags() returns exactly 18 keys',
+      name: 'V156-14: getFeatureFlags() returns 29 keys (v1.5.7: 18 v0.31.0 + 11 v0.32.0)',
       fn: () => {
         const flags = getFeatureFlags();
-        assertEqual(Object.keys(flags).length, 18);
+        assertEqual(Object.keys(flags).length, 29);
       }
     },
     {
-      name: 'V156-15: TOOL_ANNOTATIONS has 17 entries (all built-in tools)',
+      name: 'V156-15: TOOL_ANNOTATIONS has 23 entries (17 original + 6 tracker)',
       fn: () => {
-        assertEqual(Object.keys(TOOL_ANNOTATIONS).length, 17);
+        assertEqual(Object.keys(TOOL_ANNOTATIONS).length, 23);
       }
     },
     {
-      name: 'V156-16: 9 tools have readOnlyHint=true',
+      name: 'V156-16: 12 tools have readOnlyHint=true (9 original + 3 tracker)',
       fn: () => {
         const readOnly = Object.entries(TOOL_ANNOTATIONS)
           .filter(([, ann]) => ann.readOnlyHint === true);
-        assertEqual(readOnly.length, 9);
+        assertEqual(readOnly.length, 12);
       }
     },
     {
@@ -234,11 +233,11 @@ module.exports = {
       }
     },
     {
-      name: 'V156-18: 12 tools have idempotentHint=true',
+      name: 'V156-18: 16 tools have idempotentHint=true (12 original + 4 tracker)',
       fn: () => {
         const idempotent = Object.entries(TOOL_ANNOTATIONS)
           .filter(([, ann]) => ann.idempotentHint === true);
-        assertEqual(idempotent.length, 12);
+        assertEqual(idempotent.length, 16);
       }
     },
     {
@@ -264,10 +263,10 @@ module.exports = {
       }
     },
     {
-      name: 'V156-22: getStrictReadOnlyTools() returns 9 tools',
+      name: 'V156-22: getStrictReadOnlyTools() returns 12 tools (9 original + 3 tracker)',
       fn: () => {
         const tools = getStrictReadOnlyTools();
-        assertEqual(tools.length, 9, 'Should return 9 strict read-only tools');
+        assertEqual(tools.length, 12, 'Should return 12 strict read-only tools');
       }
     },
     {

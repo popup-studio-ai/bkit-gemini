@@ -1,5 +1,9 @@
 // tests/suites/tc09-pdca-e2e.js
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, executeHook, assert, assertEqual, assertContains, assertExists } = require('../test-utils');
+const { 
+  PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, 
+  executeHook, assert, assertEqual, assertContains, assertExists, 
+  readPdcaStatus 
+} = require('../test-utils');
 const fs = require('fs');
 const path = require('path');
 
@@ -13,7 +17,7 @@ const tests = [
         tool_input: { skill: 'bkit:pdca', args: 'plan test-feature' }
       });
       assert(result.success, 'Post-hook should run');
-      const status = JSON.parse(fs.readFileSync(path.join(TEST_PROJECT_DIR, 'docs/.pdca-status.json'), 'utf-8'));
+      const status = readPdcaStatus();
       assert(status.features['test-feature'], 'Feature should be in status');
       assertEqual(status.features['test-feature'].phase, 'plan', 'Phase should be plan');
     },
@@ -31,7 +35,7 @@ const tests = [
         tool_name: 'activate_skill',
         tool_input: { skill: 'bkit:pdca', args: 'design test-feature' }
       });
-      const status = JSON.parse(fs.readFileSync(path.join(TEST_PROJECT_DIR, 'docs/.pdca-status.json'), 'utf-8'));
+      const status = readPdcaStatus();
       assertEqual(status.features['test-feature'].phase, 'design', 'Phase should transition to design');
     },
     teardown: cleanupTestProject
@@ -48,7 +52,7 @@ const tests = [
         tool_name: 'write_file',
         tool_input: { file_path: 'src/app.js', content: 'console.log("hello");' }
       });
-      const status = JSON.parse(fs.readFileSync(path.join(TEST_PROJECT_DIR, 'docs/.pdca-status.json'), 'utf-8'));
+      const status = readPdcaStatus();
       assertEqual(status.features['test-feature'].phase, 'do', 'Phase should transition to do');
     },
     teardown: cleanupTestProject

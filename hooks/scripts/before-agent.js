@@ -2,60 +2,72 @@
 /**
  * BeforeAgent Hook - Intent Detection
  * Detects user intent, triggers, and provides context before agent processing
+ * Dual-mode: handler export (v0.31.0+ SDK) + stdin command (legacy)
  */
 const fs = require('fs');
 const path = require('path');
 
 const libPath = path.resolve(__dirname, '..', '..', 'lib');
 
-function main() {
+// --- Core processing logic ---
+function processHook(input) {
   try {
-    const { getAdapter } = require(path.join(libPath, 'adapters'));
-    const adapter = getAdapter();
-
-    // Read input from stdin
-    const input = adapter.readHookInput();
     const prompt = input.prompt || input.user_message || input.message || '';
 
     if (!prompt || prompt.length < 3) {
-      adapter.outputEmpty();
-      return;
+      return { status: 'allow' };
     }
 
     const contexts = [];
 
-    // 1. Detect agent triggers
     const agentMatch = matchAgentTrigger(prompt);
     if (agentMatch) {
       contexts.push(`**Detected Agent Trigger**: ${agentMatch.agent} (confidence: ${agentMatch.confidence})`);
     }
 
-    // 2. Detect skill triggers
     const skillMatch = matchSkillTrigger(prompt);
     if (skillMatch) {
       contexts.push(`**Detected Skill Trigger**: ${skillMatch.skill} (level: ${skillMatch.level})`);
     }
 
-    // 3. Detect new feature intent
     const featureIntent = detectFeatureIntent(prompt);
     if (featureIntent.isNewFeature) {
       contexts.push(`**New Feature Detected**: "${featureIntent.featureName}" - Consider starting PDCA with /pdca plan ${featureIntent.featureName}`);
     }
 
-    // 4. Calculate ambiguity
     const ambiguityScore = calculateAmbiguity(prompt);
     if (ambiguityScore > 0.5) {
       contexts.push('**Note**: Request may be ambiguous. Consider asking clarifying questions.');
     }
 
     if (contexts.length > 0) {
-      adapter.outputAllow(contexts.join('\n'), 'BeforeAgent');
+      return { status: 'allow', message: contexts.join('\n'), hookEvent: 'BeforeAgent' };
+    }
+    return { status: 'allow' };
+  } catch (error) {
+    return { status: 'allow' };
+  }
+}
+
+// --- RuntimeHook function export (v0.31.0+ SDK) ---
+async function handler(event) {
+  return processHook(event);
+}
+
+// --- Legacy command mode ---
+function main() {
+  try {
+    const { getAdapter } = require(path.join(libPath, 'adapters'));
+    const adapter = getAdapter();
+    const input = adapter.readHookInput();
+    const result = processHook(input);
+
+    if (result.message) {
+      adapter.outputAllow(result.message, result.hookEvent || 'BeforeAgent');
     } else {
       adapter.outputEmpty();
     }
-
   } catch (error) {
-    // Silent fail
     process.exit(0);
   }
 }
@@ -182,4 +194,6 @@ function calculateAmbiguity(text) {
   return Math.min(score, 1);
 }
 
-main();
+if (require.main === module) { main(); }
+
+module.exports = { handler };

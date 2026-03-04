@@ -5,7 +5,7 @@ prompt = """
 Action: {{args}}
 
 Current pipeline status:
-!cat docs/.pdca-status.json 2>/dev/null | grep -o '"currentPhase":[0-9]*' || echo 'Phase 1'
+!cat .pdca-status.json 2>/dev/null | grep -o '"currentPhase":[0-9]*' || cat docs/.pdca-status.json 2>/dev/null | grep -o '"currentPhase":[0-9]*' || echo 'Phase 1'
 
 Pipeline phases:
 1. Schema/Terminology → /phase-1-schema

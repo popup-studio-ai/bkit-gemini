@@ -2,6 +2,7 @@
 /**
  * BeforeToolSelection Hook - Tool Filtering
  * Filters available tools based on PDCA phase and active skill restrictions
+ * Dual-mode: handler export (v0.31.0+ SDK) + stdin command (legacy)
  */
 const fs = require('fs');
 const path = require('path');
@@ -9,36 +10,24 @@ const path = require('path');
 const libPath = path.resolve(__dirname, '..', '..', 'lib');
 const toolRegistryPath = path.join(libPath, 'adapters', 'gemini', 'tool-registry');
 
-function main() {
+// --- Core processing logic ---
+function processHook(input) {
   try {
-    const { getAdapter } = require(path.join(libPath, 'adapters'));
-    const adapter = getAdapter();
-
-    const input = adapter.readHookInput();
     const tools = input.tools || [];
-    const toolConfig = input.toolConfig || {};
-
     if (!tools || tools.length === 0) {
-      adapter.outputEmpty();
-      return;
+      return { status: 'allow' };
     }
 
-    const projectDir = adapter.getProjectDir();
-    const pluginRoot = adapter.getPluginRoot();
+    const projectDir = input.projectDir || process.cwd();
+    const pluginRoot = input.pluginRoot || path.resolve(__dirname, '..', '..');
 
-    // 1. Get PDCA phase restrictions
     const pdcaPhase = getCurrentPdcaPhase(projectDir);
     const phaseFilter = getPhaseToolFilter(pdcaPhase);
-
-    // 2. Get active skill restrictions
     const skillFilter = getActiveSkillToolFilter(projectDir, pluginRoot);
-
-    // 3. Merge filters (intersection)
     const allowedTools = mergeFilters(phaseFilter, skillFilter);
 
-    // 4. Apply filter if restrictions exist
     if (allowedTools && allowedTools.length > 0) {
-      const output = {
+      return {
         status: 'allow',
         toolConfig: {
           functionCallingConfig: {
@@ -48,14 +37,35 @@ function main() {
         },
         hookEvent: 'BeforeToolSelection'
       };
-      console.log(JSON.stringify(output));
+    }
+    return { status: 'allow' };
+  } catch (error) {
+    return { status: 'allow' };
+  }
+}
+
+// --- RuntimeHook function export (v0.31.0+ SDK) ---
+async function handler(event) {
+  return processHook(event);
+}
+
+// --- Legacy command mode ---
+function main() {
+  try {
+    const { getAdapter } = require(path.join(libPath, 'adapters'));
+    const adapter = getAdapter();
+    const input = adapter.readHookInput();
+    input.projectDir = adapter.getProjectDir();
+    input.pluginRoot = adapter.getPluginRoot();
+    const result = processHook(input);
+
+    if (result.toolConfig) {
+      console.log(JSON.stringify(result));
       process.exit(0);
     } else {
       adapter.outputEmpty();
     }
-
   } catch (error) {
-    // Graceful degradation - don't restrict tools on error
     process.exit(0);
   }
 }
@@ -150,4 +160,6 @@ function mergeFilters(filter1, filter2) {
   return filter1.filter(tool => filter2.includes(tool));
 }
 
-main();
+if (require.main === module) { main(); }
+
+module.exports = { handler };

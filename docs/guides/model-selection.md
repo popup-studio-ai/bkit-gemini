@@ -1,7 +1,7 @@
 # Model Selection Guide
 
-> **Version**: 1.5.6
-> **Updated**: 2026-02-28
+> **Version**: 1.5.7
+> **Updated**: 2026-03-04
 > **Author**: POPUP STUDIO
 
 This guide provides recommendations for selecting the optimal Gemini model for different bkit agents and workflows.

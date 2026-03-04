@@ -2,32 +2,25 @@
 /**
  * BeforeModel Hook - Prompt Optimization & Model Selection
  * Injects PDCA phase-specific context and optimizes prompts before model processing
+ * Dual-mode: handler export (v0.31.0+ SDK) + stdin command (legacy)
  */
 const fs = require('fs');
 const path = require('path');
 
 const libPath = path.resolve(__dirname, '..', '..', 'lib');
 
-function main() {
+// --- Core processing logic ---
+function processHook(input) {
   try {
-    const { getAdapter } = require(path.join(libPath, 'adapters'));
-    const adapter = getAdapter();
-
-    const input = adapter.readHookInput();
     const prompt = input.prompt || input.user_message || '';
-
     if (!prompt || prompt.length < 3) {
-      adapter.outputEmpty();
-      return;
+      return { status: 'allow' };
     }
 
-    const projectDir = adapter.getProjectDir();
+    const projectDir = input.projectDir || process.cwd();
     const contexts = [];
 
-    // 1. Get current PDCA phase
     const pdcaPhase = getCurrentPdcaPhase(projectDir);
-
-    // 2. Inject phase-specific context
     if (pdcaPhase) {
       const phaseContext = getPhaseContext(pdcaPhase);
       if (phaseContext) {
@@ -35,21 +28,36 @@ function main() {
       }
     }
 
-    // 3. Build output
     if (contexts.length > 0) {
-      const output = {
-        status: 'allow',
-        additionalContext: contexts.join('\n\n'),
-        hookEvent: 'BeforeModel'
-      };
-      console.log(JSON.stringify(output));
+      return { status: 'allow', additionalContext: contexts.join('\n\n'), hookEvent: 'BeforeModel' };
+    }
+    return { status: 'allow' };
+  } catch (error) {
+    return { status: 'allow' };
+  }
+}
+
+// --- RuntimeHook function export (v0.31.0+ SDK) ---
+async function handler(event) {
+  return processHook(event);
+}
+
+// --- Legacy command mode ---
+function main() {
+  try {
+    const { getAdapter } = require(path.join(libPath, 'adapters'));
+    const adapter = getAdapter();
+    const input = adapter.readHookInput();
+    input.projectDir = adapter.getProjectDir();
+    const result = processHook(input);
+
+    if (result.additionalContext) {
+      console.log(JSON.stringify(result));
       process.exit(0);
     } else {
       adapter.outputEmpty();
     }
-
   } catch (error) {
-    // Graceful degradation
     process.exit(0);
   }
 }
@@ -127,4 +135,6 @@ function getPhaseContext(phase) {
   return phaseContexts[phase] || null;
 }
 
-main();
+if (require.main === module) { main(); }
+
+module.exports = { handler };

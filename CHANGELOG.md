@@ -5,6 +5,36 @@ All notable changes to bkit-gemini will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.7] - 2026-03-04
+
+### Added
+- 6 Task Tracker tool registrations (v0.32.0+): tracker_create_task, tracker_update_task, tracker_get_task, tracker_list_tasks, tracker_add_dependency, tracker_visualize
+- 11 v0.32.0+ feature flags in version-detector (hasTaskTracker, hasModelFamilyToolsets, hasExtensionPolicies, hasPlanModeEnhanced, hasA2AStreaming, hasShellAutocompletion, hasGrepIncludePatternRename, hasReadFileLineParams, hasReplaceAllowMultiple, hasExcludeToolsRemoved, hasParallelExtensionLoading)
+- Nightly version format parsing support in version-detector
+- Extension-level TOML policy (Tier 2) replacing deprecated excludeTools
+- Task Tracker - PDCA Bridge module (tracker-bridge.js) with instruction-based architecture
+- AfterAgent loop guard (Issue #20426 mitigation) with MAX_REENTRY=3
+- Sub-agent timeout cap (600s) and non-interactive mode for v0.32.0+
+- New hooks/runtime-hooks.js SDK registration module for HookSystem.registerHook()
+- 4 Claude→Gemini tool mappings: TaskCreate, TaskUpdate, TaskGet, TaskList
+
+### Changed
+- 6 hot-path hook scripts converted to SDK dual-mode (handler export + stdin command fallback)
+- hook-adapter.js activated with activateRuntimeHooks(), loadHookHandler(), getMigrationStatus()
+- Policy Engine extended to 4-tier system (Default/Extension/Workspace/Admin)
+- Tool registry expanded from 17 to 23 built-in tools
+- Tool reference docs updated for 23 tools with Breaking Changes section
+- 4 agent frontmatters updated with tracker tools (cto-lead, product-manager, pdca-iterator, qa-strategist)
+- 3 skill frontmatters updated with tracker tools (pdca, development-pipeline, phase-8-review)
+- session-start.js integrates tracker context injection and extension policy generation
+- bkit.config.json updated with runtimeHooks and taskTracker compatibility sections
+
+### Removed
+- excludeTools from gemini-extension.json (replaced by Extension TOML policy)
+
+### Fixed
+- validateTomlStructure() now validates toolName field casing (rejects lowercase `toolname`)
+
 ## [1.5.6] - 2026-02-28
 
 ### Added
@@ -249,6 +279,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[1.5.7]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.6...v1.5.7
 [1.5.6]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.5...v1.5.6
 [1.5.5]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.4...v1.5.5
 [1.5.4]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.3...v1.5.4

@@ -1,0 +1,57 @@
+# bkit-gemini v1.5.7 - Starter Level Policy
+# Restrictive policy for beginners - safe defaults
+# Auto-generated for Gemini CLI v0.31.0+ Project-Level Policy Engine (Tier 3)
+# Generated: 2026-03-04
+
+[[rule]]
+toolName = "write_file"
+decision = "ask_user"
+priority = 30
+
+[[rule]]
+toolName = "replace"
+decision = "ask_user"
+priority = 30
+
+[[rule]]
+toolName = "run_shell_command"
+decision = "ask_user"
+priority = 40
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "rm"
+decision = "deny"
+priority = 100
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "git push --force"
+decision = "deny"
+priority = 100
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "git reset --hard"
+decision = "deny"
+priority = 100
+
+[[rule]]
+toolName = "read_file"
+decision = "allow"
+priority = 10
+
+[[rule]]
+toolName = "glob"
+decision = "allow"
+priority = 10
+
+[[rule]]
+toolName = "grep_search"
+decision = "allow"
+priority = 10
+
+[[rule]]
+toolName = "google_web_search"
+decision = "allow"
+priority = 10

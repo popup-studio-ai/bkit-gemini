@@ -12,25 +12,25 @@ const tests = [
     }
   },
   {
-    name: 'CFG-02: version is 1.5.6',
+    name: 'CFG-02: version is 1.5.7',
     fn: () => {
       const config = JSON.parse(fs.readFileSync(path.join(PLUGIN_ROOT, 'bkit.config.json'), 'utf-8'));
-      assertEqual(config.version, '1.5.6', 'Version should be 1.5.6');
+      assertEqual(config.version, '1.5.7', 'Version should be 1.5.7');
     }
   },
   {
     name: 'CFG-03: gemini-extension.json no experimental block',
     fn: () => {
       const ext = JSON.parse(fs.readFileSync(path.join(PLUGIN_ROOT, 'gemini-extension.json'), 'utf-8'));
-      assertEqual(ext.version, '1.5.6', 'Extension version should be 1.5.6');
+      assertEqual(ext.version, '1.5.7', 'Extension version should be 1.5.7');
       assert(!ext.experimental, 'experimental block should be removed (Skills/Hooks GA since v0.26.0)');
     }
   },
   {
-    name: 'CFG-06: Tool Registry exports 17 built-in tools',
+    name: 'CFG-06: Tool Registry exports 23 built-in tools',
     fn: () => {
       const { ALL_BUILTIN_TOOL_NAMES, BUILTIN_TOOLS } = require(path.join(PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'tool-registry'));
-      assertEqual(ALL_BUILTIN_TOOL_NAMES.size, 17, 'Should have 17 built-in tools');
+      assertEqual(ALL_BUILTIN_TOOL_NAMES.size, 23, 'Should have 23 built-in tools');
       assert(ALL_BUILTIN_TOOL_NAMES.has('glob'), 'Should have glob (not glob_tool)');
       assert(ALL_BUILTIN_TOOL_NAMES.has('google_web_search'), 'Should have google_web_search (not web_search)');
       assert(ALL_BUILTIN_TOOL_NAMES.has('grep_search'), 'Should have grep_search');

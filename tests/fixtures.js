@@ -33,4 +33,33 @@ const BKIT_MEMORY_RETURNING = {
   outputStyle: 'bkit-pdca-guide'
 };
 
-module.exports = { PDCA_STATUS_FIXTURE, BKIT_MEMORY_FIXTURE, BKIT_MEMORY_RETURNING };
+const PDCA_STATUS_V157 = {
+  version: "2.0",
+  activeFeatures: ["test-feature"],
+  primaryFeature: "test-feature",
+  features: {
+    "test-feature": {
+      phase: "design",
+      matchRate: null,
+      lastUpdated: new Date().toISOString()
+    }
+  },
+  pipeline: {
+    currentPhase: 1,
+    level: "Starter",
+    phaseHistory: []
+  },
+  session: {
+    startedAt: new Date().toISOString(),
+    onboardingCompleted: false,
+    lastActivity: new Date().toISOString()
+  }
+};
+
+const TRACKER_BRIDGE_FIXTURE = {
+  featureName: "test-feature",
+  epicId: null,
+  taskIds: {}
+};
+
+module.exports = { PDCA_STATUS_FIXTURE, BKIT_MEMORY_FIXTURE, BKIT_MEMORY_RETURNING, PDCA_STATUS_V157, TRACKER_BRIDGE_FIXTURE };

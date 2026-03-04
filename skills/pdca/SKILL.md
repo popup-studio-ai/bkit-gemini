@@ -29,6 +29,10 @@ allowed-tools:
   - glob
   - grep_search
   - google_web_search
+  - tracker_create_task
+  - tracker_update_task
+  - tracker_list_tasks
+  - tracker_visualize
 
 imports:
   - templates/plan.template.md

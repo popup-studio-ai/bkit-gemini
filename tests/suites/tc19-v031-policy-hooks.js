@@ -7,7 +7,7 @@ const {
 
 const { resetCache } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/version-detector'));
 const { LEVEL_POLICY_TEMPLATES, generateLevelPolicy, generatePolicyFile } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/policy-migrator'));
-const { HOOK_EVENT_MAP, supportsRuntimeHookFunctions, getHookExecutionInfo, getRuntimeHookTemplate } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/hook-adapter'));
+const { HOOK_EVENT_MAP, supportsRuntimeHookFunctions, getHookExecutionInfo, getMigrationStatus } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/hook-adapter'));
 
 module.exports = {
   tests: [
@@ -189,22 +189,22 @@ module.exports = {
       }
     },
     {
-      name: 'V156-39: getHookExecutionInfo() always returns mode="command"',
+      name: 'V156-39: getHookExecutionInfo() returns correct mode based on SDK',
       fn: () => {
         const info = getHookExecutionInfo('session_start');
-        assertEqual(info.mode, 'command', 'v1.5.6 always uses command mode');
+        assert(info.mode === 'command' || info.mode === 'function', 'mode should be command or function');
         assertEqual(info.hookEvent, 'session_start');
       }
     },
     {
-      name: 'V156-40: getHookExecutionInfo() reports sdkAvailable for v0.31.0',
+      name: 'V156-40: getHookExecutionInfo() reports sdkAvailable and function mode for v0.31.0',
       fn: () => {
         resetCache();
         process.env.GEMINI_CLI_VERSION = '0.31.0';
         try {
           const info = getHookExecutionInfo('before_tool');
           assertEqual(info.sdkAvailable, true);
-          assertEqual(info.mode, 'command');
+          assertEqual(info.mode, 'function');
         } finally {
           delete process.env.GEMINI_CLI_VERSION;
           resetCache();
@@ -212,19 +212,25 @@ module.exports = {
       }
     },
     {
-      name: 'V156-41: getRuntimeHookTemplate() default timeout is 30000',
+      name: 'V156-41: getMigrationStatus() returns mode info',
       fn: () => {
-        const tmpl = getRuntimeHookTemplate('session_start');
-        assertEqual(tmpl.event, 'session_start');
-        assertEqual(tmpl.timeout, 30000);
-        assert(tmpl._note.includes('v1.5.6'), 'Should mention v1.5.6');
+        const status = getMigrationStatus();
+        assert(status.mode === 'command-only' || status.mode === 'sdk+command', 'mode should be command-only or sdk+command');
+        assert(typeof status.sdkRegistered === 'number', 'sdkRegistered should be number');
       }
     },
     {
-      name: 'V156-42: getRuntimeHookTemplate() accepts custom timeout',
+      name: 'V156-42: getMigrationStatus() for v0.31.0 reports sdk+command mode',
       fn: () => {
-        const tmpl = getRuntimeHookTemplate('before_tool', 5000);
-        assertEqual(tmpl.timeout, 5000);
+        resetCache();
+        process.env.GEMINI_CLI_VERSION = '0.31.0';
+        try {
+          const status = getMigrationStatus();
+          assertEqual(status.mode, 'sdk+command');
+        } finally {
+          delete process.env.GEMINI_CLI_VERSION;
+          resetCache();
+        }
       }
     },
     {
@@ -257,14 +263,14 @@ module.exports = {
       }
     },
     {
-      name: 'V156-47: session-start.js references v1.5.6 version',
+      name: 'V156-47: session-start.js references v1.5.7 version',
       fn: () => {
         const content = fs.readFileSync(
           path.join(PLUGIN_ROOT, 'hooks', 'scripts', 'session-start.js'), 'utf-8'
         );
-        const matches = content.match(/1\.5\.6/g) || [];
+        const matches = content.match(/1\.5\.7/g) || [];
         assert(matches.length >= 4,
-          `session-start.js should reference v1.5.6 at least 4 times, found ${matches.length}`);
+          `session-start.js should reference v1.5.7 at least 4 times, found ${matches.length}`);
       }
     },
     {
@@ -328,7 +334,7 @@ module.exports = {
       teardown: cleanupTestProject
     },
     {
-      name: 'V156-51: All config files reference version 1.5.6',
+      name: 'V156-51: All config files reference version 1.5.7',
       fn: () => {
         const config = JSON.parse(fs.readFileSync(
           path.join(PLUGIN_ROOT, 'bkit.config.json'), 'utf-8'
@@ -336,8 +342,8 @@ module.exports = {
         const ext = JSON.parse(fs.readFileSync(
           path.join(PLUGIN_ROOT, 'gemini-extension.json'), 'utf-8'
         ));
-        assertEqual(config.version, '1.5.6', 'bkit.config.json version');
-        assertEqual(ext.version, '1.5.6', 'gemini-extension.json version');
+        assertEqual(config.version, '1.5.7', 'bkit.config.json version');
+        assertEqual(ext.version, '1.5.7', 'gemini-extension.json version');
       }
     }
   ]

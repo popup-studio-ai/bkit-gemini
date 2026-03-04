@@ -27,6 +27,7 @@ allowed-tools:
   - glob
   - grep_search
   - list_directory
+  - tracker_list_tasks
 
 imports:
   - templates/analysis.template.md
