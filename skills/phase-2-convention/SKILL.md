@@ -1,5 +1,6 @@
 ---
 name: phase-2-convention
+classification: C
 description: |
   Skill for defining coding rules and conventions.
   Ensures consistent code style and specifies coding standards.

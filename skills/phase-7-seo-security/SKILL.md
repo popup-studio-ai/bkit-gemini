@@ -1,5 +1,6 @@
 ---
 name: phase-7-seo-security
+classification: C
 description: |
   Skill for search optimization (SEO) and security hardening.
   Covers meta tags, semantic HTML, and security vulnerability checks.

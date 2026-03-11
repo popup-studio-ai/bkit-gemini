@@ -3,7 +3,7 @@ prompt = """
 Display the bkit help information:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- bkit v1.5.2 - AI Native Development Toolkit (Gemini Edition)
+ bkit v1.5.8 - AI Native Development Toolkit (Gemini Edition)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 PDCA (Document-Driven Development)
@@ -15,6 +15,10 @@ PDCA (Document-Driven Development)
   /pdca report <feature>     Completion report
   /pdca status               Show current status
   /pdca next                 Guide to next step
+
+Enhanced Planning
+  /plan-plus <feature>       Brainstorming-enhanced planning
+  /pm-discovery <feature>    PM Agent Team product discovery
 
 Project Initialization & BaaS
   /starter init <name>       Static web project
@@ -29,9 +33,12 @@ Development Pipeline
   /pipeline next             Next phase
   /pipeline status           Current phase
 
-Quality Management
+Quality & Automation
   /review <path>             Code review
   /qa                        Zero Script QA
+  /simplify                  Code quality review
+  /batch <features>          Parallel multi-feature PDCA
+  /loop <interval> <cmd>     Recurring command execution
 
 Output & Display
   /output-style              Change output style
@@ -46,7 +53,7 @@ Extension Info
   /bkit                      This help menu
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- 16 Agents | 29 Skills | 10 Hook Events
+ 21 Agents | 35 Skills | 24 Commands | 10 Hook Events
  8 Languages | 4 Output Styles | 28 MCP Tools
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 """

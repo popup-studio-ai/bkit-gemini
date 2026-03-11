@@ -5,6 +5,37 @@ All notable changes to bkit-gemini will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.8] - 2026-03-11
+
+### Added
+- **5 PM Agent Team Agents** (21 total): pm-lead (4-phase orchestration), pm-discovery (OST analysis), pm-strategy (JTBD + Lean Canvas), pm-research (personas + competitors + market sizing), pm-prd (8-section PRD synthesis + GTM strategy)
+- **6 New Skills** (35 total): batch (parallel multi-feature PDCA), plan-plus (brainstorming-enhanced planning), simplify (code quality review), pm-discovery (PM Team workflow), output-style-setup (style installation), loop (recurring interval execution)
+- **6 New TOML Commands** (24 total): `/batch`, `/loop`, `/plan-plus`, `/simplify`, `/output-style-setup`, `/pm-discovery`
+- **Team Orchestration System**: 9 modules in `lib/team/` with 5 patterns (Leader, Council, Swarm, Pipeline, Watchdog) -- coordinator.js, cto-logic.js, communication.js, memory.js, pattern-selector.js, state-recorder.js, strategy.js, task-queue.js, index.js
+- **Path Registry**: `lib/core/paths.js` -- centralized state file path management for `.bkit/{state,runtime,snapshots}/` with auto-migration from legacy paths
+- **Multilingual Intent Detection**: `lib/intent/language-patterns.js` -- structured 8-language keyword patterns for agent/skill auto-triggering
+- **Skills 2.0 Classification**: Workflow (W), Capability (C), Hybrid (H) categories for all 35 skills with `getSkillsByClassification()` query
+- **Executive Summary Output Rules**: `executive-summary-rules.md` -- mandatory summary table after PDCA document work
+- **7th @import Context Module**: `.gemini/context/executive-summary-rules.md`
+- **54 New Test Suites** (78 total, TC-25 ~ TC-78): 972 total test cases across 11 perspectives (unit, E2E, integration, scenario, philosophy, security, edge cases, boundaries, recovery, output styles, hooks)
+- **Gemini CLI v0.33.x Compatibility**: tested through v0.33.0-preview.4
+
+### Changed
+- Agent count: 16 -> 21 (+5 PM agents)
+- Skill count: 29 -> 35 (+6 new skills)
+- Command count: 18 -> 24 (+6 new commands)
+- Test suite count: 24 -> 78 (+54 new suites, 972 total TCs)
+- @import context modules: 6 -> 7 (+executive-summary-rules.md)
+- bkit.config.json: added team orchestration, Skills 2.0 metadata, PM Agent Team configuration sections
+- gemini-extension.json: version bumped to 1.5.8, plan.directory setting added
+- GEMINI.md: version bumped to v1.5.8 with 7 @import modules
+- Skill Orchestrator: enhanced with Skills 2.0 classification queries
+- Core index: updated exports including paths module and team orchestration
+
+### Documentation
+- Plan/Design/Analysis/Report for bkit-gemini-v158-upgrade (39/39 functional requirements)
+- Plan/Design/Analysis/Report for bkit-v158-comprehensive-test (972 TCs, 100% pass rate)
+
 ## [1.5.7] - 2026-03-04
 
 ### Added
@@ -279,6 +310,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[1.5.8]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.7...v1.5.8
 [1.5.7]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.6...v1.5.7
 [1.5.6]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.5...v1.5.6
 [1.5.5]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.4...v1.5.5

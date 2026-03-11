@@ -34,8 +34,53 @@ function processHook(input) {
   }
 }
 
+/**
+ * Validate PDCA document against template requirements (FR-36)
+ * @param {string} filePath - Path to the document
+ * @param {string} projectDir - Project root directory
+ * @returns {{ valid: boolean, missing: string[], docType: string|null }}
+ */
+function validatePdcaDocument(filePath, projectDir) {
+  const requiredSections = {
+    'plan': ['## 1.', '## 2.', '## 3.'],
+    'design': ['## 1.', '## 2.', '## 3.'],
+    'analysis': ['Match Rate', 'Gap'],
+    'report': ['Executive Summary', 'Result']
+  };
+
+  const normalizedPath = filePath.replace(/\\/g, '/');
+  let docType = null;
+  if (normalizedPath.includes('/01-plan/')) docType = 'plan';
+  else if (normalizedPath.includes('/02-design/')) docType = 'design';
+  else if (normalizedPath.includes('/03-analysis/')) docType = 'analysis';
+  else if (normalizedPath.includes('/04-report/')) docType = 'report';
+
+  if (!docType || !requiredSections[docType]) return { valid: true, missing: [], docType: null };
+
+  try {
+    const content = fs.readFileSync(path.resolve(projectDir, filePath), 'utf-8');
+    const missing = requiredSections[docType].filter(s => !content.includes(s));
+    return { valid: missing.length === 0, missing, docType };
+  } catch {
+    return { valid: true, missing: [], docType };
+  }
+}
+
 function processPostWrite(toolInput, projectDir) {
   const filePath = toolInput.file_path || toolInput.path || toolInput.filePath || '';
+
+  // Template validation for PDCA documents (FR-36)
+  if (filePath.includes('/docs/') && filePath.endsWith('.md')) {
+    const validation = validatePdcaDocument(filePath, projectDir);
+    if (!validation.valid && validation.missing.length > 0) {
+      return {
+        status: 'allow',
+        message: `**Template Warning**: ${validation.docType} document may be missing sections: ${validation.missing.join(', ')}`,
+        hookEvent: 'AfterTool'
+      };
+    }
+  }
+
   const ext = path.extname(filePath).toLowerCase();
   const sourceExts = ['.ts', '.tsx', '.js', '.jsx', '.py', '.go', '.rs', '.java'];
   if (!sourceExts.includes(ext)) return { status: 'allow' };

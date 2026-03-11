@@ -1,4 +1,4 @@
-# bkit-gemini v1.5.7 - Extension Policy (Tier 2)
+# bkit-gemini v1.5.8 - Extension Policy (Tier 2)
 # Replaces deprecated excludeTools in gemini-extension.json
 # Extension tier: DENY and ASK_USER decisions only (ALLOW not permitted at Tier 2)
 

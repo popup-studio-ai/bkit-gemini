@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * SessionStart Hook - Enhanced Session Initialization (v1.5.7)
+ * SessionStart Hook - Enhanced Session Initialization (v1.5.8)
  * Dynamic context injection, output style loading, returning user detection,
  * agent triggers injection, PDCA rules injection, feature report template
  */
@@ -87,7 +87,7 @@ function main() {
       context: dynamicContext,
       hookEvent: 'SessionStart',
       metadata: {
-        version: '1.5.7',
+        version: '1.5.8',
         platform: 'gemini',
         level: level,
         primaryFeature: pdcaStatus.primaryFeature,
@@ -110,7 +110,7 @@ function main() {
     }
     console.log(JSON.stringify({
       status: 'allow',
-      context: 'bkit Vibecoding Kit v1.5.7 activated (Gemini CLI)',
+      context: 'bkit Vibecoding Kit v1.5.8 activated (Gemini CLI)',
       hookEvent: 'SessionStart'
     }));
     process.exit(0);
@@ -210,7 +210,7 @@ function generateDynamicContext(pdcaStatus, level, memory, returningInfo, output
   const sections = [];
 
   // Header
-  sections.push('# bkit Vibecoding Kit v1.5.7 - Session Start');
+  sections.push('# bkit Vibecoding Kit v1.5.8 - Session Start');
   sections.push('');
 
   // Core Rules (dynamically injected to address GEMINI.md ignore issue #13852)
@@ -305,13 +305,13 @@ function getPhaseRecommendation(phase, feature, matchRate) {
   if (!phase || !feature) return null;
 
   const recommendations = {
-    plan: `Design 문서 작성 추천: \`/pdca design ${feature}\``,
-    design: `구현 시작 추천: \`/pdca do ${feature}\``,
-    do: `Gap 분석 추천: \`/pdca analyze ${feature}\``,
+    plan: `Recommended: Create Design document: \`/pdca design ${feature}\``,
+    design: `Recommended: Start implementation: \`/pdca do ${feature}\``,
+    do: `Recommended: Run Gap analysis: \`/pdca analyze ${feature}\``,
     check: matchRate !== null && matchRate < 90
-      ? `반복 개선 추천 (현재 ${matchRate}%): \`/pdca iterate ${feature}\``
-      : `완료 보고서 추천: \`/pdca report ${feature}\``,
-    act: `완료 보고서 추천: \`/pdca report ${feature}\``
+      ? `Recommended: Iterate to improve (current ${matchRate}%): \`/pdca iterate ${feature}\``
+      : `Recommended: Generate completion report: \`/pdca report ${feature}\``,
+    act: `Recommended: Generate completion report: \`/pdca report ${feature}\``
   };
 
   return recommendations[phase] || null;
@@ -348,6 +348,8 @@ function buildAgentTriggersSection() {
     '| analyze, 분석, 分析, 品質, analizar, analyser, analysieren, analizzare | code-analyzer | Code quality |',
     '| report, 보고서, 報告, 报告, informe, rapport, Bericht, rapporto | report-generator | Completion report |',
     '| help, 도움, 助けて, 帮助, ayuda, aide, Hilfe, aiuto | starter-guide | Beginner guide |',
+    '| bkend, BaaS, 백엔드, バックエンド, 后端, backend | bkend-expert | Backend/BaaS expert |',
+    '| pm, PRD, PM 분석, PM分析, PM-Analyse, analisi PM | pm-lead | PM Team analysis |',
     '| team, 팀 구성, チームリード, 团队领导, CTO | cto-lead | Team orchestration |',
     ''
   ].join('\n');

@@ -9,7 +9,7 @@
  *   BeforeToolSelection, BeforeTool, AfterTool
  * Lifecycle hooks (command-only): SessionStart, AfterAgent, PreCompress, SessionEnd
  *
- * @version 1.5.7
+ * @version 1.5.8
  */
 const path = require('path');
 

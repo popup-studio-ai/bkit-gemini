@@ -1,8 +1,8 @@
 # bkit - Vibecoding Kit (Gemini CLI Edition)
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-v0.29.0~v0.32.1-blue.svg)](https://github.com/google-gemini/gemini-cli)
-[![Version](https://img.shields.io/badge/Version-1.5.7-green.svg)](CHANGELOG.md)
+[![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-v0.29.0~v0.33.x-blue.svg)](https://github.com/google-gemini/gemini-cli)
+[![Version](https://img.shields.io/badge/Version-1.5.8-green.svg)](CHANGELOG.md)
 [![Author](https://img.shields.io/badge/Author-POPUP%20STUDIO-orange.svg)](https://popupstudio.ai)
 
 > **PDCA methodology + Context Engineering for AI-native development**
@@ -37,9 +37,9 @@ Context Engineering:
 
 | Layer | Components | Count | Purpose |
 |-------|-----------|-------|---------|
-| **Domain Knowledge** | Skills | 29 | Structured expert knowledge activated on-demand via progressive disclosure |
-| **Behavioral Rules** | Agents | 16 | Role-based constraints with model, tools, temperature configuration |
-| **State Management** | Hook Scripts + Lib Modules | 17 + 6 | PDCA status tracking, intent detection, permission control, memory persistence |
+| **Domain Knowledge** | Skills | 35 | Structured expert knowledge activated on-demand via progressive disclosure |
+| **Behavioral Rules** | Agents | 21 | Role-based constraints with model, tools, temperature configuration |
+| **State Management** | Hook Scripts + Lib Modules | 17 + 13 | PDCA status tracking, intent detection, permission control, memory persistence, team orchestration |
 
 ### 10-Event Hook System
 
@@ -62,8 +62,8 @@ Event 10: SessionEnd           -> Session cleanup, memory persistence
 
 ```
 bkit-gemini/
-|-- gemini-extension.json         # Extension manifest (v1.5.7)
-|-- GEMINI.md                     # Global context with 6 @import modules
+|-- gemini-extension.json         # Extension manifest (v1.5.8)
+|-- GEMINI.md                     # Global context with 7 @import modules
 |-- bkit.config.json              # Centralized configuration (12 sections)
 |-- CHANGELOG.md                  # Version history
 |
@@ -73,9 +73,10 @@ bkit-gemini/
 |   |-- agent-triggers.md         # Agent activation triggers
 |   |-- skill-triggers.md         # Skill activation triggers
 |   |-- tool-reference.md         # Tool name mapping
-|   +-- feature-report.md         # Feature usage report format
+|   |-- feature-report.md         # Feature usage report format
+|   +-- executive-summary-rules.md # Executive summary output rules
 |
-|-- agents/                       # 16 specialized AI agents
+|-- agents/                       # 21 specialized AI agents
 |   |-- cto-lead.md               # CTO-level orchestration
 |   |-- frontend-architect.md     # UI/UX architecture
 |   |-- security-architect.md     # Security & vulnerability analysis
@@ -91,9 +92,14 @@ bkit-gemini/
 |   |-- pipeline-guide.md         # Pipeline guidance
 |   |-- bkend-expert.md           # bkend.ai BaaS expertise
 |   |-- enterprise-expert.md      # Enterprise architecture
-|   +-- infra-architect.md        # AWS/K8s/Terraform
+|   |-- infra-architect.md        # AWS/K8s/Terraform
+|   |-- pm-lead.md                # PM Team Lead orchestration
+|   |-- pm-discovery.md           # Market/user opportunity discovery
+|   |-- pm-strategy.md            # Value proposition & Lean Canvas
+|   |-- pm-research.md            # Personas, competitors, market sizing
+|   +-- pm-prd.md                 # PRD synthesis & GTM strategy
 |
-|-- skills/                       # 29 domain skills (progressive disclosure)
+|-- skills/                       # 35 domain skills (progressive disclosure)
 |   |-- pdca/SKILL.md             # Unified PDCA management (8 actions)
 |   |-- starter/SKILL.md          # Static web development
 |   |-- dynamic/SKILL.md          # Fullstack with BaaS
@@ -107,6 +113,12 @@ bkit-gemini/
 |   |-- bkit-rules/               # Core rules
 |   |-- gemini-cli-learning/      # Gemini CLI mastery
 |   |-- phase-{1..9}-*/           # 9 pipeline phase skills
+|   |-- plan-plus/                # Brainstorming-enhanced planning
+|   |-- simplify/                 # Code quality review
+|   |-- batch/                    # Parallel multi-feature PDCA
+|   |-- loop/                     # Recurring interval execution
+|   |-- output-style-setup/       # Output style installation
+|   |-- pm-discovery/             # PM Agent Team workflow
 |   |-- bkend-quickstart/         # bkend.ai platform onboarding
 |   |-- bkend-auth/               # bkend.ai authentication
 |   |-- bkend-data/               # bkend.ai database CRUD
@@ -116,7 +128,7 @@ bkit-gemini/
 |   |-- bkend-cookbook/            # bkend.ai project tutorials
 |   +-- bkend-guides/             # bkend.ai operational guides
 |
-|-- commands/                     # 18 TOML custom commands
+|-- commands/                     # 24 TOML custom commands
 |   |-- bkit.toml                 # /bkit help
 |   |-- pdca.toml                 # /pdca (plan, design, do, analyze, iterate, report, status, next)
 |   |-- review.toml               # /review
@@ -127,6 +139,12 @@ bkit-gemini/
 |   |-- pipeline.toml             # /pipeline
 |   |-- learn.toml                # /learn
 |   |-- github-stats.toml         # /github-stats
+|   |-- plan-plus.toml            # /plan-plus
+|   |-- simplify.toml             # /simplify
+|   |-- batch.toml                # /batch
+|   |-- loop.toml                 # /loop
+|   |-- output-style-setup.toml   # /output-style-setup
+|   |-- pm-discovery.toml         # /pm-discovery
 |   |-- bkend-quickstart.toml     # /bkend-quickstart
 |   |-- bkend-auth.toml           # /bkend-auth
 |   |-- bkend-data.toml           # /bkend-data
@@ -159,14 +177,26 @@ bkit-gemini/
 |   +-- bkit-pdca-enterprise.md   # Enterprise PDCA combined
 |
 |-- lib/
-|   |-- skill-orchestrator.js     # Custom YAML parser, agent delegation (708 lines)
+|   |-- skill-orchestrator.js     # Custom YAML parser, agent delegation, Skills 2.0 classification
 |   |-- context-hierarchy.js      # 4-level config merge (209 lines)
 |   |-- core/
+|   |   |-- paths.js              # Centralized path registry (v1.5.8)
 |   |   |-- agent-memory.js       # Per-agent persistence (214 lines)
 |   |   +-- permission.js         # Glob pattern permission engine (381 lines)
+|   |-- team/                     # Team orchestration (v1.5.8, 9 modules)
+|   |   |-- coordinator.js        # Task coordination
+|   |   |-- cto-logic.js          # CTO-level orchestration (5 patterns)
+|   |   |-- communication.js      # MCP/memory protocols
+|   |   |-- memory.js             # Team memory persistence
+|   |   |-- pattern-selector.js   # Orchestration pattern selection
+|   |   |-- state-recorder.js     # State snapshots
+|   |   |-- strategy.js           # Strategy enum (dynamic/enterprise/custom)
+|   |   +-- task-queue.js         # Task queueing
+|   |-- intent/
+|   |   +-- language-patterns.js  # 8-language intent detection patterns
 |   +-- adapters/gemini/
 |       |-- index.js              # Platform adapter with TOOL_MAP
-|       |-- tool-registry.js      # Tool name registry + Annotations (v0.29.0~v0.32.1, 23 tools)
+|       |-- tool-registry.js      # Tool name registry + Annotations (v0.29.0~v0.33.x, 23 tools)
 |       |-- version-detector.js   # 3-strategy CLI version detection + 34 feature flags
 |       |-- policy-migrator.js    # Permission -> TOML Policy + Extension/Level Policy (v0.30.0+)
 |       |-- hook-adapter.js       # RuntimeHook SDK integration (v0.31.0+)
@@ -181,6 +211,17 @@ bkit-gemini/
 ---
 
 ## Features
+
+### v1.5.8 Highlights
+
+- **PM Agent Team** -- 5 new agents (pm-lead, pm-discovery, pm-strategy, pm-research, pm-prd) for comprehensive product discovery before PDCA Plan phase
+- **Team Orchestration** -- 9 modules with 5 patterns (Leader, Council, Swarm, Pipeline, Watchdog) for coordinated multi-agent workflows
+- **6 New Skills** -- plan-plus (brainstorming-enhanced planning), simplify (code quality review), batch (parallel PDCA), loop (recurring execution), output-style-setup, pm-discovery
+- **6 New Commands** -- `/plan-plus`, `/simplify`, `/batch`, `/loop`, `/output-style-setup`, `/pm-discovery`
+- **Skills 2.0 Classification** -- 35 skills categorized as Workflow (9), Capability (25), or Hybrid (1)
+- **Path Registry** -- Centralized state file management in `lib/core/paths.js` with auto-migration from legacy paths
+- **972 Test Cases** -- 78 test suites covering 11 perspectives (unit, E2E, integration, scenario, philosophy, security, edge cases, recovery)
+- **Gemini CLI v0.33.x Compatibility** -- Tested through v0.33.0-preview.4
 
 ### v1.5.7 Highlights
 
@@ -343,6 +384,21 @@ Run `/bkit` at any time to see all available commands and capabilities.
 /qa                      # Zero Script QA via Docker log monitoring
 ```
 
+### Enhanced Planning
+
+```bash
+/plan-plus <feature>     # Brainstorming-enhanced PDCA planning
+/pm-discovery <feature>  # PM Agent Team product discovery and PRD
+```
+
+### Automation
+
+```bash
+/simplify                # Code quality review and simplification
+/batch <features>        # Process multiple features in parallel
+/loop <interval> <cmd>   # Run command on recurring interval (e.g., /loop 5m /pdca status)
+```
+
 ### Output Styles
 
 ```bash
@@ -386,7 +442,7 @@ bkit recognizes natural language triggers in 8 languages and automatically activ
 
 ### Agent Memory Persistence
 
-All 16 agents remember context across sessions automatically:
+All 21 agents remember context across sessions automatically:
 - **Project scope** (default): Memory stored in `.gemini/agent-memory/bkit/` -- shared across team
 - **User scope** (starter-guide, pipeline-guide): Memory stored in `~/.gemini/agent-memory/bkit/` -- personal
 - Maximum 20 sessions retained per agent
@@ -400,14 +456,19 @@ All 16 agents remember context across sessions automatically:
 | `bkit-enterprise` | Enterprise teams | Technical architecture focus |
 | `bkit-pdca-enterprise` | Enterprise PDCA | Combined enterprise and PDCA methodologies |
 
-### Team Mode Foundation
+### Team Orchestration
 
-bkit includes team mode foundation with 3 MCP tools:
-- `team_create` -- Create agent teams with configurable strategies
-- `team_assign` -- Assign tasks to team members
-- `team_status` -- Monitor team progress
+bkit v1.5.8 includes full team orchestration with 5 coordination patterns:
 
-Team strategies: dynamic (3 agents), enterprise (5 agents), custom (up to 10 agents).
+| Pattern | Description | Use Case |
+|---------|-------------|----------|
+| **Leader** | 1 lead + N workers | Standard feature development |
+| **Council** | Equal peers | Architecture decisions |
+| **Swarm** | Dynamic pool | High-parallelism tasks |
+| **Pipeline** | Sequential chain | Multi-phase workflows |
+| **Watchdog** | Monitor + actors | Continuous monitoring |
+
+9 dedicated modules in `lib/team/` handle coordination, communication, state recording, and memory persistence. MCP tools: `team_create`, `team_assign`, `team_status`.
 
 ---
 
@@ -421,7 +482,7 @@ Team strategies: dynamic (3 agents), enterprise (5 agents), custom (up to 10 age
 
 ---
 
-## Agents (16)
+## Agents (21)
 
 | Agent | Category | Description |
 |-------|----------|-------------|
@@ -441,12 +502,17 @@ Team strategies: dynamic (3 agents), enterprise (5 agents), custom (up to 10 age
 | **bkend-expert** | Backend | bkend.ai BaaS platform expertise |
 | **enterprise-expert** | Architecture | Enterprise-grade system strategy, microservices |
 | **infra-architect** | Infrastructure | AWS, Kubernetes, Terraform infrastructure design |
+| **pm-lead** | PM Team | PM team orchestration, 4-phase product discovery workflow |
+| **pm-discovery** | PM Team | Opportunity Solution Tree analysis, market/user discovery |
+| **pm-strategy** | PM Team | Value Proposition (JTBD), Lean Canvas business model |
+| **pm-research** | PM Team | User personas, competitor analysis, market sizing (TAM/SAM/SOM) |
+| **pm-prd** | PM Team | PRD synthesis, beachhead segment, GTM strategy |
 
 Each agent uses Gemini native frontmatter with configurable `model`, `tools`, `temperature`, `max_turns`, and `timeout_mins`.
 
 ---
 
-## Skills (29)
+## Skills (35)
 
 | Skill | Category | Trigger Examples |
 |-------|----------|-----------------|
@@ -462,6 +528,12 @@ Each agent uses Gemini native frontmatter with configurable `model`, `tools`, `t
 | **bkit-templates** | Utility | "plan template", "design template" |
 | **bkit-rules** | Utility | Core rules (auto-applied) |
 | **gemini-cli-learning** | Learning | `/learn`, "Gemini CLI setup" |
+| **plan-plus** | Enhanced | "brainstorm plan", "explore alternatives" |
+| **simplify** | Quality | "simplify code", "reduce complexity" |
+| **batch** | Automation | "batch process", "multiple features" |
+| **loop** | Automation | "recurring check", "monitor interval" |
+| **output-style-setup** | Utility | "install styles", "setup output" |
+| **pm-discovery** | PM | "product discovery", "PM analysis", "PRD" |
 | **phase-1-schema** | Pipeline | "schema", "data model" |
 | **phase-2-convention** | Pipeline | "coding rules", "conventions" |
 | **phase-3-mockup** | Pipeline | "mockup", "wireframe", "prototype" |
@@ -480,13 +552,13 @@ Each agent uses Gemini native frontmatter with configurable `model`, `tools`, `t
 | **bkend-cookbook** | bkend.ai | "tutorial", "example project", "todo app" |
 | **bkend-guides** | bkend.ai | "troubleshooting", "migration", "environment" |
 
-Skills use progressive disclosure -- only metadata is loaded initially, with full instructions injected when activated.
+Skills use progressive disclosure -- only metadata is loaded initially, with full instructions injected when activated. Skills are classified as Workflow (W), Capability (C), or Hybrid (H) for optimal activation.
 
 ---
 
-## TOML Commands (18)
+## TOML Commands (24)
 
-bkit provides 18 custom commands using Gemini CLI's TOML command format with advanced syntax:
+bkit provides 24 custom commands using Gemini CLI's TOML command format with advanced syntax:
 
 | Command | Description | Syntax Features |
 |---------|-------------|-----------------|
@@ -500,6 +572,12 @@ bkit provides 18 custom commands using Gemini CLI's TOML command format with adv
 | `/pipeline <action>` | Development pipeline | `@{path}` + `{{args}}` |
 | `/learn [topic]` | Gemini CLI learning | `@{path}` + `!{command}` + `{{args}}` |
 | `/github-stats` | GitHub repository statistics | Custom prompt |
+| `/plan-plus <feature>` | Brainstorming-enhanced PDCA planning | `@{path}` + `{{args}}` |
+| `/simplify` | Code quality review and simplification | `@{path}` |
+| `/batch <features>` | Parallel multi-feature PDCA processing | `@{path}` + `{{args}}` |
+| `/loop <interval> <cmd>` | Recurring command execution | `@{path}` + `{{args}}` |
+| `/output-style-setup` | Install output style files | `@{path}` |
+| `/pm-discovery <feature>` | PM Agent Team product analysis | `@{path}` + `{{args}}` |
 | `/bkend-quickstart` | bkend.ai platform onboarding | `@{path}` + `{{args}}` |
 | `/bkend-auth` | bkend.ai authentication guide | `@{path}` + `{{args}}` |
 | `/bkend-data` | bkend.ai database operations | `@{path}` + `{{args}}` |
@@ -627,7 +705,7 @@ These hooks are non-interactive, performance-optimized, and essential for the Co
 
 | Requirement | Version |
 |-------------|---------|
-| Gemini CLI | v0.29.0+ (forward-compatible with v0.32.1 Task Tracker + Extension Policies) |
+| Gemini CLI | v0.29.0+ (forward-compatible with v0.33.x Task Tracker + Extension Policies) |
 | Node.js | v18+ (for hook scripts) |
 | Git | Any recent version |
 
@@ -635,11 +713,11 @@ These hooks are non-interactive, performance-optimized, and essential for the Co
 
 | Gemini CLI Feature | bkit Usage |
 |-------------------|-----------|
-| Agent frontmatter (model, tools, temperature, max_turns, timeout_mins) | All 16 agents |
+| Agent frontmatter (model, tools, temperature, max_turns, timeout_mins) | All 21 agents |
 | 10 Hook Events | All 10 events registered with matcher patterns |
-| @import syntax | 6 context modules in `.gemini/context/` |
-| TOML commands with `@{}`, `!{}`, `{{}}` | 18 enhanced commands |
-| Agent Skills (GA since v0.26.0) | 29 skills with progressive disclosure |
+| @import syntax | 7 context modules in `.gemini/context/` |
+| TOML commands with `@{}`, `!{}`, `{{}}` | 24 enhanced commands |
+| Agent Skills (GA since v0.26.0) | 35 skills with progressive disclosure |
 | MCP servers | 6 tools via `spawn-agent-server.js` |
 | Extension manifest `settings` | 2 user-configurable options |
 | `${extensionPath}` variable | Used in hooks.json for portable paths |
@@ -651,8 +729,8 @@ These hooks are non-interactive, performance-optimized, and essential for the Co
 ### Component Reference
 
 - [Development Pipeline](skills/development-pipeline/SKILL.md) -- 9-stage pipeline skill
-- [Skills Reference](skills/) -- 29 domain skills
-- [Agents Reference](agents/) -- 16 specialized agents
+- [Skills Reference](skills/) -- 35 domain skills
+- [Agents Reference](agents/) -- 21 specialized agents
 - [Changelog](CHANGELOG.md) -- Complete version history
 
 ### PDCA Documents

@@ -1,5 +1,6 @@
 ---
 name: mobile-app
+classification: C
 description: |
   Mobile app development guide for cross-platform apps.
   Covers React Native, Flutter, and Expo frameworks.

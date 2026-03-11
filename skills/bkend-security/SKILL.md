@@ -1,5 +1,6 @@
 ---
 name: bkend-security
+classification: C
 description: |
   bkend.ai security policies and encryption expert skill.
   Covers API key management (Public vs Secret), Row Level Security (RLS) with 4 roles

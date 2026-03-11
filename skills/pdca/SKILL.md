@@ -1,5 +1,6 @@
 ---
 name: pdca
+classification: W
 description: |
   Unified skill for managing the entire PDCA cycle.
   Supports Plan → Design → Do → Check → Act workflow with automatic phase progression.

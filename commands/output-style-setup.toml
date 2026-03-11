@@ -1,0 +1,18 @@
+[command]
+name = "output-style-setup"
+description = "Install and configure bkit output styles"
+prompt = """
+@{extensionPath}/skills/output-style-setup/SKILL.md
+
+Arguments: {{args}}
+
+Configure bkit output styles for the current project.
+
+Steps:
+1. Read current output style configuration from bkit.config.json
+2. List available output styles: bkit-learning, bkit-pdca-guide, bkit-enterprise, bkit-pdca-enterprise
+3. If an argument is provided, set it as the active output style
+4. If no argument, show current style and available options
+5. Update BKIT_OUTPUT_STYLE environment variable reference
+6. Confirm the change to the user
+"""

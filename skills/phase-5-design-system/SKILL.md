@@ -1,5 +1,6 @@
 ---
 name: phase-5-design-system
+classification: C
 description: |
   Skill for building platform-independent design systems.
   Develops consistent component libraries for all UI frameworks.

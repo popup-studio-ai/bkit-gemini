@@ -26,3 +26,9 @@ Skills are activated based on context and keywords:
 | RLS, api key, encryption, rate limit, CORS, 보안정책, セキュリティ | `bkend-security` | bkend.ai security policies |
 | cookbook, tutorial, example project, todo app, 쿡북, チュートリアル, 教程 | `bkend-cookbook` | bkend.ai project tutorials |
 | guide, troubleshooting, migration, environment, 가이드, ガイド, 指南 | `bkend-guides` | bkend.ai operational guides |
+| brainstorm plan, explore alternatives, plan plus, 브레인스토밍, ブレスト, 头脑风暴 | `plan-plus` | Brainstorming-enhanced PDCA planning |
+| simplify, reduce complexity, code cleanup, 심플리파이, シンプル化, 简化 | `simplify` | Code quality review and simplification |
+| batch process, multiple features, parallel, 배치, バッチ, 批量 | `batch` | Parallel multi-feature PDCA processing |
+| loop, recurring, monitor interval, 반복, ループ, 循环 | `loop` | Recurring interval execution |
+| output style, install style, setup style, 스타일 설정, スタイル設定, 样式设置 | `output-style-setup` | Output style file installation |
+| pm analysis, product discovery, PRD, PM 분석, PM分析, 产品分析 | `pm-discovery` | PM Agent Team workflow |

@@ -1,5 +1,6 @@
 ---
 name: code-review
+classification: C
 description: |
   Code review skill for analyzing code quality, detecting bugs, and ensuring best practices.
 

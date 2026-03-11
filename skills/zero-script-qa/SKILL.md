@@ -1,5 +1,6 @@
 ---
 name: zero-script-qa
+classification: C
 description: |
   Zero Script QA - Testing methodology without test scripts.
   Uses structured JSON logging and real-time Docker monitoring.

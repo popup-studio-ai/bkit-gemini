@@ -1,5 +1,6 @@
 ---
 name: bkend-guides
+classification: C
 description: |
   bkend.ai operational guides, troubleshooting, and platform comparison.
   Covers migration guides, performance optimization, testing strategy,

@@ -1,5 +1,6 @@
 ---
 name: phase-9-deployment
+classification: C
 description: |
   Skill for deploying to production environment.
   Covers CI/CD, environment configuration, and deployment strategies.

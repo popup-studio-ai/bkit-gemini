@@ -1,5 +1,6 @@
 ---
 name: gemini-cli-learning
+classification: C
 description: |
   Gemini CLI learning and education skill.
   Teaches users how to configure and optimize Gemini CLI settings.

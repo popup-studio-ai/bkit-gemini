@@ -1,5 +1,6 @@
 ---
 name: bkend-cookbook
+classification: C
 description: |
   bkend.ai practical project tutorials and troubleshooting guide.
   Covers 4 full-guide projects (blog, recipe-app, shopping-mall, social-network)

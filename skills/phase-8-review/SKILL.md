@@ -1,5 +1,6 @@
 ---
 name: phase-8-review
+classification: C
 description: |
   Skill for verifying codebase quality and gap analysis.
   Covers architecture consistency and convention compliance.

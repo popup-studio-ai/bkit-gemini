@@ -1,5 +1,6 @@
 ---
 name: bkit-templates
+classification: C
 description: |
   PDCA document templates for consistent documentation.
   Plan, Design, Analysis, and Report templates.

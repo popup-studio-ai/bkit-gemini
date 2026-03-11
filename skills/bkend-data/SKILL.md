@@ -1,5 +1,6 @@
 ---
 name: bkend-data
+classification: C
 description: |
   bkend.ai database expert skill.
   Covers table creation, CRUD operations, 7 column types, constraints,

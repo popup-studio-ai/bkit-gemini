@@ -1,5 +1,6 @@
 ---
 name: phase-1-schema
+classification: C
 description: |
   Skill for defining terminology and data structures.
   Covers domain terminology, entities, relationships, and schema design.

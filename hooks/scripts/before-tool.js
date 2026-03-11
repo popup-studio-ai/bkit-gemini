@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * BeforeTool Hook - Pre-execution Validation (v1.5.7)
+ * BeforeTool Hook - Pre-execution Validation (v1.5.8)
  * Dual-mode: handler export (v0.31.0+ SDK) + stdin command (legacy)
  * Validates tool calls, checks permissions via PermissionManager,
  * applies PDCA phase restrictions, and provides guidance

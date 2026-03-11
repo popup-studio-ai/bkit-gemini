@@ -1,5 +1,6 @@
 ---
 name: bkend-auth
+classification: C
 description: |
   bkend.ai authentication and security expert skill.
   Covers email signup/login, social login (Google, GitHub), magic link,

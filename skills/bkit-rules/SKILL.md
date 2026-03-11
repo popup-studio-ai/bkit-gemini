@@ -1,5 +1,6 @@
 ---
 name: bkit-rules
+classification: C
 description: |
   Core rules for bkit plugin.
   PDCA methodology, level detection, agent auto-triggering, and code quality standards.
