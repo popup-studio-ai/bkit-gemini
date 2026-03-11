@@ -10,7 +10,7 @@ const tests = [
     fn: () => {
       const content = fs.readFileSync(path.join(PLUGIN_ROOT, 'GEMINI.md'), 'utf-8');
       const imports = content.match(/^@\.gemini\/context\//gm) || [];
-      assertEqual(imports.length, 6, `Should have 6 @import directives but found ${imports.length}`);
+      assertEqual(imports.length, 7, `Should have 7 @import directives but found ${imports.length}`);
     }
   },
   {

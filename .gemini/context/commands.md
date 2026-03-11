@@ -31,6 +31,20 @@
 | `/bkend-cookbook` | Project tutorials and examples |
 | `/bkend-guides` | Operational guides and troubleshooting |
 
+### Enhanced Planning Commands
+| Command | Description |
+|---------|-------------|
+| `/plan-plus [feature]` | Brainstorming-enhanced PDCA planning |
+| `/pm-discovery [feature]` | PM Agent Team product discovery and PRD |
+
+### Automation Commands
+| Command | Description |
+|---------|-------------|
+| `/batch [features]` | Process multiple features in parallel |
+| `/loop [interval] [cmd]` | Run command on recurring interval |
+| `/simplify` | Code quality review and simplification |
+| `/output-style-setup` | Install output style files |
+
 ### Utility Commands
 | Command | Description |
 |---------|-------------|

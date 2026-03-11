@@ -195,6 +195,49 @@ function assertExists(filePath, message) {
   }
 }
 
+function assertThrows(fn, message) {
+  let threw = false;
+  try { fn(); } catch { threw = true; }
+  if (!threw) throw new Error(`ASSERT FAILED: ${message} (expected error but none thrown)`);
+}
+
+function assertType(value, type, message) {
+  if (typeof value !== type) {
+    throw new Error(`ASSERT FAILED: ${message}\n  Expected type: ${type}\n  Actual type: ${typeof value}`);
+  }
+}
+
+function assertLength(arr, length, message) {
+  if (!Array.isArray(arr)) throw new Error(`ASSERT FAILED: ${message} (not an array)`);
+  if (arr.length !== length) {
+    throw new Error(`ASSERT FAILED: ${message}\n  Expected length: ${length}\n  Actual length: ${arr.length}`);
+  }
+}
+
+function assertHasKey(obj, key, message) {
+  if (!(key in obj)) {
+    throw new Error(`ASSERT FAILED: ${message}\n  Key "${key}" not found in object`);
+  }
+}
+
+function assertInRange(value, min, max, message) {
+  if (value < min || value > max) {
+    throw new Error(`ASSERT FAILED: ${message}\n  ${value} not in [${min}, ${max}]`);
+  }
+}
+
+function parseYamlFrontmatter(filePath) {
+  const content = fs.readFileSync(filePath, 'utf-8');
+  const match = content.match(/^---\n([\s\S]*?)\n---/);
+  if (!match) return {};
+  const yaml = {};
+  match[1].split('\n').forEach(line => {
+    const [key, ...rest] = line.split(':');
+    if (key && rest.length) yaml[key.trim()] = rest.join(':').trim();
+  });
+  return yaml;
+}
+
 /**
  * Run a test suite
  */
@@ -264,6 +307,8 @@ module.exports = {
   createTestProject, createTestProjectV2, cleanupTestProject,
   executeHook, sendMcpRequest,
   assert, assertEqual, assertContains, assertExists,
+  assertThrows, assertType, assertLength, assertHasKey, assertInRange,
+  parseYamlFrontmatter,
   runSuite, withVersion, countMatches,
   readPdcaStatus, readGlobalMemory
 };

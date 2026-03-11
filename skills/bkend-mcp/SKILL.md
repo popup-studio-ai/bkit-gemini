@@ -1,5 +1,6 @@
 ---
 name: bkend-mcp
+classification: C
 description: |
   bkend.ai MCP tools and AI integration expert skill.
   Covers 28 MCP tools (Fixed 3 + Project 6 + Table 9 + Data CRUD 5 + Env 3 + Schema 2),

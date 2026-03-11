@@ -263,3 +263,10 @@ Provide choices to user when differences are found:
 3. Integrate both into a new version
 4. Record the difference as intentional
 ```
+
+## Tool Usage Notes (v0.33.x)
+
+When using Gemini CLI tools, follow these version-aware guidelines:
+- `read_file`: `start_line`/`end_line` use 1-based line numbers (v0.32.0+)
+- `replace`: Must set `allow_multiple: true` when `old_string` matches multiple locations (required v0.33.0+)
+- `grep_search`: Use `include_pattern` parameter for file filtering (renamed from `glob` in v0.32.0+)

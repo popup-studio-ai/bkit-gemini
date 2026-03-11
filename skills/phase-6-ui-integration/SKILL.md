@@ -1,5 +1,6 @@
 ---
 name: phase-6-ui-integration
+classification: C
 description: |
   Skill for implementing UI and integrating with APIs.
   Covers frontend-backend integration and state management.

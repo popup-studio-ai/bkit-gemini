@@ -1,5 +1,6 @@
 ---
 name: bkend-storage
+classification: C
 description: |
   bkend.ai file storage expert skill.
   Covers single/multiple/multipart file upload via Presigned URL,

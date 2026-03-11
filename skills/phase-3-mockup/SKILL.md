@@ -1,5 +1,6 @@
 ---
 name: phase-3-mockup
+classification: C
 description: |
   Skill for creating mockups with UI/UX trends.
   Designs HTML/CSS/JS prototypes before implementation.

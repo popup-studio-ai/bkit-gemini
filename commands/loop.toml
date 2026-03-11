@@ -1,0 +1,24 @@
+[command]
+name = "loop"
+description = "Run a command on a recurring interval"
+prompt = """
+@{extensionPath}/skills/loop/SKILL.md
+
+Interval and command: {{args}}
+
+Parse the interval (e.g., 5m, 10m, 1h) and the command to execute.
+Run the command at the specified interval. Default interval: 10m if not specified.
+Maximum iterations: 100 (safety limit).
+
+Steps:
+1. Parse interval from first argument (format: Ns, Nm, Nh). Default to 10m if no interval found.
+2. Parse the command from remaining arguments.
+3. Execute the command immediately (iteration 1).
+4. Wait for the interval duration.
+5. Re-execute the command (iteration 2..N).
+6. Check stop conditions after each iteration.
+7. Output iteration summary after each execution.
+8. Output final summary when loop ends.
+
+If a --until condition is provided, evaluate it after each iteration and stop if true.
+"""

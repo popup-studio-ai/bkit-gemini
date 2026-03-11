@@ -20,3 +20,8 @@ Agents are auto-triggered by keywords in user messages:
 | security, vulnerability, OWASP, 보안, 취약점, セキュリティ, 安全 | `security-architect` | Security review and analysis |
 | requirements, feature spec, user story, 요구사항, 기능 정의, 要件定義, 需求 | `product-manager` | Requirements and feature specs |
 | test strategy, QA plan, quality, 테스트 전략, QA 계획, テスト戦略, 测试策略 | `qa-strategist` | Test strategy and quality planning |
+| pm, PRD, product discovery, PM analysis, PM 분석, 제품 기획, PM分析, 产品分析 | `pm-lead` | PM Team orchestration and PRD workflow |
+| opportunity, discovery, OST, customer needs, 기회, 고객 니즈, 機会発見, 机会发现 | `pm-discovery` | Opportunity Solution Tree analysis |
+| value proposition, JTBD, lean canvas, business model, 가치 제안, 価値提案, 价值主张 | `pm-strategy` | Value Proposition and Lean Canvas |
+| persona, competitor, market size, TAM, SAM, 페르소나, 경쟁사, ペルソナ, 用户画像 | `pm-research` | User personas, competitor analysis, market sizing |
+| PRD, beachhead, GTM, feature spec, 요구사항 문서, 製品要件, 产品需求 | `pm-prd` | PRD synthesis and GTM strategy |

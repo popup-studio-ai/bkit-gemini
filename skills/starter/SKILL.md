@@ -1,5 +1,6 @@
 ---
 name: starter
+classification: W
 description: |
   Static web development skill for beginners and non-developers.
   Covers HTML/CSS/JavaScript and Next.js App Router basics.

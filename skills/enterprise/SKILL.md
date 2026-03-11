@@ -1,5 +1,6 @@
 ---
 name: enterprise
+classification: W
 description: |
   Enterprise-grade system development with microservices, Kubernetes, and Terraform.
   Includes AI Native methodology and Monorepo architecture patterns.

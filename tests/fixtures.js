@@ -62,4 +62,74 @@ const TRACKER_BRIDGE_FIXTURE = {
   taskIds: {}
 };
 
-module.exports = { PDCA_STATUS_FIXTURE, BKIT_MEMORY_FIXTURE, BKIT_MEMORY_RETURNING, PDCA_STATUS_V157, TRACKER_BRIDGE_FIXTURE };
+const PDCA_STATUS_V158 = {
+  version: '2.0',
+  primaryFeature: 'test-feature',
+  activeFeatures: {
+    'test-feature': {
+      phase: 'plan',
+      matchRate: null,
+      iterationCount: 0,
+      lastUpdated: new Date().toISOString(),
+      documents: { plan: 'docs/01-plan/features/test-feature.plan.md' }
+    }
+  },
+  archivedFeatures: {},
+  pipeline: { level: 'Dynamic', currentPhase: 3, phaseHistory: [] },
+  lastChecked: new Date().toISOString()
+};
+
+const PDCA_STATUS_MULTI = {
+  version: '2.0',
+  primaryFeature: 'feature-a',
+  activeFeatures: {
+    'feature-a': { phase: 'plan', matchRate: null, iterationCount: 0, lastUpdated: new Date().toISOString(), documents: {} },
+    'feature-b': { phase: 'do', matchRate: null, iterationCount: 0, lastUpdated: new Date().toISOString(), documents: {} },
+    'feature-c': { phase: 'completed', matchRate: 100, iterationCount: 2, completedAt: new Date().toISOString(), lastUpdated: new Date().toISOString(), documents: {} }
+  },
+  archivedFeatures: {},
+  pipeline: { level: 'Enterprise', currentPhase: 9, phaseHistory: [] },
+  lastChecked: new Date().toISOString()
+};
+
+const TEAM_CONFIG_FIXTURE = {
+  enabled: true,
+  defaultStrategy: 'balanced',
+  strategies: {
+    Starter: { maxAgents: 1 },
+    Dynamic: { maxAgents: 3 },
+    Enterprise: { maxAgents: 10 }
+  },
+  orchestrationPatterns: ['leader', 'council', 'swarm', 'pipeline', 'watchdog'],
+  communication: { protocol: 'task-tracker' }
+};
+
+const MULTILANG_INPUTS = {
+  ko: { verify: '검증해줘', improve: '개선해줘', report: '보고서 작성해줘', help: '도움이 필요해' },
+  ja: { verify: 'コード確認して', improve: '改善して', report: '報告書作成', help: '助けて' },
+  zh: { verify: '验证代码', improve: '改进代码', report: '生成报告', help: '帮助我' },
+  es: { verify: 'verificar código', improve: 'mejorar código', report: 'informe', help: 'ayuda' },
+  fr: { verify: 'vérifier le code', improve: 'améliorer', report: 'rapport', help: 'aide' },
+  de: { verify: 'Code prüfen', improve: 'verbessern', report: 'Bericht', help: 'Hilfe' },
+  it: { verify: 'verificare codice', improve: 'migliorare', report: 'rapporto', help: 'aiuto' },
+  en: { verify: 'verify code', improve: 'improve code', report: 'generate report', help: 'help me' }
+};
+
+const HOOK_INPUT_FIXTURES = {
+  sessionStart: {},
+  beforeTool: { toolName: 'run_shell_command', input: { command: 'git status' } },
+  afterTool: { toolName: 'write_file', input: { file_path: 'src/app.js' }, output: { success: true } },
+  beforeToolDeny: { toolName: 'run_shell_command', input: { command: 'rm -rf /' } }
+};
+
+const LEVEL_DETECTION_FIXTURES = {
+  enterprise: { dirs: ['kubernetes'], files: [] },
+  dynamic: { dirs: [], files: ['.mcp.json', 'docker-compose.yml'] },
+  starter: { dirs: [], files: [] }
+};
+
+module.exports = {
+  PDCA_STATUS_FIXTURE, BKIT_MEMORY_FIXTURE, BKIT_MEMORY_RETURNING, PDCA_STATUS_V157, TRACKER_BRIDGE_FIXTURE,
+  PDCA_STATUS_V158, PDCA_STATUS_MULTI, TEAM_CONFIG_FIXTURE,
+  MULTILANG_INPUTS, HOOK_INPUT_FIXTURES, LEVEL_DETECTION_FIXTURES
+};

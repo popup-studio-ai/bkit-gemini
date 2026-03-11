@@ -1,0 +1,10 @@
+[command]
+name = "simplify"
+description = "Review and simplify changed code"
+prompt = """
+@{extensionPath}/skills/simplify/SKILL.md
+
+Review all recently changed files for code quality improvements.
+Focus on: deduplication, complexity reduction, naming clarity, dead code removal.
+Apply fixes automatically and report changes.
+"""

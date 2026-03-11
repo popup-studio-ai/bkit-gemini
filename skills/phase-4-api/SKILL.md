@@ -1,5 +1,6 @@
 ---
 name: phase-4-api
+classification: C
 description: |
   Skill for designing and implementing backend APIs.
   Includes Zero Script QA methodology for API validation.

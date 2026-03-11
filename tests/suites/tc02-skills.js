@@ -73,7 +73,7 @@ const tests = [
       const { listSkills, clearCache } = require(path.join(PLUGIN_ROOT, 'lib', 'skill-orchestrator'));
       clearCache();
       const skills = listSkills();
-      assertEqual(skills.length, 29, `Should list 29 skills but found ${skills.length}`);
+      assertEqual(skills.length, 35, `Should list 35 skills but found ${skills.length}`);
     }
   },
   {

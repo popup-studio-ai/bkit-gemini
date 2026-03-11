@@ -1,6 +1,6 @@
 ## Tool Name Reference
 
-bkit uses Gemini CLI native tool names (v0.29.0~v0.32.1 verified):
+bkit uses Gemini CLI native tool names (v0.29.0~v0.33.x verified):
 
 | Tool | Purpose | Category | Since |
 |------|---------|----------|-------|
@@ -28,15 +28,33 @@ bkit uses Gemini CLI native tool names (v0.29.0~v0.32.1 verified):
 | `tracker_add_dependency` | Add task dependency | Task Tracker | v0.32.0 |
 | `tracker_visualize` | Visualize task graph | Task Tracker | v0.32.0 |
 
-## Breaking Changes (v0.32.0)
+## Breaking Changes
+
+### v0.32.0 Changes
 
 | ID | Tool | Change | Impact |
 |----|------|--------|--------|
-| BC-1 | `grep_search` | `include_pattern` renamed to `file_pattern` | Use version-detector to select correct param |
-| BC-2 | `read_file` | New `start_line`/`end_line` params (replaces `offset`/`limit` usage) | Optional enhancement for v0.32.0+ |
-| BC-3 | `replace` | New `allow_multiple` param for multi-occurrence replace | Optional enhancement for v0.32.0+ |
+| BC-1 | `grep_search` | `glob` param renamed to `include_pattern` | Use `include_pattern` for file filtering on v0.32.0+ |
+| BC-2 | `read_file` | New `start_line`/`end_line` params (1-based line numbers) | Use 1-based line numbers for offset/limit on v0.32.0+ |
+| BC-3 | `replace` | New `allow_multiple` param for multi-occurrence replace | Set `allow_multiple: true` when multiple matches on v0.31.0+ |
 
-## Tool Alias Reference (v1.5.7)
+### v0.33.0 Changes
+
+| ID | Tool | Change | Impact |
+|----|------|--------|--------|
+| BC-4 | `replace` | `allow_multiple` now **required** when multiple matches exist | Omitting causes error on v0.33.0+ |
+| BC-5 | Extension | New `plan.directory` field in gemini-extension.json | Optional: specify plan output directory |
+| BC-6 | Extension | New `excludeTools` field for tool restriction | Optional: restrict tools by level |
+
+### Tool Usage Guide (v0.33.x)
+
+When using tools, follow these version-aware guidelines:
+
+- **`read_file`**: `offset`/`limit` use 1-based line numbers. Line 1 is the first line.
+- **`replace`**: When `old_string` matches multiple locations, you MUST set `allow_multiple: true`.
+- **`grep_search`**: Use `include_pattern` (not `glob`) for file pattern filtering.
+
+## Tool Alias Reference (v1.5.8)
 
 ### Forward Aliases (Future Compatibility)
 
@@ -52,7 +70,7 @@ These aliases are pre-mapped for potential future Gemini CLI tool renames:
 
 bkit-gemini resolves both current and future names automatically via `tool-registry.js`.
 
-### Claude Code Mappings (v1.5.7)
+### Claude Code Mappings (v1.5.8)
 
 | Claude Code Tool | Gemini CLI Tool |
 |-----------------|-----------------|
@@ -61,7 +79,7 @@ bkit-gemini resolves both current and future names automatically via `tool-regis
 | TaskGet | tracker_get_task |
 | TaskList | tracker_list_tasks |
 
-## Tool Annotations (v1.5.7)
+## Tool Annotations (v1.5.8)
 
 Tool annotations provide hints for Gemini CLI's v0.31.0+ trust model and parallel execution:
 

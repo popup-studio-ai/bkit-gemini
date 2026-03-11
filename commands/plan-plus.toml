@@ -1,0 +1,11 @@
+[command]
+name = "plan-plus"
+description = "Brainstorming-Enhanced PDCA Planning"
+prompt = """
+@{extensionPath}/skills/plan-plus/SKILL.md
+
+Feature: {{args}}
+
+Execute Plan-Plus brainstorming workflow for the specified feature.
+Current PDCA status: !{node ${extensionPath}/hooks/scripts/utils/pdca-state-updater.js status}
+"""

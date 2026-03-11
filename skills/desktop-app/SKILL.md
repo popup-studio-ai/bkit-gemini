@@ -1,5 +1,6 @@
 ---
 name: desktop-app
+classification: C
 description: |
   Desktop app development guide for cross-platform applications.
   Covers Electron and Tauri frameworks.

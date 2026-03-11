@@ -1,5 +1,6 @@
 ---
 name: development-pipeline
+classification: W
 description: |
   9-phase Development Pipeline complete knowledge.
   Use when user doesn't know development order or starts a new project.

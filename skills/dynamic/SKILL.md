@@ -1,5 +1,6 @@
 ---
 name: dynamic
+classification: W
 description: |
   Fullstack development skill using bkend.ai BaaS platform.
   Covers authentication, data storage, API integration for dynamic web apps.

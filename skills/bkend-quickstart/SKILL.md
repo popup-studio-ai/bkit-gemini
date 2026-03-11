@@ -1,5 +1,6 @@
 ---
 name: bkend-quickstart
+classification: C
 description: |
   bkend.ai platform onboarding and core concepts guide.
   Covers MCP setup, resource hierarchy (Org->Project->Environment),
