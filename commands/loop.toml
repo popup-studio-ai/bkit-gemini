@@ -1,5 +1,3 @@
-[command]
-name = "loop"
 description = "Run a command on a recurring interval"
 prompt = """
 @{extensionPath}/skills/loop/SKILL.md

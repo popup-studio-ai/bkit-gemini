@@ -1,5 +1,3 @@
-[command]
-name = "simplify"
 description = "Review and simplify changed code"
 prompt = """
 @{extensionPath}/skills/simplify/SKILL.md

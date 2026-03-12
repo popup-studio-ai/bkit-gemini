@@ -5,6 +5,12 @@ All notable changes to bkit-gemini will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- **Gemini CLI v0.33.0 Compatibility**: Updated task tracker tool names to use the required `task_tracker__` namespace (e.g., `task_tracker__tracker_create_task`) across 5 affected agents (`cto-lead`, `pdca-iterator`, `pm-lead`, `product-manager`, `qa-strategist`).
+- **Command TOML Parsing**: Removed legacy `[command]` table header and `name` field from 6 command files (`/simplify`, `/batch`, `/loop`, `/plan-plus`, `/pm-discovery`, `/output-style-setup`) to comply with v0.33.0 top-level key parsing requirements.
+
 ## [1.5.8] - 2026-03-11
 
 ### Added

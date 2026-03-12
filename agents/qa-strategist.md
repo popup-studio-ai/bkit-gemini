@@ -27,8 +27,8 @@ tools:
   - glob
   - grep_search
   - run_shell_command
-  - tracker_list_tasks
-  - tracker_visualize
+  - task_tracker__tracker_list_tasks
+  - task_tracker__tracker_visualize
 temperature: 0.3
 max_turns: 20
 timeout_mins: 10

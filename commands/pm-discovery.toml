@@ -1,5 +1,3 @@
-[command]
-name = "pm"
 description = "Run PM Agent Team analysis for product discovery"
 prompt = """
 @{extensionPath}/skills/pm-discovery/SKILL.md

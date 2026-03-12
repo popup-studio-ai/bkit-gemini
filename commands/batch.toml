@@ -1,5 +1,3 @@
-[command]
-name = "batch"
 description = "Process multiple features in parallel"
 prompt = """
 @{extensionPath}/skills/batch/SKILL.md

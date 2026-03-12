@@ -1,5 +1,3 @@
-[command]
-name = "output-style-setup"
 description = "Install and configure bkit output styles"
 prompt = """
 @{extensionPath}/skills/output-style-setup/SKILL.md

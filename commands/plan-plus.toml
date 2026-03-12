@@ -1,5 +1,3 @@
-[command]
-name = "plan-plus"
 description = "Brainstorming-Enhanced PDCA Planning"
 prompt = """
 @{extensionPath}/skills/plan-plus/SKILL.md

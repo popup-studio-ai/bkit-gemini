@@ -21,10 +21,10 @@ tools:
   - grep_search
   - run_shell_command
   - google_web_search
-  - tracker_create_task
-  - tracker_update_task
-  - tracker_list_tasks
-  - tracker_visualize
+  - task_tracker__tracker_create_task
+  - task_tracker__tracker_update_task
+  - task_tracker__tracker_list_tasks
+  - task_tracker__tracker_visualize
 temperature: 0.3
 max_turns: 50
 timeout_mins: 30
