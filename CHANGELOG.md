@@ -5,6 +5,30 @@ All notable changes to bkit-gemini will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.9] - 2026-03-18
+
+### Fixed
+- **6 TOML Command Files**: Removed invalid `[command]` section headers and `name` fields from simplify, batch, loop, plan-plus, pm-discovery, output-style-setup commands to comply with Gemini CLI v0.34.0 Zod schema validation (`FileCommandLoader` requires top-level `prompt` + optional `description` only)
+
+### Added
+- **14 v0.34.0 Feature Flags**: hasNativeSkillSystem, hasACP, hasExtensionRegistryClient, hasExtensionValidation, hasHookMigration, hasSlashCommandConflictResolution, hasMcpPromptLoader, hasContextFileNameArray, hasGemini31CustomTools, hasToolLegacyAliases, hasStrictTomlValidation, hasSubagentPolicies, hasThemeSubdirectories, hasUpgradeCommand
+- **3 bkit Feature Gates**: canUseNativeSkills, canUseSubagentPolicies, canValidateExtension
+- **Nightly version hash parsing**: Support `0.34.0-nightly.20260304.28af4e127` format with optional commit hash
+- **Session metadata fields**: isNightly, hasNativeSkills, hasStrictToml in getGeminiCliFeatures()
+- **compatibility.skillsSystem**: Configuration section for Gemini CLI native skills system
+- **Gemini CLI v0.34.0 Compatibility**: Tested and verified (added to testedVersions)
+- **4 Breaking Changes documented**: BC-7 (strict TOML), BC-8 (SKILL CommandKind), BC-9 (conflict resolution), BC-10 (subagent policies)
+- **Test Suite TC-79**: v0.34.0 feature flags, nightly parsing, TOML validation tests
+
+### Changed
+- Version bump: 1.5.8 → 1.5.9 across gemini-extension.json, GEMINI.md, bkit.config.json, session-start.js, version-detector.js, tool-registry.js
+- compatibility.testedVersions: added "0.34.0"
+- Tool reference: verified range expanded to v0.29.0~v0.34.x
+
+### Documentation
+- Plan: gemini-cli-034-migration plan document (Korean)
+- Design: gemini-cli-034-migration design document (Korean)
+
 ## [1.5.8] - 2026-03-11
 
 ### Added
@@ -310,6 +334,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[1.5.8]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.7...v1.5.8
+[1.5.9]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.8...v1.5.9
 [1.5.8]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.7...v1.5.8
 [1.5.7]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.6...v1.5.7
 [1.5.6]: https://github.com/popup-studio-ai/bkit-gemini/compare/v1.5.5...v1.5.6

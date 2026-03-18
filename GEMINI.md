@@ -1,4 +1,4 @@
-# bkit Vibecoding Kit v1.5.8 - Gemini CLI Edition
+# bkit Vibecoding Kit v1.5.9 - Gemini CLI Edition
 
 > AI-native development toolkit implementing PDCA methodology with Context Engineering
 
@@ -59,5 +59,5 @@ docs/
 
 ---
 
-*bkit Vibecoding Kit v1.5.8 - Empowering AI-native development*
+*bkit Vibecoding Kit v1.5.9 - Empowering AI-native development*
 *Copyright 2024-2026 POPUP STUDIO PTE. LTD.*

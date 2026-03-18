@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * SessionStart Hook - Enhanced Session Initialization (v1.5.8)
+ * SessionStart Hook - Enhanced Session Initialization (v1.5.9)
  * Dynamic context injection, output style loading, returning user detection,
  * agent triggers injection, PDCA rules injection, feature report template
  */
@@ -87,7 +87,7 @@ function main() {
       context: dynamicContext,
       hookEvent: 'SessionStart',
       metadata: {
-        version: '1.5.8',
+        version: '1.5.9',
         platform: 'gemini',
         level: level,
         primaryFeature: pdcaStatus.primaryFeature,
@@ -110,7 +110,7 @@ function main() {
     }
     console.log(JSON.stringify({
       status: 'allow',
-      context: 'bkit Vibecoding Kit v1.5.8 activated (Gemini CLI)',
+      context: 'bkit Vibecoding Kit v1.5.9 activated (Gemini CLI)',
       hookEvent: 'SessionStart'
     }));
     process.exit(0);
@@ -210,7 +210,7 @@ function generateDynamicContext(pdcaStatus, level, memory, returningInfo, output
   const sections = [];
 
   // Header
-  sections.push('# bkit Vibecoding Kit v1.5.8 - Session Start');
+  sections.push('# bkit Vibecoding Kit v1.5.9 - Session Start');
   sections.push('');
 
   // Core Rules (dynamically injected to address GEMINI.md ignore issue #13852)
@@ -397,11 +397,14 @@ function getGeminiCliFeatures() {
     return {
       version: version.raw,
       isPreview: version.isPreview,
+      isNightly: version.isNightly || false,
       flagCount: Object.values(flags).filter(Boolean).length,
-      totalFlags: Object.keys(flags).length
+      totalFlags: Object.keys(flags).length,
+      hasNativeSkills: flags.hasNativeSkillSystem || false,
+      hasStrictToml: flags.hasStrictTomlValidation || false
     };
   } catch (e) {
-    return { version: 'unknown', isPreview: false, flagCount: 0, totalFlags: 0 };
+    return { version: 'unknown', isPreview: false, isNightly: false, flagCount: 0, totalFlags: 0, hasNativeSkills: false, hasStrictToml: false };
   }
 }
 

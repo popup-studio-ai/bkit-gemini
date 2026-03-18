@@ -16,7 +16,7 @@ module.exports = {
         try {
           const flags = getFeatureFlags();
           const keys = Object.keys(flags);
-          assertEqual(keys.length, 36, 'Should have 36 feature flags');
+          assertEqual(keys.length, 50, 'Should have 50 feature flags');
           const trueFlags = keys.filter(k => flags[k] === true);
           assertEqual(trueFlags.length, 18, 'Should have 18 true flags for v0.31.0');
         } finally {
@@ -206,7 +206,7 @@ module.exports = {
       name: 'V156-14: getFeatureFlags() returns 29 keys (v1.5.7: 18 v0.31.0 + 11 v0.32.0)',
       fn: () => {
         const flags = getFeatureFlags();
-        assertEqual(Object.keys(flags).length, 36);
+        assertEqual(Object.keys(flags).length, 50);
       }
     },
     {
