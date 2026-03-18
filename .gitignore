@@ -40,3 +40,6 @@ docs/bkit-Best-Practice.pdf
 
 # Commands (private)
 commands/github-stats.toml
+
+# Local skills & evals (private)
+evals/gemini-migration/
