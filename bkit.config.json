@@ -1,6 +1,6 @@
 {
   "$schema": "./bkit.config.schema.json",
-  "version": "1.5.8",
+  "version": "1.5.9",
   "platform": "gemini",
 
   "sourceDirectories": ["src", "lib", "app", "components", "pages", "features", "services"],
@@ -117,7 +117,7 @@
 
   "compatibility": {
     "minGeminiCliVersion": "0.29.0",
-    "testedVersions": ["0.29.0", "0.29.5", "0.29.7", "0.30.0-preview.3", "0.30.0", "0.31.0", "0.32.0", "0.32.1", "0.33.0-preview.4", "0.33.0"],
+    "testedVersions": ["0.29.0", "0.29.5", "0.29.7", "0.30.0-preview.3", "0.30.0", "0.31.0", "0.32.0", "0.32.1", "0.33.0-preview.4", "0.33.0", "0.34.0"],
     "policyEngine": {
       "autoGenerate": true,
       "outputDir": ".gemini/policies/",
@@ -140,6 +140,12 @@
       "enabled": true,
       "minVersion": "0.32.0",
       "bridgeEnabled": true
+    },
+    "skillsSystem": {
+      "enabled": true,
+      "minVersion": "0.34.0",
+      "nativeActivation": false,
+      "description": "Gemini CLI native skills system compatibility"
     }
   },
 

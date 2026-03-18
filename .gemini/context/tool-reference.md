@@ -1,6 +1,6 @@
 ## Tool Name Reference
 
-bkit uses Gemini CLI native tool names (v0.29.0~v0.33.x verified):
+bkit uses Gemini CLI native tool names (v0.29.0~v0.34.x verified):
 
 | Tool | Purpose | Category | Since |
 |------|---------|----------|-------|
@@ -46,7 +46,16 @@ bkit uses Gemini CLI native tool names (v0.29.0~v0.33.x verified):
 | BC-5 | Extension | New `plan.directory` field in gemini-extension.json | Optional: specify plan output directory |
 | BC-6 | Extension | New `excludeTools` field for tool restriction | Optional: restrict tools by level |
 
-### Tool Usage Guide (v0.33.x)
+### v0.34.0 Changes
+
+| ID | Tool | Change | Impact |
+|----|------|--------|--------|
+| BC-7 | TOML Commands | Strict Zod schema: only `prompt` (required) + `description` (optional) at top level | `[command]` section headers and `name` fields cause validation failure |
+| BC-8 | Commands | `SkillCommandLoader` adds `CommandKind.SKILL` type | Skill commands may conflict with extension commands |
+| BC-9 | Commands | `SlashCommandConflictResolver` auto-renames conflicting extension commands | Extension commands prefixed with `ext-name:` on conflict |
+| BC-10 | Policies | `subagent` field supported in TOML policy rules | Per-agent policy rules possible |
+
+### Tool Usage Guide (v0.34.x)
 
 When using tools, follow these version-aware guidelines:
 
@@ -54,7 +63,7 @@ When using tools, follow these version-aware guidelines:
 - **`replace`**: When `old_string` matches multiple locations, you MUST set `allow_multiple: true`.
 - **`grep_search`**: Use `include_pattern` (not `glob`) for file pattern filtering.
 
-## Tool Alias Reference (v1.5.8)
+## Tool Alias Reference (v1.5.9)
 
 ### Forward Aliases (Future Compatibility)
 

@@ -1,4 +1,4 @@
-// tests/run-all.js - Main test runner for bkit-gemini v1.5.8
+// tests/run-all.js - Main test runner for bkit-gemini v1.5.9
 const { runSuite } = require('./test-utils');
 
 function parseArgs() {
@@ -125,6 +125,9 @@ async function main() {
     { name: 'TC-76: Template System', file: 'suites/tc76-template-system.js', priority: 'P1', category: 'infra', sprint: 3 },
     { name: 'TC-77: Hook Scripts Individual', file: 'suites/tc77-hook-scripts-individual.js', priority: 'P1', category: 'infra', sprint: 3 },
     { name: 'TC-78: Hook Config Runtime', file: 'suites/tc78-hook-config-runtime.js', priority: 'P1', category: 'infra', sprint: 3 },
+
+    // ═══ 관점 11: v1.5.9 신규 (TC-79) ═══
+    { name: 'TC-79: v0.34.0 Features', file: 'suites/tc79-v034-features.js', priority: 'P0', category: 'unit', sprint: 4 },
   ];
 
   const filtered = filterSuites(suites, opts);
@@ -158,16 +161,16 @@ function generatePDCACompletionReport(passed, failed, skipped) {
   const fs = require('fs');
   const path = require('path');
   const date = new Date().toISOString().split('T')[0];
-  const reportPath = path.resolve(__dirname, '../docs/04-report/features/bkit-v158-comprehensive-test.report.md');
+  const reportPath = path.resolve(__dirname, '../docs/04-report/features/bkit-v159-comprehensive-test.report.md');
 
   fs.mkdirSync(path.dirname(reportPath), { recursive: true });
 
   const total = passed + failed + skipped;
   const matchRate = (((passed || 0) / (total || 1)) * 100).toFixed(1);
 
-  let report = `# bkit-gemini v1.5.8 Comprehensive Test Report
+  let report = `# bkit-gemini v1.5.9 Comprehensive Test Report
 
-> **Feature**: bkit-v158-comprehensive-test
+> **Feature**: bkit-v159-comprehensive-test
 > **Status**: ${failed === 0 ? 'COMPLETED' : 'IN_PROGRESS'}
 > **Match Rate**: ${matchRate}%
 > **Date**: ${date}
@@ -180,8 +183,8 @@ function generatePDCACompletionReport(passed, failed, skipped) {
 
 ## 2. Test Execution Details
 
-The test suite covered 78 categories including v1.5.8 Unit Tests, E2E, Integration,
-Scenario, Philosophy, Security, Edge Cases, Boundary, Error Recovery, and Infrastructure.
+The test suite covered 79 categories including v1.5.9 Unit Tests, E2E, Integration,
+Scenario, Philosophy, Security, Edge Cases, Boundary, Error Recovery, Infrastructure, and v0.34.0 features.
 A total of ${total} automated test cases were executed across 11 test perspectives.
 
 ---

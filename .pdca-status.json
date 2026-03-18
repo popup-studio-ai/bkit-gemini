@@ -1,7 +1,19 @@
 {
   "version": "2.0",
-  "primaryFeature": "bkit-v158-doc-sync",
+  "primaryFeature": "gemini-cli-034-migration",
   "activeFeatures": {
+    "gemini-cli-034-migration": {
+      "phase": "completed",
+      "matchRate": 96,
+      "iterationCount": 0,
+      "lastUpdated": "2026-03-18T00:00:00Z",
+      "completedAt": "2026-03-18T00:00:00Z",
+      "documents": {
+        "plan": "docs/01-plan/features/gemini-cli-034-migration.plan.md",
+        "design": "docs/02-design/features/gemini-cli-034-migration.design.md",
+        "report": "docs/04-report/features/gemini-cli-034-migration.report.md"
+      }
+    },
     "bkit-v158-doc-sync": {
       "phase": "completed",
       "matchRate": 100,
@@ -81,5 +93,5 @@
     "phaseHistory": []
   },
   "lastChecked": "2026-03-11T00:00:00Z",
-  "lastUpdated": "2026-03-11T00:00:00Z"
+  "lastUpdated": "2026-03-18T03:48:09.783Z"
 }
