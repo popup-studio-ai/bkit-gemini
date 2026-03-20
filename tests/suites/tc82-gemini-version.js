@@ -7,12 +7,12 @@ const { getFeatureFlags, getBkitFeatureFlags, parseVersion, isVersionBeyondPlaus
 const tests = [
   // 18 test cases for lib/gemini/version.js
   {
-    name: 'VER-01: getFeatureFlags returns exactly 14 keys',
+    name: 'VER-01: getFeatureFlags returns exactly 19 keys',
     fn: () => {
       withVersion('0.34.0', () => {
         const flags = getFeatureFlags();
         const keys = Object.keys(flags);
-        assertEqual(keys.length, 14, 'getFeatureFlags should return 14 keys');
+        assertEqual(keys.length, 19, 'getFeatureFlags should return 19 keys');
       });
     }
   },

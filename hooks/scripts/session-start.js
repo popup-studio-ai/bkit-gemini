@@ -76,7 +76,7 @@ function main() {
       context: dynamicContext,
       hookEvent: 'SessionStart',
       metadata: {
-        version: '1.5.9',
+        version: '2.0.0',
         platform: 'gemini',
         level: level,
         primaryFeature: pdcaStatus.primaryFeature,
@@ -198,7 +198,7 @@ function detectReturningUser(pdcaStatus, memory) {
 const PHASE_CONTEXT_MAP = {
   plan:   ['commands.md', 'pdca-rules.md', 'feature-report.md', 'executive-summary-rules.md'],
   design: ['pdca-rules.md', 'feature-report.md', 'executive-summary-rules.md'],
-  do:     ['tool-reference.md', 'skill-triggers.md', 'feature-report.md'],
+  do:     ['tool-reference-v2.md', 'skill-triggers.md', 'feature-report.md'],
   check:  ['pdca-rules.md', 'feature-report.md'],
   act:    ['pdca-rules.md', 'feature-report.md'],
   idle:   ['commands.md', 'pdca-rules.md', 'agent-triggers.md', 'skill-triggers.md', 'feature-report.md']
@@ -210,14 +210,23 @@ function loadPhaseAwareContext(pluginRoot, phase) {
   const contextDir = path.join(pluginRoot, '.gemini', 'context');
 
   const sections = [];
+  const missing = [];
+
   for (const fileName of files) {
+    const filePath = path.join(contextDir, fileName);
     try {
-      const filePath = path.join(contextDir, fileName);
       if (fs.existsSync(filePath)) {
         const content = fs.readFileSync(filePath, 'utf-8').trim();
         if (content) sections.push(content);
+      } else {
+        missing.push(fileName);
       }
     } catch (e) { /* non-fatal */ }
+  }
+
+  // Debug: log missing files when BKIT_DEBUG is enabled
+  if (missing.length > 0 && process.env.BKIT_DEBUG === 'true') {
+    console.error(`[bkit] Missing phase context files for ${effectivePhase}: ${missing.join(', ')}`);
   }
 
   return sections.length > 0
@@ -296,15 +305,6 @@ function generateDynamicContext(pdcaStatus, level, memory, returningInfo, output
   if (phaseContext) {
     sections.push(phaseContext);
   }
-
-  // Agent Triggers
-  sections.push(buildAgentTriggersSection());
-
-  // Feature Report
-  sections.push(buildFeatureReportSection());
-
-  // Auto-Trigger Keywords
-  sections.push(buildAutoTriggerSection());
 
   return sections.join('\n');
 }
@@ -410,56 +410,6 @@ function buildPdcaStatusSection(pdcaStatus, level) {
     `- **Primary Feature**: ${pdcaStatus.primaryFeature || 'None'}`,
     `- **Current Phase**: ${pdcaStatus.primaryFeature ? pdcaStatus.features[pdcaStatus.primaryFeature]?.phase || 'plan' : 'N/A'}`,
     `- **Active Features**: ${pdcaStatus.activeFeatures?.length || 0}`,
-    ''
-  ].join('\n');
-}
-
-function buildAgentTriggersSection() {
-  return [
-    '## Agent Auto-Triggers (8 Languages)',
-    '',
-    '| Keywords | Agent | Action |',
-    '|----------|-------|--------|',
-    '| verify, 검증, 確認, 验证, verificar, vérifier, prüfen, verificare | gap-detector | Gap analysis |',
-    '| improve, 개선, 改善, 改进, mejorar, améliorer, verbessern, migliorare | pdca-iterator | Auto-improvement |',
-    '| analyze, 분석, 分析, 品質, analizar, analyser, analysieren, analizzare | code-analyzer | Code quality |',
-    '| report, 보고서, 報告, 报告, informe, rapport, Bericht, rapporto | report-generator | Completion report |',
-    '| help, 도움, 助けて, 帮助, ayuda, aide, Hilfe, aiuto | starter-guide | Beginner guide |',
-    '| bkend, BaaS, 백엔드, バックエンド, 后端, backend | bkend-expert | Backend/BaaS expert |',
-    '| pm, PRD, PM 분석, PM分析, PM-Analyse, analisi PM | pm-lead | PM Team analysis |',
-    '| team, 팀 구성, チームリード, 团队领导, CTO | cto-lead | Team orchestration |',
-    ''
-  ].join('\n');
-}
-
-function buildFeatureReportSection() {
-  return [
-    '## Feature Usage Report (Required)',
-    '',
-    'Include at the end of every response:',
-    '```',
-    '─────────────────────────────────────────────────',
-    '📊 bkit Feature Usage',
-    '─────────────────────────────────────────────────',
-    '✅ Used: [Features used in this response]',
-    '⏭️ Not Used: [Major unused features] (reason)',
-    '💡 Recommended: [Features suitable for next task]',
-    '─────────────────────────────────────────────────',
-    '```',
-    ''
-  ].join('\n');
-}
-
-function buildAutoTriggerSection() {
-  return [
-    '## Skill Auto-Triggers',
-    '',
-    '| Keywords | Skill | Level |',
-    '|----------|-------|-------|',
-    '| static site, portfolio, 정적 웹 | starter | Starter |',
-    '| login, fullstack, 로그인 | dynamic | Dynamic |',
-    '| microservices, k8s, 마이크로서비스 | enterprise | Enterprise |',
-    '| mobile app, React Native, 모바일 앱 | mobile-app | All |',
     ''
   ].join('\n');
 }

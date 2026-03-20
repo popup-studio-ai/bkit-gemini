@@ -146,6 +146,9 @@ async function main() {
     { name: 'TC-96: Edge Recovery', file: 'suites/tc96-edge-recovery.js', priority: 'P1', category: 'edge', sprint: 5 },
     { name: 'TC-97: E2E Integration', file: 'suites/tc97-e2e-integration.js', priority: 'P0', category: 'e2e', sprint: 5 },
     { name: 'TC-98: Performance', file: 'suites/tc98-performance.js', priority: 'P1', category: 'infra', sprint: 5 },
+
+    // ═══ Sprint 6: v2.0.1 Supplement Verification ═══
+    { name: 'TC-99: v2.0.1 Supplement', file: 'suites/tc99-v201-supplement.js', priority: 'P0', category: 'unit', sprint: 6 },
   ];
 
   const filtered = filterSuites(suites, opts);

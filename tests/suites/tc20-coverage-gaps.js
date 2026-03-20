@@ -78,12 +78,12 @@ module.exports = {
       }
     },
 
-    // 4.5 GAP-05: lib/common.js
+    // 4.5 GAP-05: lib/common.js removed in v2.0.1 (zero usage)
     {
-      name: 'UT-79: common.js exports checkPermission',
+      name: 'UT-79: common.js removed (unused bridge)',
       fn: () => {
-        const common = require(path.join(PLUGIN_ROOT, 'lib/common'));
-        assert(typeof common.checkPermission === 'function', 'Should export checkPermission');
+        const fs = require('fs');
+        assert(!fs.existsSync(path.join(PLUGIN_ROOT, 'lib/common.js')), 'common.js should be deleted');
       }
     },
 

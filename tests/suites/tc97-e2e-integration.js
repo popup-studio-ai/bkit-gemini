@@ -252,8 +252,9 @@ const tests = [
 
   // ─── Module dependency chain (5 tests) ───
 
-  { name: 'TC97-26: common.js -> gemini/platform -> gemini/version chain (no circular)', fn: () => {
+  { name: 'TC97-26: gemini/platform -> gemini/version chain (no circular)', fn: () => {
     // Verify that requiring these in order does not throw
+    // Note: common.js was removed in v2.0.1 (zero usage); platform.js is the canonical entry
     let errorMsg = null;
     try {
       const version = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));

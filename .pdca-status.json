@@ -1,7 +1,30 @@
 {
   "version": "2.0",
-  "primaryFeature": "gemini-cli-034-migration",
+  "primaryFeature": "bkit-gemini-v200-refactoring-supplement",
   "activeFeatures": {
+    "bkit-gemini-v200-refactoring-supplement": {
+      "phase": "completed",
+      "matchRate": 100,
+      "iterationCount": 0,
+      "lastUpdated": "2026-03-20T18:00:00Z",
+      "completedAt": "2026-03-20T18:00:00Z",
+      "documents": {
+        "plan": "docs/01-plan/features/bkit-gemini-v200-refactoring-supplement.plan.md",
+        "design": "docs/02-design/features/bkit-gemini-v200-refactoring-supplement.design.md",
+        "report": "docs/04-report/features/bkit-gemini-v200-refactoring-supplement.report.md"
+      }
+    },
+    "bkit-gemini-v200-refactoring": {
+      "phase": "completed",
+      "matchRate": 100,
+      "iterationCount": 0,
+      "lastUpdated": "2026-03-20T12:40:00Z",
+      "completedAt": "2026-03-20T12:40:00Z",
+      "documents": {
+        "plan": "docs/01-plan/features/bkit-gemini-v200-refactoring.plan.md",
+        "report": "docs/04-report/features/bkit-gemini-v200-refactoring.report.md"
+      }
+    },
     "gemini-cli-034-migration": {
       "phase": "completed",
       "matchRate": 96,
@@ -93,5 +116,5 @@
     "phaseHistory": []
   },
   "lastChecked": "2026-03-11T00:00:00Z",
-  "lastUpdated": "2026-03-19T11:41:28.066Z"
+  "lastUpdated": "2026-03-20T13:25:19.680Z"
 }

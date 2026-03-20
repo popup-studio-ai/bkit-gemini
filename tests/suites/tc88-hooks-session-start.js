@@ -103,7 +103,7 @@ const tests = [
       const doMatch = mapMatch[1].match(/do:\s*\[([\s\S]*?)\]/);
       assert(doMatch, 'Should find do array');
       const doFiles = doMatch[1];
-      assertContains(doFiles, 'tool-reference.md', 'do should load tool-reference.md');
+      assertContains(doFiles, 'tool-reference-v2.md', 'do should load tool-reference-v2.md');
       assertContains(doFiles, 'skill-triggers.md', 'do should load skill-triggers.md');
       assertContains(doFiles, 'feature-report.md', 'do should load feature-report.md');
       const entries = doFiles.match(/\.md/g);

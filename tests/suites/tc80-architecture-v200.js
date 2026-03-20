@@ -7,7 +7,7 @@
  *   - Claude Code legacy removal (CC maps, aliases, platform flags)
  *   - Version consistency (v2.0.0 across all config files)
  *   - Migration tooling (sync-version.js)
- *   - Backward compatibility (common.js, old fixtures)
+ *   - Backward compatibility (old fixtures; common.js removed in v2.0.1)
  *   - Philosophy docs (symlink, 4 files)
  *   - CHANGELOG structure
  *
@@ -96,14 +96,15 @@ test('ARC-06', 'lib/adapters/index.js does NOT exist', () => {
     'adapters/index.js still exists');
 });
 
-test('ARC-07', 'lib/common.js exists', () => {
-  assert(fs.existsSync(path.join(LIB, 'common.js')), 'lib/common.js not found');
+test('ARC-07', 'lib/common.js removed (unused bridge, deleted in v2.0.1)', () => {
+  assert(!fs.existsSync(path.join(LIB, 'common.js')), 'common.js should be deleted (zero usage)');
 });
 
-test('ARC-08', 'lib/common.js requires lib/gemini/platform (not lib/adapters)', () => {
-  const content = fs.readFileSync(path.join(LIB, 'common.js'), 'utf-8');
-  assert(content.includes('./gemini/platform'), 'common.js does not require ./gemini/platform');
-  assert(!content.includes('./adapters'), 'common.js still references ./adapters');
+test('ARC-08', 'Platform functions available directly from lib/gemini/platform.js', () => {
+  const platform = require(path.join(LIB, 'gemini', 'platform.js'));
+  assert(typeof platform.getAdapter === 'function', 'getAdapter not exported from platform.js');
+  assert(typeof platform.getPlatformName === 'function', 'getPlatformName not exported from platform.js');
+  assert(typeof platform.isGemini === 'function', 'isGemini not exported from platform.js');
 });
 
 // All module directories load without errors
@@ -179,34 +180,26 @@ test('REQ-05', 'mcp/spawn-agent-server.js requires lib/gemini/version (not lib/a
   assert(!content.includes('lib/adapters'), 'spawn-agent-server.js still references lib/adapters');
 });
 
-test('REQ-06', 'lib/common.js re-exports getAdapter property', () => {
-  const common = require(path.join(LIB, 'common.js'));
-  // Note: getAdapter is defined on common.js as adapters.getAdapter, but
-  // adapters is a GeminiAdapter instance that does not have getAdapter method.
-  // This test documents the expected interface.
-  assert('getAdapter' in common, 'common.js does not export getAdapter key');
+test('REQ-06', 'lib/gemini/platform.js exports getAdapter function', () => {
+  const platform = require(path.join(LIB, 'gemini', 'platform.js'));
+  assert(typeof platform.getAdapter === 'function', 'getAdapter not exported from platform.js');
 });
 
-test('REQ-07', 'lib/common.js re-exports getPlatformName property', () => {
-  const common = require(path.join(LIB, 'common.js'));
-  assert('getPlatformName' in common, 'common.js does not export getPlatformName key');
+test('REQ-07', 'lib/gemini/platform.js exports getPlatformName function', () => {
+  const platform = require(path.join(LIB, 'gemini', 'platform.js'));
+  assert(typeof platform.getPlatformName === 'function', 'getPlatformName not exported from platform.js');
 });
 
-test('REQ-08', 'lib/common.js re-exports isGemini property', () => {
-  const common = require(path.join(LIB, 'common.js'));
-  assert('isGemini' in common, 'common.js does not export isGemini key');
+test('REQ-08', 'lib/gemini/platform.js exports isGemini function', () => {
+  const platform = require(path.join(LIB, 'gemini', 'platform.js'));
+  assert(typeof platform.isGemini === 'function', 'isGemini not exported from platform.js');
 });
 
-test('REQ-09', 'lib/common.js getAdapter is callable or defined', () => {
-  // KNOWN ISSUE: GeminiAdapter singleton does not expose getAdapter() —
-  // common.js maps adapters.getAdapter which resolves to undefined on the instance.
-  // This test flags the issue for resolution.
-  const common = require(path.join(LIB, 'common.js'));
-  const val = common.getAdapter;
-  // If undefined, this is a compatibility gap that should be addressed
-  if (typeof val === 'undefined') {
-    throw new Error('getAdapter is undefined — GeminiAdapter singleton does not expose this method; common.js backward compat is broken');
-  }
+test('REQ-09', 'lib/gemini/platform.js getAdapter() returns adapter object', () => {
+  const platform = require(path.join(LIB, 'gemini', 'platform.js'));
+  const adapter = platform.getAdapter();
+  assert(adapter !== null && typeof adapter === 'object',
+    `getAdapter() returned ${typeof adapter}, expected object`);
 });
 
 test('REQ-10', 'session-start.js requires from lib/gemini/ path', () => {
@@ -515,9 +508,10 @@ test('MIG-02', 'sync-version.js propagates version from bkit.config.json', () =>
   assert(content.includes('bkit.config.json'), 'sync-version.js does not read bkit.config.json');
 });
 
-test('MIG-03', 'lib/common.js still exports getAdapter key (backward compat)', () => {
-  const common = require(path.join(LIB, 'common.js'));
-  assert('getAdapter' in common, 'getAdapter key missing from common.js exports');
+test('MIG-03', 'lib/common.js removed — getAdapter available from lib/gemini/platform.js', () => {
+  assert(!fs.existsSync(path.join(LIB, 'common.js')), 'common.js should be deleted (v2.0.1)');
+  const platform = require(path.join(LIB, 'gemini', 'platform.js'));
+  assert(typeof platform.getAdapter === 'function', 'getAdapter not available from platform.js');
 });
 
 test('MIG-04', 'Old test fixture PDCA_STATUS_V157 is importable', () => {

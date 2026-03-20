@@ -194,14 +194,16 @@ test('RP-04', 'Zero "require.*adapters" in mcp/**/*.js', () => {
     `Found ${result.length} adapters references in mcp/: ${result.map(r => r.file).join(', ')}`);
 });
 
-test('RP-05', 'lib/common.js requires lib/gemini/platform', () => {
-  const content = fs.readFileSync(path.join(LIB, 'common.js'), 'utf-8');
-  assert(content.includes('./gemini/platform'), 'common.js does not require ./gemini/platform');
+test('RP-05', 'lib/common.js removed (unused bridge, deleted in v2.0.1)', () => {
+  const commonPath = path.join(LIB, 'common.js');
+  assert(!fs.existsSync(commonPath), 'common.js should be deleted (zero usage in codebase)');
 });
 
-test('RP-06', 'lib/common.js does not require lib/adapters', () => {
-  const content = fs.readFileSync(path.join(LIB, 'common.js'), 'utf-8');
-  assert(!content.includes('./adapters'), 'common.js still references ./adapters');
+test('RP-06', 'Platform functions available from lib/gemini/platform.js (not common.js)', () => {
+  const platform = require(path.join(LIB, 'gemini', 'platform.js'));
+  assert(typeof platform.getAdapter === 'function', 'getAdapter not exported from platform.js');
+  assert(typeof platform.getPlatformName === 'function', 'getPlatformName not exported from platform.js');
+  assert(typeof platform.isGemini === 'function', 'isGemini not exported from platform.js');
 });
 
 test('RP-07', 'session-start.js requires lib/gemini (not lib/adapters)', () => {
@@ -263,9 +265,8 @@ test('RP-17', 'mcp/spawn-agent-server.js has no adapters reference', () => {
   assert(!content.includes('lib/adapters'), 'spawn-agent-server.js still references lib/adapters');
 });
 
-test('RP-18', 'lib/common.js exists and is non-empty', () => {
-  const content = fs.readFileSync(path.join(LIB, 'common.js'), 'utf-8');
-  assert(content.length > 50, 'common.js is too short or empty');
+test('RP-18', 'lib/common.js does not exist (removed in v2.0.1)', () => {
+  assert(!fs.existsSync(path.join(LIB, 'common.js')), 'common.js should be deleted');
 });
 
 test('RP-19', 'Zero string literal "adapters" in lib/gemini/*.js files', () => {
@@ -522,42 +523,38 @@ test('VER-15', 'hooks/hooks.json uses ${extensionPath} variable (not ${CLAUDE_PL
 // ================================================================
 console.log('\n=== Section 5: Module Compatibility (10 tests) ===');
 
-test('MC-01', 'lib/common.js exports getAdapter as function', () => {
-  const common = require(path.join(LIB, 'common.js'));
-  assert(typeof common.getAdapter === 'function',
-    `getAdapter is ${typeof common.getAdapter}, expected function`);
+test('MC-01', 'lib/common.js removed (unused bridge, deleted in v2.0.1)', () => {
+  assert(!fs.existsSync(path.join(LIB, 'common.js')),
+    'common.js should be deleted (zero usage in codebase)');
 });
 
-test('MC-02', 'lib/common.js exports getPlatformName as function', () => {
-  const common = require(path.join(LIB, 'common.js'));
-  assert(typeof common.getPlatformName === 'function',
-    `getPlatformName is ${typeof common.getPlatformName}, expected function`);
+test('MC-02', 'lib/gemini/platform.js exports getAdapter as function', () => {
+  const platform = require(path.join(GEMINI_DIR, 'platform.js'));
+  assert(typeof platform.getAdapter === 'function',
+    `getAdapter is ${typeof platform.getAdapter}, expected function`);
 });
 
-test('MC-03', 'lib/common.js exports isGemini as function', () => {
-  const common = require(path.join(LIB, 'common.js'));
-  assert(typeof common.isGemini === 'function',
-    `isGemini is ${typeof common.isGemini}, expected function`);
+test('MC-03', 'lib/gemini/platform.js exports getPlatformName as function', () => {
+  const platform = require(path.join(GEMINI_DIR, 'platform.js'));
+  assert(typeof platform.getPlatformName === 'function',
+    `getPlatformName is ${typeof platform.getPlatformName}, expected function`);
 });
 
-test('MC-04', 'lib/common.js getAdapter() returns object with _name="gemini"', () => {
-  const common = require(path.join(LIB, 'common.js'));
-  const adapter = common.getAdapter();
-  assert(adapter !== null && typeof adapter === 'object',
-    `getAdapter() returned ${typeof adapter}, expected object`);
-  assert(adapter._name === 'gemini',
-    `getAdapter()._name is "${adapter._name}", expected "gemini"`);
+test('MC-04', 'lib/gemini/platform.js exports isGemini as function', () => {
+  const platform = require(path.join(GEMINI_DIR, 'platform.js'));
+  assert(typeof platform.isGemini === 'function',
+    `isGemini is ${typeof platform.isGemini}, expected function`);
 });
 
-test('MC-05', 'lib/common.js getPlatformName() returns "gemini"', () => {
-  const common = require(path.join(LIB, 'common.js'));
-  const name = common.getPlatformName();
+test('MC-05', 'lib/gemini/platform.js getPlatformName() returns "gemini"', () => {
+  const platform = require(path.join(GEMINI_DIR, 'platform.js'));
+  const name = platform.getPlatformName();
   assert(name === 'gemini', `getPlatformName() returned "${name}", expected "gemini"`);
 });
 
-test('MC-06', 'lib/common.js isGemini() returns true', () => {
-  const common = require(path.join(LIB, 'common.js'));
-  assert(common.isGemini() === true, 'isGemini() did not return true');
+test('MC-06', 'lib/gemini/platform.js isGemini() returns true', () => {
+  const platform = require(path.join(GEMINI_DIR, 'platform.js'));
+  assert(platform.isGemini() === true, 'isGemini() did not return true');
 });
 
 test('MC-07', 'lib/gemini/platform.js exports a singleton object', () => {

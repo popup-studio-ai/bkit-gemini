@@ -28,9 +28,9 @@ const tests = [
     assert('readonly' in SUBAGENT_POLICY_GROUPS, 'should have readonly group');
     assert('docwrite' in SUBAGENT_POLICY_GROUPS, 'should have docwrite group');
   }},
-  { name: 'TC84-04: readonly group has 10 agents and 3 deny rules', fn: () => {
+  { name: 'TC84-04: readonly group has 8 agents and 3 deny rules', fn: () => {
     const ro = SUBAGENT_POLICY_GROUPS.readonly;
-    assertEqual(ro.agents.length, 10, 'readonly should have 10 agents');
+    assertEqual(ro.agents.length, 8, 'readonly should have 8 agents');
     assertEqual(ro.rules.length, 3, 'readonly should have 3 deny rules');
     ro.rules.forEach(r => assertEqual(r.decision, 'deny', 'readonly rules should all be deny'));
   }},
@@ -40,9 +40,9 @@ const tests = [
     assertEqual(toolNames[1], 'run_shell_command', 'should deny run_shell_command');
     assertEqual(toolNames[2], 'write_file', 'should deny write_file');
   }},
-  { name: 'TC84-06: docwrite group has 4 agents and 1 deny rule (run_shell_command only)', fn: () => {
+  { name: 'TC84-06: docwrite group has 6 agents and 1 deny rule (run_shell_command only)', fn: () => {
     const dw = SUBAGENT_POLICY_GROUPS.docwrite;
-    assertEqual(dw.agents.length, 4, 'docwrite should have 4 agents');
+    assertEqual(dw.agents.length, 6, 'docwrite should have 6 agents');
     assertEqual(dw.rules.length, 1, 'docwrite should have 1 rule');
     assertEqual(dw.rules[0].toolName, 'run_shell_command', 'docwrite rule should be run_shell_command');
   }},
@@ -59,10 +59,10 @@ const tests = [
     assert(output.includes('gap-detector'), 'should contain gap-detector');
     assert(output.includes('code-analyzer'), 'should contain code-analyzer');
   }},
-  { name: 'TC84-09: generateSubagentRules does NOT contain cto-lead or pdca-iterator', fn: () => {
+  { name: 'TC84-09: generateSubagentRules DOES contain cto-lead and pdca-iterator (full tier)', fn: () => {
     const output = generateSubagentRules();
-    assert(!output.includes('cto-lead'), 'should NOT contain cto-lead');
-    assert(!output.includes('pdca-iterator'), 'should NOT contain pdca-iterator');
+    assert(output.includes('cto-lead'), 'should contain cto-lead (full tier)');
+    assert(output.includes('pdca-iterator'), 'should contain pdca-iterator (full tier)');
   }},
 
   // ─── LEVEL_POLICY_TEMPLATES (4 tests) ─────────────────────

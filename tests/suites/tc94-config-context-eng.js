@@ -364,11 +364,10 @@ const tests = [
     const hasCCMap = /Claude\s*Code/i.test(content) || /\bCC\b/.test(content) || /claude_/.test(content);
     assertEqual(hasCCMap, false, 'tool-reference-v2.md should have no Claude Code mappings');
   }},
-  { name: 'TC94-83: All 7 original context files exist for phase-aware loading', fn: () => {
+  { name: 'TC94-83: All 6 original context files exist for phase-aware loading', fn: () => {
     const expectedFiles = [
       'commands.md', 'core-rules.md', 'pdca-rules.md',
-      'agent-triggers.md', 'skill-triggers.md', 'feature-report.md',
-      'tool-reference.md'
+      'agent-triggers.md', 'skill-triggers.md', 'feature-report.md'
     ];
     for (const f of expectedFiles) {
       assertExists(path.join(CONTEXT_DIR, f), `context file ${f}`);
@@ -443,9 +442,9 @@ const tests = [
     const match = sessionStartSrc.match(/idle:\s*\[(.*?)\]/s);
     assert(match[1].includes('skill-triggers.md'), 'idle should include skill-triggers.md');
   }},
-  { name: 'TC94-97: do phase includes tool-reference.md', fn: () => {
+  { name: 'TC94-97: do phase includes tool-reference-v2.md', fn: () => {
     const match = sessionStartSrc.match(/do:\s*\[(.*?)\]/s);
-    assert(match[1].includes('tool-reference.md'), 'do should include tool-reference.md');
+    assert(match[1].includes('tool-reference-v2.md'), 'do should include tool-reference-v2.md');
   }},
   { name: 'TC94-98: loadPhaseAwareContext function exists in session-start.js', fn: () => {
     assertContains(sessionStartSrc, 'function loadPhaseAwareContext', 'should define loadPhaseAwareContext');

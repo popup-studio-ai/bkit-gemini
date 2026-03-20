@@ -221,11 +221,11 @@ const tests = [
     }
   },
 
-  { name: 'TC91-20: SEC-02 readonly group has exactly 10 agents',
+  { name: 'TC91-20: SEC-02 readonly group has exactly 8 agents',
     fn: () => {
       const policy = require(policyPath);
-      assertEqual(policy.SUBAGENT_POLICY_GROUPS.readonly.agents.length, 10,
-        'readonly.agents should have 10 entries');
+      assertEqual(policy.SUBAGENT_POLICY_GROUPS.readonly.agents.length, 8,
+        'readonly.agents should have 8 entries');
     }
   },
 
@@ -237,11 +237,11 @@ const tests = [
     }
   },
 
-  { name: 'TC91-22: SEC-02 docwrite group has exactly 4 agents',
+  { name: 'TC91-22: SEC-02 docwrite group has exactly 6 agents',
     fn: () => {
       const policy = require(policyPath);
-      assertEqual(policy.SUBAGENT_POLICY_GROUPS.docwrite.agents.length, 4,
-        'docwrite.agents should have 4 entries');
+      assertEqual(policy.SUBAGENT_POLICY_GROUPS.docwrite.agents.length, 6,
+        'docwrite.agents should have 6 entries');
     }
   },
 
@@ -262,21 +262,21 @@ const tests = [
     }
   },
 
-  { name: 'TC91-25: SEC-02 generateSubagentRules() does not include cto-lead',
+  { name: 'TC91-25: SEC-02 generateSubagentRules() DOES include cto-lead (full tier)',
     fn: () => {
       const policy = require(policyPath);
       const rules = policy.generateSubagentRules();
-      assert(!rules.includes('cto-lead'),
-        'cto-lead (FULL tier) should NOT appear in subagent rules');
+      assert(rules.includes('cto-lead'),
+        'cto-lead (FULL tier) should appear in subagent rules');
     }
   },
 
-  { name: 'TC91-26: SEC-02 generateSubagentRules() does not include pdca-iterator',
+  { name: 'TC91-26: SEC-02 generateSubagentRules() DOES include pdca-iterator (full tier)',
     fn: () => {
       const policy = require(policyPath);
       const rules = policy.generateSubagentRules();
-      assert(!rules.includes('pdca-iterator'),
-        'pdca-iterator (FULL tier) should NOT appear in subagent rules');
+      assert(rules.includes('pdca-iterator'),
+        'pdca-iterator (FULL tier) should appear in subagent rules');
     }
   },
 
@@ -305,13 +305,15 @@ const tests = [
       const policy = require(policyPath);
       const expected = [
         'gap-detector', 'design-validator', 'code-analyzer', 'security-architect',
-        'qa-monitor', 'qa-strategist', 'starter-guide', 'pipeline-guide',
-        'bkend-expert', 'enterprise-expert'
+        'qa-monitor', 'qa-strategist', 'starter-guide', 'pipeline-guide'
       ];
       for (const name of expected) {
         assert(policy.SUBAGENT_POLICY_GROUPS.readonly.agents.includes(name),
           `${name} should be in readonly agents list`);
       }
+      // bkend-expert moved to docwrite
+      assert(!policy.SUBAGENT_POLICY_GROUPS.readonly.agents.includes('bkend-expert'),
+        'bkend-expert should NOT be in readonly (moved to docwrite)');
     }
   },
 
