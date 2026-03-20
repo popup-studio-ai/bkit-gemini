@@ -81,8 +81,8 @@ const tests = [
     },
     teardown: cleanupTestProject
   },
-  { name: 'TC49-08: lib/adapters → hook-adapter 연동', fn: () => {
-    const ha = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/hook-adapter'));
+  { name: 'TC49-08: lib/gemini → hooks 연동', fn: () => {
+    const ha = require(path.join(PLUGIN_ROOT, 'lib/gemini/hooks'));
     assertType(ha.HOOK_EVENT_MAP, 'object', 'Should have event map');
   }},
   { name: 'TC49-09: lib/pdca/level → session-start level 감지', fn: () => {

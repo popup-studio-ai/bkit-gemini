@@ -9,6 +9,74 @@ const path = require('path');
 
 const libPath = path.resolve(__dirname, '..', '..', 'lib');
 
+// --- Model Routing Hints (v2.0.0) ---
+const MODEL_ROUTING = Object.freeze({
+  plan:   { preferredModel: 'pro', reason: 'Deep reasoning for requirements analysis' },
+  design: { preferredModel: 'pro', reason: 'Architecture analysis needs thorough evaluation' },
+  do:     { preferredModel: 'pro', reason: 'Code generation requires accuracy' },
+  check:  { preferredModel: 'flash', reason: 'Comparison/verification is speed-optimized' },
+  act:    { preferredModel: 'flash', reason: 'Iterative fixes benefit from fast response' },
+  report: { preferredModel: 'flash', reason: 'Document generation is speed-optimized' }
+});
+
+function getModelRoutingHint(phase) {
+  const routing = MODEL_ROUTING[phase];
+  if (!routing) return null;
+  return `[Model Routing: ${routing.preferredModel}] ${routing.reason}`;
+}
+
+// --- Context Anchoring (v2.0.0) ---
+function extractDocumentAnchors(projectDir, phase) {
+  const MAX_ANCHOR_CHARS = 2000;
+
+  try {
+    const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
+    const statusPath = pdcaStatusModule.getPdcaStatusPath(projectDir);
+    if (!fs.existsSync(statusPath)) return null;
+
+    const status = pdcaStatusModule.loadPdcaStatus(projectDir);
+    const feature = status.primaryFeature;
+    if (!feature) return null;
+
+    // Determine which document to anchor based on phase
+    const PHASE_ANCHOR_DOCS = {
+      design: ['01-plan'],
+      do:     ['02-design'],
+      check:  ['02-design', '01-plan'],
+      act:    ['03-analysis']
+    };
+
+    const docDirs = PHASE_ANCHOR_DOCS[phase];
+    if (!docDirs) return null;
+
+    const anchors = [];
+    for (const dir of docDirs) {
+      const docPath = path.join(projectDir, 'docs', dir, 'features', `${feature}.${dir.split('-')[1]}.md`);
+      if (!fs.existsSync(docPath)) continue;
+
+      try {
+        let content = fs.readFileSync(docPath, 'utf-8');
+        // Extract Executive Summary section only
+        const execMatch = content.match(/## Executive Summary[\s\S]*?(?=\n## [^#]|\n---|\Z)/);
+        if (execMatch) {
+          const excerpt = execMatch[0].substring(0, 800);
+          anchors.push(`### Context Anchor (${dir}):\n${excerpt}`);
+        }
+      } catch (e) { /* non-fatal */ }
+    }
+
+    if (anchors.length === 0) return null;
+
+    let result = `## Context Anchor (auto-injected)\n\n${anchors.join('\n\n')}`;
+    if (result.length > MAX_ANCHOR_CHARS) {
+      result = result.substring(0, MAX_ANCHOR_CHARS) + '\n\n[...truncated]';
+    }
+    return result;
+  } catch (e) {
+    return null;
+  }
+}
+
 // --- Core processing logic ---
 function processHook(input) {
   try {
@@ -25,6 +93,18 @@ function processHook(input) {
       const phaseContext = getPhaseContext(pdcaPhase);
       if (phaseContext) {
         contexts.push(phaseContext);
+      }
+
+      // v2.0.0: Model Routing Hint
+      const routingHint = getModelRoutingHint(pdcaPhase);
+      if (routingHint) {
+        contexts.push(routingHint);
+      }
+
+      // v2.0.0: Context Anchoring
+      const anchorContext = extractDocumentAnchors(projectDir, pdcaPhase);
+      if (anchorContext) {
+        contexts.push(anchorContext);
       }
     }
 
@@ -45,7 +125,7 @@ async function handler(event) {
 // --- Legacy command mode ---
 function main() {
   try {
-    const { getAdapter } = require(path.join(libPath, 'adapters'));
+    const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
     const adapter = getAdapter();
     const input = adapter.readHookInput();
     input.projectDir = adapter.getProjectDir();
@@ -67,10 +147,8 @@ function main() {
  */
 function getCurrentPdcaPhase(projectDir) {
   try {
-    const statusPath = path.join(projectDir, 'docs', '.pdca-status.json');
-    if (!fs.existsSync(statusPath)) return null;
-
-    const status = JSON.parse(fs.readFileSync(statusPath, 'utf-8'));
+    const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
+    const status = pdcaStatusModule.loadPdcaStatus(projectDir);
     const feature = status.primaryFeature;
     if (!feature || !status.features[feature]) return null;
 

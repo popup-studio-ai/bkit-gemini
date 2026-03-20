@@ -1,31 +1,42 @@
 /**
  * Memory Helper - Shared memory load/save utility
+ * Delegates to lib/core/memory module for path resolution
  */
-const fs = require('fs');
 const path = require('path');
 
+const libPath = path.resolve(__dirname, '..', '..', '..', 'lib');
+
 function loadMemory(projectDir) {
-  const memoryPath = path.join(projectDir, 'docs', '.bkit-memory.json');
   try {
-    if (fs.existsSync(memoryPath)) {
-      return JSON.parse(fs.readFileSync(memoryPath, 'utf-8'));
-    }
+    const { getMemory } = require(path.join(libPath, 'core', 'memory'));
+    return getMemory(projectDir).load();
   } catch (e) { /* ignore */ }
   return {};
 }
 
 function saveMemory(projectDir, memory) {
   try {
-    const memoryPath = path.join(projectDir, 'docs', '.bkit-memory.json');
-    fs.writeFileSync(memoryPath, JSON.stringify(memory, null, 2));
+    const { getMemory } = require(path.join(libPath, 'core', 'memory'));
+    const memoryManager = getMemory(projectDir);
+    // Overwrite cache and force save
+    memoryManager.cache = memory;
+    memoryManager.dirty = true;
+    memoryManager.save(true);
   } catch (e) { /* silently fail */ }
 }
 
 function updateMemoryField(projectDir, key, value) {
-  const memory = loadMemory(projectDir);
-  memory[key] = value;
-  saveMemory(projectDir, memory);
-  return memory;
+  try {
+    const { getMemory } = require(path.join(libPath, 'core', 'memory'));
+    const memoryManager = getMemory(projectDir);
+    memoryManager.set(key, value);
+    return memoryManager.load();
+  } catch (e) {
+    const memory = loadMemory(projectDir);
+    memory[key] = value;
+    saveMemory(projectDir, memory);
+    return memory;
+  }
 }
 
 module.exports = { loadMemory, saveMemory, updateMemoryField };

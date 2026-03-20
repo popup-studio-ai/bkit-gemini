@@ -8,7 +8,7 @@ const fs = require('fs');
 const path = require('path');
 
 const libPath = path.resolve(__dirname, '..', '..', 'lib');
-const toolRegistryPath = path.join(libPath, 'adapters', 'gemini', 'tool-registry');
+const toolRegistryPath = path.join(libPath, 'gemini', 'tools');
 
 // --- Core processing logic ---
 function processHook(input) {
@@ -52,7 +52,7 @@ async function handler(event) {
 // --- Legacy command mode ---
 function main() {
   try {
-    const { getAdapter } = require(path.join(libPath, 'adapters'));
+    const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
     const adapter = getAdapter();
     const input = adapter.readHookInput();
     input.projectDir = adapter.getProjectDir();
@@ -75,10 +75,8 @@ function main() {
  */
 function getCurrentPdcaPhase(projectDir) {
   try {
-    const statusPath = path.join(projectDir, 'docs', '.pdca-status.json');
-    if (!fs.existsSync(statusPath)) return null;
-
-    const status = JSON.parse(fs.readFileSync(statusPath, 'utf-8'));
+    const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
+    const status = pdcaStatusModule.loadPdcaStatus(projectDir);
     const feature = status.primaryFeature;
     if (!feature || !status.features[feature]) return null;
 
@@ -117,11 +115,10 @@ function getPhaseToolFilter(phase) {
  */
 function getActiveSkillToolFilter(projectDir, pluginRoot) {
   try {
-    const memoryPath = path.join(projectDir, 'docs', '.bkit-memory.json');
-    if (!fs.existsSync(memoryPath)) return null;
-
-    const memory = JSON.parse(fs.readFileSync(memoryPath, 'utf-8'));
-    const activeSkill = memory.activeSkill;
+    const { getMemory } = require(path.join(libPath, 'core', 'memory'));
+    const memoryManager = getMemory(projectDir);
+    const memory = memoryManager.load();
+    const activeSkill = memory.activeSkill || memoryManager.get('activeSkill');
     if (!activeSkill) return null;
 
     // Read SKILL.md frontmatter for allowed-tools

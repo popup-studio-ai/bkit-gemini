@@ -3,7 +3,7 @@ const { PLUGIN_ROOT, assert, assertEqual, withVersion } = require('../test-utils
 const path = require('path');
 const fs = require('fs');
 
-const { parseVersion, getFeatureFlags, getBkitFeatureFlags, isValidSemVer, resetCache } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/version-detector'));
+const { parseVersion, getFeatureFlags, getBkitFeatureFlags, isValidSemVer, resetCache } = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
 
 const tests = [
   // ─── v0.34.0 Feature Flags (14 tests) ─────────────────────

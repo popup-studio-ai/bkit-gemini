@@ -24,7 +24,7 @@ What are you doing?
 │   └─► report.template.md
 │
 └─► Setting up new project?
-    └─► CLAUDE.template.md
+    └─► GEMINI.template.md
 ```
 
 ---
@@ -83,7 +83,7 @@ Project Complexity?
 
 | Template | Purpose |
 |----------|---------|
-| **CLAUDE.template.md** | Generate CLAUDE.md for new projects |
+| **GEMINI.template.md** | Generate GEMINI.md for new projects |
 | **iteration-report.template.md** | Evaluator-Optimizer iteration report |
 | **_INDEX.template.md** | Folder document index |
 
@@ -127,7 +127,7 @@ Project Complexity?
 /pipeline-next            # Go to next phase
 
 # Project Setup
-/setup-claude-code        # Generate CLAUDE.md
+/development-pipeline        # Generate GEMINI.md
 /init-starter             # Initialize Starter level project
 /init-dynamic             # Initialize Dynamic level project
 /init-enterprise          # Initialize Enterprise level project

@@ -2,7 +2,7 @@
 const { PLUGIN_ROOT, assert, assertEqual, assertType, withVersion } = require('../test-utils');
 const path = require('path');
 
-const vd = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/version-detector'));
+const vd = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
 
 const VERSION_FLAG_MATRIX = [
   { version: '0.26.0', expected: { hasPolicyEngine: false, hasTaskTracker: false } },

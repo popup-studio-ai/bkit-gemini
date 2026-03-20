@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require('fs');
 
 const cache = require(path.join(PLUGIN_ROOT, 'lib/core/cache'));
-const { resetCache } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/version-detector'));
+const { resetCache } = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
 
 const tests = [
   { name: 'TC74-01: cache clear 후 새 값 설정', fn: () => {
@@ -19,7 +19,7 @@ const tests = [
   { name: 'TC74-02: version cache reset 후 재감지', fn: () => {
     resetCache();
     // After reset, next detectVersion should work fresh
-    const vd = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/version-detector'));
+    const vd = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
     assertType(vd.detectVersion, 'function', 'Should still have detectVersion');
   }},
   { name: 'TC74-03: cache invalidate 특정 키만 삭제', fn: () => {

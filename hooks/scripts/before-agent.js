@@ -57,7 +57,7 @@ async function handler(event) {
 // --- Legacy command mode ---
 function main() {
   try {
-    const { getAdapter } = require(path.join(libPath, 'adapters'));
+    const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
     const adapter = getAdapter();
     const input = adapter.readHookInput();
     const result = processHook(input);

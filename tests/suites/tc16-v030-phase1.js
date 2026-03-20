@@ -44,13 +44,13 @@ const tests = [
 
   // ─────────────────────────────────────────────────────────────────
   // P1-03 through P1-08: Policy TOML Generation Unit Tests
-  // Module: lib/adapters/gemini/policy-migrator.js / convertToToml()
+  // Module: lib/gemini/policy.js / convertToToml()
   // ─────────────────────────────────────────────────────────────────
   {
     name: 'P1-03: convertToToml() generates [[rule]] array syntax for deny rules',
     fn: () => {
       const { convertToToml } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'policy-migrator'
+        PLUGIN_ROOT, 'lib', 'gemini', 'policy'
       ));
       const permissions = {
         'run_shell_command(rm -rf*)': 'deny',
@@ -68,7 +68,7 @@ const tests = [
     name: 'P1-04: convertToToml() maps "ask" to "ask_user" decision for Policy Engine',
     fn: () => {
       const { convertToToml } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'policy-migrator'
+        PLUGIN_ROOT, 'lib', 'gemini', 'policy'
       ));
       const permissions = {
         'run_shell_command(rm -r*)': 'ask',
@@ -84,7 +84,7 @@ const tests = [
     name: 'P1-05: convertToToml() generates allow rules with correct decision and priority',
     fn: () => {
       const { convertToToml } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'policy-migrator'
+        PLUGIN_ROOT, 'lib', 'gemini', 'policy'
       ));
       const permissions = { 'write_file': 'allow' };
       const toml = convertToToml(permissions);
@@ -98,7 +98,7 @@ const tests = [
     name: 'P1-06: convertToToml() orders deny > ask > allow sections by priority',
     fn: () => {
       const { convertToToml } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'policy-migrator'
+        PLUGIN_ROOT, 'lib', 'gemini', 'policy'
       ));
       const permissions = {
         'write_file': 'allow',
@@ -121,7 +121,7 @@ const tests = [
     name: 'P1-07: parsePermissionKey() strips trailing asterisk from commandPrefix',
     fn: () => {
       const { parsePermissionKey } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'policy-migrator'
+        PLUGIN_ROOT, 'lib', 'gemini', 'policy'
       ));
       const result = parsePermissionKey('run_shell_command(rm -rf*)');
       assertEqual(result.tool, 'run_shell_command', 'Tool name should be extracted correctly');
@@ -134,7 +134,7 @@ const tests = [
     name: 'P1-07b: parsePermissionKey() handles tool name without pattern',
     fn: () => {
       const { parsePermissionKey } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'policy-migrator'
+        PLUGIN_ROOT, 'lib', 'gemini', 'policy'
       ));
       const result = parsePermissionKey('write_file');
       assertEqual(result.tool, 'write_file', 'Tool name parsed correctly');
@@ -146,7 +146,7 @@ const tests = [
     name: 'P1-08: convertToToml() returns empty string for null/empty/undefined permissions',
     fn: () => {
       const { convertToToml } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'policy-migrator'
+        PLUGIN_ROOT, 'lib', 'gemini', 'policy'
       ));
       assertEqual(convertToToml({}), '', 'Empty object should return empty string');
       assertEqual(convertToToml(null), '', 'null should return empty string');
@@ -194,14 +194,14 @@ const tests = [
 
   // ─────────────────────────────────────────────────────────────────
   // P1-11 through P1-17: version-detector SemVer Validation
-  // Module: lib/adapters/gemini/version-detector.js
+  // Module: lib/gemini/version.js
   // Analysis security finding: GEMINI_CLI_VERSION env var validation missing
   // ─────────────────────────────────────────────────────────────────
   {
     name: 'P1-11: parseVersion() correctly parses "0.30.0"',
     fn: () => {
       const { parseVersion, resetCache } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'version-detector'
+        PLUGIN_ROOT, 'lib', 'gemini', 'version'
       ));
       resetCache();
       const v = parseVersion('0.30.0');
@@ -217,7 +217,7 @@ const tests = [
     name: 'P1-12: parseVersion() parses preview suffix "0.31.0-preview.0"',
     fn: () => {
       const { parseVersion, resetCache } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'version-detector'
+        PLUGIN_ROOT, 'lib', 'gemini', 'version'
       ));
       resetCache();
       const v = parseVersion('0.31.0-preview.0');
@@ -233,7 +233,7 @@ const tests = [
     name: 'P1-12b: parseVersion() parses "0.29.7" patch version correctly',
     fn: () => {
       const { parseVersion, resetCache } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'version-detector'
+        PLUGIN_ROOT, 'lib', 'gemini', 'version'
       ));
       resetCache();
       const v = parseVersion('0.29.7');
@@ -247,7 +247,7 @@ const tests = [
     name: 'P1-13: parseVersion() handles invalid input gracefully (no throw)',
     fn: () => {
       const { parseVersion, resetCache } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'version-detector'
+        PLUGIN_ROOT, 'lib', 'gemini', 'version'
       ));
       resetCache();
       // Must not throw - must return safe defaults
@@ -268,7 +268,7 @@ const tests = [
     name: 'P1-13b: parseVersion() handles empty string without throwing',
     fn: () => {
       const { parseVersion, resetCache } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'version-detector'
+        PLUGIN_ROOT, 'lib', 'gemini', 'version'
       ));
       resetCache();
       let v;
@@ -288,7 +288,7 @@ const tests = [
       // GEMINI_CLI_VERSION="99.99.99" currently activates all feature flags
       // This test documents the security boundary requirement
       const { detectVersion, getFeatureFlags, resetCache } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'version-detector'
+        PLUGIN_ROOT, 'lib', 'gemini', 'version'
       ));
       resetCache();
       const original = process.env.GEMINI_CLI_VERSION;
@@ -321,7 +321,7 @@ const tests = [
     name: 'P1-15: getFeatureFlags() hasPolicyEngine=true for version "0.30.0"',
     fn: () => {
       const { getFeatureFlags, resetCache } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'version-detector'
+        PLUGIN_ROOT, 'lib', 'gemini', 'version'
       ));
       resetCache();
       const original = process.env.GEMINI_CLI_VERSION;
@@ -346,7 +346,7 @@ const tests = [
     name: 'P1-16: getFeatureFlags() hasPolicyEngine=false for version "0.29.0"',
     fn: () => {
       const { getFeatureFlags, resetCache } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'version-detector'
+        PLUGIN_ROOT, 'lib', 'gemini', 'version'
       ));
       resetCache();
       const original = process.env.GEMINI_CLI_VERSION;
@@ -369,7 +369,7 @@ const tests = [
     name: 'P1-17: GEMINI_CLI_VERSION env var takes precedence over npm/CLI detection',
     fn: () => {
       const { detectVersion, resetCache } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'version-detector'
+        PLUGIN_ROOT, 'lib', 'gemini', 'version'
       ));
       resetCache();
       const original = process.env.GEMINI_CLI_VERSION;
@@ -392,7 +392,7 @@ const tests = [
     name: 'P1-17b: resetCache() allows re-detection after env var change',
     fn: () => {
       const { detectVersion, resetCache } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'version-detector'
+        PLUGIN_ROOT, 'lib', 'gemini', 'version'
       ));
       resetCache();
       const original = process.env.GEMINI_CLI_VERSION;

@@ -28,7 +28,7 @@ const tests = [
     assert(templates.length >= 10, 'Should have 10+ templates as context');
   }},
   { name: 'TC55-09: import-resolver 컨텍스트 합성', fn: () => {
-    const { resolveImports } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/import-resolver'));
+    const { resolveImports } = require(path.join(PLUGIN_ROOT, 'lib/gemini/import-resolver'));
     assert(typeof resolveImports === 'function', 'Should support context composition');
   }},
   { name: 'TC55-10: ContextHierarchy 3레벨 우선순위', fn: () => {

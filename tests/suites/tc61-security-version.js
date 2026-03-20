@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const { withVersion } = require('../test-utils');
 
-const { detectVersion, parseVersion, isValidSemVer, getFeatureFlags } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/version-detector'));
+const { detectVersion, parseVersion, isValidSemVer, getFeatureFlags } = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
 
 const tests = [
   { name: 'TC61-01: malformed version string 처리', fn: () => {

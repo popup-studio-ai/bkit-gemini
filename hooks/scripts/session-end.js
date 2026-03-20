@@ -10,16 +10,17 @@ const libPath = path.resolve(__dirname, '..', '..', 'lib');
 
 function main() {
   try {
-    const { getAdapter } = require(path.join(libPath, 'adapters'));
+    const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
     const adapter = getAdapter();
 
     const projectDir = adapter.getProjectDir();
 
     // Update PDCA status with session end
-    const pdcaStatusPath = path.join(projectDir, 'docs', '.pdca-status.json');
+    const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
+    const pdcaStatusPath = pdcaStatusModule.getPdcaStatusPath(projectDir);
     if (fs.existsSync(pdcaStatusPath)) {
       try {
-        const pdcaStatus = JSON.parse(fs.readFileSync(pdcaStatusPath, 'utf-8'));
+        const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
 
         pdcaStatus.session.lastActivity = new Date().toISOString();
         pdcaStatus.lastUpdated = new Date().toISOString();
@@ -31,22 +32,19 @@ function main() {
           details: 'Session ended'
         });
 
-        fs.writeFileSync(pdcaStatusPath, JSON.stringify(pdcaStatus, null, 2));
+        pdcaStatusModule.savePdcaStatus(pdcaStatus, projectDir);
       } catch (e) {
         // Ignore errors
       }
     }
 
     // Update memory store
-    const memoryPath = path.join(projectDir, 'docs', '.bkit-memory.json');
-    if (fs.existsSync(memoryPath)) {
-      try {
-        const memory = JSON.parse(fs.readFileSync(memoryPath, 'utf-8'));
-        memory.lastSessionEnded = new Date().toISOString();
-        fs.writeFileSync(memoryPath, JSON.stringify(memory, null, 2));
-      } catch (e) {
-        // Ignore errors
-      }
+    try {
+      const { getMemory } = require(path.join(libPath, 'core', 'memory'));
+      const memoryManager = getMemory(projectDir);
+      memoryManager.endSession();
+    } catch (e) {
+      // Ignore errors
     }
 
     adapter.outputAllow('bkit session ended. State preserved.', 'SessionEnd');

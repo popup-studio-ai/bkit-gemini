@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * BeforeTool Hook - Pre-execution Validation (v1.5.8)
+ * BeforeTool Hook - Pre-execution Validation (v2.0.0)
  * Dual-mode: handler export (v0.31.0+ SDK) + stdin command (legacy)
  * Validates tool calls, checks permissions via PermissionManager,
  * applies PDCA phase restrictions, and provides guidance
@@ -10,6 +10,41 @@ const path = require('path');
 
 const libPath = path.resolve(__dirname, '..', '..', 'lib');
 
+/**
+ * SEC-09: Security audit log
+ * Records DENY/ASK events to .gemini/security-audit.log
+ * @param {string} projectDir
+ * @param {string} event - 'DENY' | 'ASK' | 'BLOCK'
+ * @param {string} toolName
+ * @param {object} toolInput
+ * @param {string} reason
+ */
+function writeSecurityAuditLog(projectDir, event, toolName, toolInput, reason) {
+  try {
+    const auditDir = path.join(projectDir, '.gemini');
+    const auditFile = path.join(auditDir, 'security-audit.log');
+
+    if (!fs.existsSync(auditDir)) {
+      fs.mkdirSync(auditDir, { recursive: true });
+    }
+
+    const entry = JSON.stringify({
+      timestamp: new Date().toISOString(),
+      event,
+      hook: 'BeforeTool',
+      tool: toolName,
+      command: toolInput?.command?.substring(0, 200) || undefined,
+      filePath: toolInput?.file_path || undefined,
+      reason,
+      severity: event === 'DENY' || event === 'BLOCK' ? 'HIGH' : 'MEDIUM'
+    });
+
+    fs.appendFileSync(auditFile, entry + '\n', 'utf-8');
+  } catch (e) {
+    // Audit log failure must not block hook execution
+  }
+}
+
 // --- Core processing logic ---
 function processHook(input) {
   try {
@@ -17,32 +52,27 @@ function processHook(input) {
     const toolInput = input.tool_input || {};
     const projectDir = input.projectDir || process.cwd();
 
-    // Resolve Claude tool name mapping
-    let claudeToolName = '';
-    try {
-      const { CLAUDE_TO_GEMINI_MAP } = require(path.join(libPath, 'adapters', 'gemini', 'tool-registry'));
-      const reverseMap = Object.fromEntries(Object.entries(CLAUDE_TO_GEMINI_MAP).map(([k, v]) => [v, k]));
-      claudeToolName = reverseMap[toolName] || '';
-    } catch (e) { /* ignore */ }
-
     const permResult = checkPermissionManager(toolName, toolInput, projectDir);
     if (permResult.level === 'deny') {
+      writeSecurityAuditLog(projectDir, 'DENY', toolName, toolInput, permResult.reason);
       return { status: 'block', message: `Permission denied: ${permResult.reason || 'Blocked by permission policy'}` };
     }
 
     const contexts = [];
     if (permResult.level === 'ask') {
       contexts.push(`**Permission Warning**: ${permResult.reason || 'This action requires caution.'}`);
+      writeSecurityAuditLog(projectDir, 'ASK', toolName, toolInput, permResult.reason);
     }
 
     const pdcaWarning = checkPdcaPhaseRestriction(toolName, projectDir);
     if (pdcaWarning) { contexts.push(pdcaWarning); }
 
-    if (['write_file', 'replace'].includes(toolName) || ['Write', 'Edit'].includes(claudeToolName)) {
+    if (['write_file', 'replace'].includes(toolName)) {
       contexts.push(...handleWriteEdit(toolInput));
-    } else if (toolName === 'run_shell_command' || claudeToolName === 'Bash') {
+    } else if (toolName === 'run_shell_command') {
       const bashResult = handleBash(toolInput);
       if (bashResult.block) {
+        writeSecurityAuditLog(projectDir, 'BLOCK', toolName, toolInput, bashResult.message || 'Blocked by pattern');
         return { status: 'block', message: bashResult.message };
       }
       contexts.push(...bashResult.warnings);
@@ -65,7 +95,7 @@ async function handler(event) {
 // --- Legacy command mode ---
 function main() {
   try {
-    const { getAdapter } = require(path.join(libPath, 'adapters'));
+    const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
     const adapter = getAdapter();
     const input = adapter.readHookInput();
     input.projectDir = adapter.getProjectDir();

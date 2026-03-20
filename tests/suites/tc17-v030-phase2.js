@@ -21,7 +21,7 @@ const tests = [
     name: 'P2-02: TOML output uses [[rule]] array-of-tables (not single [rule])',
     fn: () => {
       const { convertToToml } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'policy-migrator'
+        PLUGIN_ROOT, 'lib', 'gemini', 'policy'
       ));
       const permissions = { 'write_file': 'allow', 'run_shell_command(rm -rf*)': 'deny' };
       const toml = convertToToml(permissions);
@@ -40,7 +40,7 @@ const tests = [
     name: 'P2-03: All TOML [[rule]] blocks contain required toolName field',
     fn: () => {
       const { convertToToml } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'policy-migrator'
+        PLUGIN_ROOT, 'lib', 'gemini', 'policy'
       ));
       const permissions = {
         'write_file': 'allow',
@@ -62,7 +62,7 @@ const tests = [
     name: 'P2-04: TOML decision field only contains valid Policy Engine values',
     fn: () => {
       const { convertToToml } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'policy-migrator'
+        PLUGIN_ROOT, 'lib', 'gemini', 'policy'
       ));
       const permissions = {
         'write_file': 'allow',
@@ -88,7 +88,7 @@ const tests = [
     name: 'P2-05: TOML priority field is a bare integer (not a quoted string)',
     fn: () => {
       const { convertToToml } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'policy-migrator'
+        PLUGIN_ROOT, 'lib', 'gemini', 'policy'
       ));
       const permissions = { 'write_file': 'allow', 'run_shell_command(rm -rf*)': 'deny' };
       const toml = convertToToml(permissions);
@@ -207,7 +207,7 @@ const tests = [
     name: 'P2-13: tool-registry resolveToolName handles all 5 FORWARD_ALIASES',
     fn: () => {
       const { resolveToolName } = require(path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'tool-registry'
+        PLUGIN_ROOT, 'lib', 'gemini', 'tools'
       ));
       // Analysis BC-04: proposed future tool renames that FORWARD_ALIASES must handle
       // if v0.31.0 activates them
@@ -229,7 +229,7 @@ const tests = [
     name: 'P2-14: tool-registry FORWARD_ALIASES has exactly 5 entries (per analysis R-03)',
     fn: () => {
       const toolRegistryPath = path.join(
-        PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'tool-registry.js'
+        PLUGIN_ROOT, 'lib', 'gemini', 'tools.js'
       );
       const content = fs.readFileSync(toolRegistryPath, 'utf-8');
       // Count FORWARD_ALIASES entries by finding the object literal
@@ -244,7 +244,7 @@ const tests = [
       } else {
         // If FORWARD_ALIASES is exported differently, verify via resolveToolName behavior
         const { resolveToolName } = require(path.join(
-          PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'tool-registry'
+          PLUGIN_ROOT, 'lib', 'gemini', 'tools'
         ));
         // At minimum verify the 5 known aliases work
         assert(resolveToolName('edit_file') === 'replace', 'edit_file alias must exist');

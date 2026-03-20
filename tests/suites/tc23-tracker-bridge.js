@@ -5,7 +5,7 @@ const {
 } = require('../test-utils');
 
 // Require the module directly for unit tests
-const trackerBridge = require(path.join(PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'tracker-bridge'));
+const trackerBridge = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'tracker'));
 
 const tests = [
   {

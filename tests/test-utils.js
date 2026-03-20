@@ -53,7 +53,7 @@ function createTestProjectV2(fixtures = {}) {
  * Set Gemini CLI version for testing with auto-cleanup
  */
 function withVersion(version, fn) {
-  const vd = require(path.join(PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'version-detector'));
+  const vd = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'version'));
   vd.resetCache();
   const original = process.env.GEMINI_CLI_VERSION;
   process.env.GEMINI_CLI_VERSION = version;

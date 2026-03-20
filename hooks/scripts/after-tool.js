@@ -16,16 +16,9 @@ function processHook(input) {
     const toolInput = input.tool_input || input.toolInput || {};
     const projectDir = input.projectDir || process.cwd();
 
-    let claudeToolName = '';
-    try {
-      const { CLAUDE_TO_GEMINI_MAP } = require(path.join(libPath, 'adapters', 'gemini', 'tool-registry'));
-      const reverseMap = Object.fromEntries(Object.entries(CLAUDE_TO_GEMINI_MAP).map(([k, v]) => [v, k]));
-      claudeToolName = reverseMap[toolName] || '';
-    } catch (e) { /* ignore */ }
-
-    if (['write_file', 'replace'].includes(toolName) || ['Write', 'Edit'].includes(claudeToolName)) {
+    if (['write_file', 'replace'].includes(toolName)) {
       return processPostWrite(toolInput, projectDir);
-    } else if (toolName === 'activate_skill' || claudeToolName === 'Skill') {
+    } else if (toolName === 'activate_skill') {
       return processPostSkill(toolInput, projectDir);
     }
     return { status: 'allow' };
@@ -158,7 +151,7 @@ async function handler(event) {
 // --- Legacy command mode ---
 function main() {
   try {
-    const { getAdapter } = require(path.join(libPath, 'adapters'));
+    const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
     const adapter = getAdapter();
     const input = adapter.readHookInput();
     input.projectDir = adapter.getProjectDir();

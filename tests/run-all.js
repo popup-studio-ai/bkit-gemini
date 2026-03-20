@@ -62,8 +62,8 @@ async function main() {
     { name: 'TC-31: Team Modules', file: 'suites/tc31-team-modules.js', priority: 'P0', category: 'unit', sprint: 1 },
     { name: 'TC-32: Paths Registry', file: 'suites/tc32-paths-registry.js', priority: 'P1', category: 'unit', sprint: 1 },
     { name: 'TC-33: Task Modules', file: 'suites/tc33-task-modules.js', priority: 'P1', category: 'unit', sprint: 1 },
-    { name: 'TC-34: Adapters Gemini', file: 'suites/tc34-adapters-gemini.js', priority: 'P1', category: 'unit', sprint: 1 },
-    { name: 'TC-35: Adapters Common', file: 'suites/tc35-adapters-common.js', priority: 'P1', category: 'unit', sprint: 1 },
+    { name: 'TC-34: Gemini Platform', file: 'suites/tc34-adapters-gemini.js', priority: 'P1', category: 'unit', sprint: 1 },
+    { name: 'TC-35: Gemini Common', file: 'suites/tc35-adapters-common.js', priority: 'P1', category: 'unit', sprint: 1 },
     { name: 'TC-36: Config Extension v1.5.8', file: 'suites/tc36-config-extension-v158.js', priority: 'P0', category: 'unit', sprint: 1 },
     { name: 'TC-37: Context Hierarchy', file: 'suites/tc37-context-hierarchy.js', priority: 'P1', category: 'unit', sprint: 1 },
     { name: 'TC-38: Feature Flags Matrix', file: 'suites/tc38-feature-flags-matrix.js', priority: 'P0', category: 'unit', sprint: 1 },
@@ -128,6 +128,30 @@ async function main() {
 
     // ═══ 관점 11: v1.5.9 신규 (TC-79) ═══
     { name: 'TC-79: v0.34.0 Features', file: 'suites/tc79-v034-features.js', priority: 'P0', category: 'unit', sprint: 4 },
+
+    // ═══ Sprint 5: v2.0.0 Comprehensive Tests ═══
+    { name: 'TC-80: Architecture v2.0', file: 'suites/tc80-architecture-v200.js', priority: 'P0', category: 'regression', sprint: 5 },
+    { name: 'TC-81: Security v2.0 (Deep)', file: 'suites/tc80-security-v200.js', priority: 'P0', category: 'security', sprint: 5 },
+    { name: 'TC-82: Gemini Platform', file: 'suites/tc80-gemini-platform.js', priority: 'P0', category: 'unit', sprint: 5 },
+    { name: 'TC-83: Gemini Tools', file: 'suites/tc81-gemini-tools.js', priority: 'P0', category: 'unit', sprint: 5 },
+    { name: 'TC-84: Gemini Version', file: 'suites/tc82-gemini-version.js', priority: 'P0', category: 'unit', sprint: 5 },
+    { name: 'TC-85: Gemini Policy', file: 'suites/tc84-gemini-policy.js', priority: 'P0', category: 'unit', sprint: 5 },
+    { name: 'TC-86: Gemini Tracker', file: 'suites/tc85-gemini-tracker.js', priority: 'P0', category: 'unit', sprint: 5 },
+    { name: 'TC-88: Hooks Session Start', file: 'suites/tc88-hooks-session-start.js', priority: 'P0', category: 'e2e', sprint: 5 },
+    { name: 'TC-89: Hooks Before Model', file: 'suites/tc89-hooks-before-model.js', priority: 'P1', category: 'e2e', sprint: 5 },
+    { name: 'TC-90: Hooks Tool Security', file: 'suites/tc90-hooks-tool-security.js', priority: 'P0', category: 'security', sprint: 5 },
+    { name: 'TC-91: Security v2.0.0', file: 'suites/tc91-security-v200.js', priority: 'P0', category: 'security', sprint: 5 },
+    { name: 'TC-92: PDCA Workflow', file: 'suites/tc92-pdca-workflow.js', priority: 'P0', category: 'e2e', sprint: 5 },
+    { name: 'TC-93: Skills Agents', file: 'suites/tc93-skills-agents.js', priority: 'P1', category: 'integration', sprint: 5 },
+    { name: 'TC-94: Config Context', file: 'suites/tc94-config-context-eng.js', priority: 'P0', category: 'integration', sprint: 5 },
+    { name: 'TC-95: Architecture', file: 'suites/tc95-architecture-migration.js', priority: 'P0', category: 'regression', sprint: 5 },
+    { name: 'TC-96: Edge Recovery', file: 'suites/tc96-edge-recovery.js', priority: 'P1', category: 'edge', sprint: 5 },
+    { name: 'TC-97: E2E Integration', file: 'suites/tc97-e2e-integration.js', priority: 'P0', category: 'e2e', sprint: 5 },
+    { name: 'TC-98: Performance', file: 'suites/tc98-performance.js', priority: 'P1', category: 'infra', sprint: 5 },
+
+    // ═══ Sprint 6: v2.0.1 Supplement Verification ═══
+    { name: 'TC-99: v2.0.1 Supplement', file: 'suites/tc99-v201-supplement.js', priority: 'P0', category: 'unit', sprint: 6 },
+    { name: 'TC-100: Comprehensive v2.0', file: 'suites/tc100-comprehensive-v200.js', priority: 'P0', category: 'unit', sprint: 6 }
   ];
 
   const filtered = filterSuites(suites, opts);
@@ -161,7 +185,7 @@ function generatePDCACompletionReport(passed, failed, skipped) {
   const fs = require('fs');
   const path = require('path');
   const date = new Date().toISOString().split('T')[0];
-  const reportPath = path.resolve(__dirname, '../docs/04-report/features/bkit-v159-comprehensive-test.report.md');
+  const reportPath = path.resolve(__dirname, '../docs/04-report/features/bkit-v200-comprehensive-test.report.md');
 
   fs.mkdirSync(path.dirname(reportPath), { recursive: true });
 
@@ -183,9 +207,9 @@ function generatePDCACompletionReport(passed, failed, skipped) {
 
 ## 2. Test Execution Details
 
-The test suite covered 79 categories including v1.5.9 Unit Tests, E2E, Integration,
-Scenario, Philosophy, Security, Edge Cases, Boundary, Error Recovery, Infrastructure, and v0.34.0 features.
-A total of ${total} automated test cases were executed across 11 test perspectives.
+The test suite covered v2.0.0 Unit Tests, Architecture, Deep Security, E2E, Integration,
+Scenario, Philosophy, Edge Cases, Boundary, Error Recovery, Infrastructure, and v0.34.0 features.
+A total of ${total} automated test cases were executed across 15+ test perspectives.
 
 ---
 *Generated by bkit PDCA Act Phase*

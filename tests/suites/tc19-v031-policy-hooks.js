@@ -5,9 +5,9 @@ const {
   PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, executeHook 
 } = require('../test-utils');
 
-const { resetCache } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/version-detector'));
-const { LEVEL_POLICY_TEMPLATES, generateLevelPolicy, generatePolicyFile } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/policy-migrator'));
-const { HOOK_EVENT_MAP, supportsRuntimeHookFunctions, getHookExecutionInfo, getMigrationStatus } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/hook-adapter'));
+const { resetCache } = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
+const { LEVEL_POLICY_TEMPLATES, generateLevelPolicy, generatePolicyFile } = require(path.join(PLUGIN_ROOT, 'lib/gemini/policy'));
+const { HOOK_EVENT_MAP, supportsRuntimeHookFunctions, getHookExecutionInfo, getMigrationStatus } = require(path.join(PLUGIN_ROOT, 'lib/gemini/hooks'));
 
 module.exports = {
   tests: [
@@ -296,7 +296,7 @@ module.exports = {
         resetCache();
         process.env.GEMINI_CLI_VERSION = '0.29.0';
         try {
-          const { getFeatureFlags } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/version-detector'));
+          const { getFeatureFlags } = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
           const flags = getFeatureFlags();
           const trueFlags = Object.values(flags).filter(v => v === true).length;
           assertEqual(trueFlags, 4, 'v0.29.0 should have 4 true flags');
@@ -316,7 +316,7 @@ module.exports = {
         resetCache();
         process.env.GEMINI_CLI_VERSION = '0.30.0';
         try {
-          const { getFeatureFlags } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/version-detector'));
+          const { getFeatureFlags } = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
           const flags = getFeatureFlags();
           const trueFlags = Object.values(flags).filter(v => v === true).length;
           assertEqual(trueFlags, 9, 'v0.30.0 should have 9 true flags');

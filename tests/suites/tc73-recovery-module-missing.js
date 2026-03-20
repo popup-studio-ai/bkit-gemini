@@ -25,11 +25,11 @@ const tests = [
   { name: 'TC73-07: lib/intent/language.js 존재', fn: () => {
     assertExists(path.join(PLUGIN_ROOT, 'lib/intent/language.js'), 'language.js');
   }},
-  { name: 'TC73-08: lib/adapters/gemini/version-detector.js 존재', fn: () => {
-    assertExists(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/version-detector.js'), 'version-detector.js');
+  { name: 'TC73-08: lib/gemini/version.js 존재', fn: () => {
+    assertExists(path.join(PLUGIN_ROOT, 'lib/gemini/version.js'), 'version.js');
   }},
-  { name: 'TC73-09: lib/adapters/gemini/tool-registry.js 존재', fn: () => {
-    assertExists(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/tool-registry.js'), 'tool-registry.js');
+  { name: 'TC73-09: lib/gemini/tools.js 존재', fn: () => {
+    assertExists(path.join(PLUGIN_ROOT, 'lib/gemini/tools.js'), 'tools.js');
   }},
   { name: 'TC73-10: lib/context-hierarchy.js 존재', fn: () => {
     assertExists(path.join(PLUGIN_ROOT, 'lib/context-hierarchy.js'), 'context-hierarchy.js');

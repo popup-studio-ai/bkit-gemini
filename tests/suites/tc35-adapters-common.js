@@ -2,8 +2,8 @@
 const { PLUGIN_ROOT, assert, assertEqual, assertType, assertExists } = require('../test-utils');
 const path = require('path');
 
-const adapters = require(path.join(PLUGIN_ROOT, 'lib/adapters'));
-const ir = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/import-resolver'));
+const adapters = require(path.join(PLUGIN_ROOT, 'lib/gemini/platform'));
+const ir = require(path.join(PLUGIN_ROOT, 'lib/gemini/import-resolver'));
 
 const tests = [
   { name: 'TC35-01: getAdapter 함수 존재', fn: () => { assertType(adapters.getAdapter, 'function', 'Should export getAdapter'); } },
@@ -38,11 +38,11 @@ const tests = [
   },
   {
     name: 'TC35-07: gemini adapter index 존재',
-    fn: () => { assertExists(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/index.js'), 'gemini index'); }
+    fn: () => { assertExists(path.join(PLUGIN_ROOT, 'lib/gemini/platform/index.js'), 'gemini index'); }
   },
   {
-    name: 'TC35-08: adapters index 존재',
-    fn: () => { assertExists(path.join(PLUGIN_ROOT, 'lib/adapters/index.js'), 'adapters index'); }
+    name: 'TC35-08: platform index 존재',
+    fn: () => { assertExists(path.join(PLUGIN_ROOT, 'lib/gemini/platform/index.js'), 'platform index'); }
   },
   {
     name: 'TC35-09: adapter getPluginRoot 실제 경로',

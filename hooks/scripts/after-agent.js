@@ -32,7 +32,7 @@ function main() {
   const depth = parseInt(process.env[LOOP_GUARD_KEY] || '0');
   if (depth >= MAX_REENTRY) {
     try {
-      const { getAdapter } = require(path.join(libPath, 'adapters'));
+      const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
       getAdapter().outputEmpty();
     } catch (e) {
       process.exit(0);
@@ -42,7 +42,7 @@ function main() {
   process.env[LOOP_GUARD_KEY] = String(depth + 1);
 
   try {
-    const { getAdapter } = require(path.join(libPath, 'adapters'));
+    const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
     const adapter = getAdapter();
 
     // Read input
@@ -79,15 +79,16 @@ function main() {
 
 function handleGapDetectorComplete(adapter, input) {
   const projectDir = adapter.getProjectDir();
-  const pdcaStatusPath = path.join(projectDir, 'docs', '.pdca-status.json');
+  const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
 
   try {
+    const pdcaStatusPath = pdcaStatusModule.getPdcaStatusPath(projectDir);
     if (!fs.existsSync(pdcaStatusPath)) {
       adapter.outputEmpty();
       return;
     }
 
-    const pdcaStatus = JSON.parse(fs.readFileSync(pdcaStatusPath, 'utf-8'));
+    const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
     const primaryFeature = pdcaStatus.primaryFeature;
 
     if (!primaryFeature) {
@@ -114,7 +115,7 @@ function handleGapDetectorComplete(adapter, input) {
         details: `Match rate: ${matchRate}%`
       });
 
-      fs.writeFileSync(pdcaStatusPath, JSON.stringify(pdcaStatus, null, 2));
+      pdcaStatusModule.savePdcaStatus(pdcaStatus, projectDir);
 
       // Suggest next action based on match rate
       if (matchRate >= 90) {
@@ -139,15 +140,16 @@ function handleGapDetectorComplete(adapter, input) {
 
 function handleIteratorComplete(adapter, input) {
   const projectDir = adapter.getProjectDir();
-  const pdcaStatusPath = path.join(projectDir, 'docs', '.pdca-status.json');
+  const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
 
   try {
+    const pdcaStatusPath = pdcaStatusModule.getPdcaStatusPath(projectDir);
     if (!fs.existsSync(pdcaStatusPath)) {
       adapter.outputEmpty();
       return;
     }
 
-    const pdcaStatus = JSON.parse(fs.readFileSync(pdcaStatusPath, 'utf-8'));
+    const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
     const primaryFeature = pdcaStatus.primaryFeature;
 
     if (!primaryFeature) {
@@ -169,7 +171,7 @@ function handleIteratorComplete(adapter, input) {
       details: `Iteration ${featureStatus.iterationCount} completed`
     });
 
-    fs.writeFileSync(pdcaStatusPath, JSON.stringify(pdcaStatus, null, 2));
+    pdcaStatusModule.savePdcaStatus(pdcaStatus, projectDir);
 
     if (featureStatus.iterationCount >= 5) {
       adapter.outputAllow(
@@ -204,11 +206,12 @@ function handleQaComplete(adapter, input) {
 
 function handleReportComplete(adapter, input) {
   const projectDir = adapter.getProjectDir();
-  const pdcaStatusPath = path.join(projectDir, 'docs', '.pdca-status.json');
+  const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
 
   try {
+    const pdcaStatusPath = pdcaStatusModule.getPdcaStatusPath(projectDir);
     if (fs.existsSync(pdcaStatusPath)) {
-      const pdcaStatus = JSON.parse(fs.readFileSync(pdcaStatusPath, 'utf-8'));
+      const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
       const primaryFeature = pdcaStatus.primaryFeature;
 
       if (primaryFeature && pdcaStatus.features[primaryFeature]) {
@@ -223,7 +226,7 @@ function handleReportComplete(adapter, input) {
           details: 'PDCA cycle completed'
         });
 
-        fs.writeFileSync(pdcaStatusPath, JSON.stringify(pdcaStatus, null, 2));
+        pdcaStatusModule.savePdcaStatus(pdcaStatus, projectDir);
 
         adapter.outputAllow(
           `**PDCA Complete**: Feature "${primaryFeature}" development cycle completed. Consider \`/pdca archive ${primaryFeature}\` to archive documents.`,

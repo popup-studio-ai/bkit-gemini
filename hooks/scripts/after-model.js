@@ -36,7 +36,7 @@ async function handler(event) {
 // --- Legacy command mode ---
 function main() {
   try {
-    const { getAdapter } = require(path.join(libPath, 'adapters'));
+    const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
     const adapter = getAdapter();
     const input = adapter.readHookInput();
     input.projectDir = adapter.getProjectDir();
@@ -54,21 +54,15 @@ function main() {
  */
 function trackUsage(projectDir, metrics) {
   try {
-    const memoryPath = path.join(projectDir, 'docs', '.bkit-memory.json');
-    if (!fs.existsSync(memoryPath)) return;
+    const { getMemory } = require(path.join(libPath, 'core', 'memory'));
+    const memoryManager = getMemory(projectDir);
 
-    const memoryStr = fs.readFileSync(memoryPath, 'utf-8');
-    const memory = JSON.parse(memoryStr);
+    const totalResponses = memoryManager.get('usage.totalResponses', 0) + 1;
+    const totalTokensEstimate = memoryManager.get('usage.totalTokensEstimate', 0) + Math.ceil(metrics.responseLength / 4);
 
-    if (!memory.usage) {
-      memory.usage = { totalResponses: 0, totalTokensEstimate: 0, featureReportRate: 0 };
-    }
-
-    memory.usage.totalResponses = (memory.usage.totalResponses || 0) + 1;
-    memory.usage.totalTokensEstimate = (memory.usage.totalTokensEstimate || 0) + Math.ceil(metrics.responseLength / 4);
-    memory.usage.lastResponseAt = metrics.timestamp;
-
-    fs.writeFileSync(memoryPath, JSON.stringify(memory, null, 2));
+    memoryManager.set('usage.totalResponses', totalResponses);
+    memoryManager.set('usage.totalTokensEstimate', totalTokensEstimate);
+    memoryManager.set('usage.lastResponseAt', metrics.timestamp);
   } catch (e) {
     // Silently fail
   }
