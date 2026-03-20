@@ -15,7 +15,7 @@ async function runTests() {
   process.chdir(TEST_DIR);
   
   // Reset adapter to pick up new CWD
-  const adapter = require('../lib/adapters/gemini');
+  const adapter = require('../lib/gemini/platform');
   adapter.reset();
 
   try {
@@ -31,7 +31,7 @@ async function runTests() {
 
     // --- FR-02: @import Directive ---
     console.log('Testing FR-02: @import Directive...');
-    const importResolver = require('../lib/adapters/gemini/import-resolver');
+    const importResolver = require('../lib/gemini/import-resolver');
     
     // Create template
     fs.mkdirSync('templates', { recursive: true });
@@ -64,7 +64,7 @@ async function runTests() {
 
     // --- FR-03: Context Fork Isolation ---
     console.log('Testing FR-03: Context Fork Isolation...');
-    const contextFork = require('../lib/adapters/gemini/context-fork');
+    const contextFork = require('../lib/gemini/context-fork');
     
     const fork = contextFork.forkContext('test-agent', { projectDir: TEST_DIR });
     assert.ok(fork.forkId, 'FR-03: Should return forkId');

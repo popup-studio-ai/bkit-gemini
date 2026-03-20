@@ -5,6 +5,55 @@ All notable changes to bkit-gemini will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.0.0 (2026-03-19) — Gemini CLI Native Architecture
+
+> "Write your idea. bkit does the rest."
+
+### Breaking Changes
+- **Minimum Gemini CLI version**: v0.34.0+ required (was v0.29.0)
+- **lib/adapters/ removed**: All adapter files moved to `lib/gemini/` (platform.js, tools.js, version.js, hooks.js, policy.js, tracker.js, context-fork.js, import-resolver.js)
+- **lib/common.js path update**: Now requires `lib/gemini/platform` instead of `lib/adapters`
+- **Claude Code code removed**: CLAUDE_TO_GEMINI_MAP, PlatformAdapter, isClaudeCode(), mapToolName(), reverseMapToolName() — all deleted
+- **Feature Flags reduced**: 50 → 14 (v0.26~v0.33 flags removed, always true on v0.34.0+)
+- **bkit.config.json permissions removed**: TOML Policy Engine is sole authority
+- **contextFileName array**: gemini-extension.json contextFileName changed from string to array
+
+### Security Fixes
+- **SEC-01 (CRITICAL)**: Agent Safety Tiers — READONLY/DOCWRITE/FULL approval modes per agent role
+- **SEC-02 (CRITICAL)**: Subagent TOML policies — 34 deny rules for 14 read-only/doc-only agents
+- **SEC-03 (HIGH)**: team_assign path traversal prevention with sanitizeTeamName()
+- **SEC-04 (HIGH)**: run_shell_command default changed from `allow` to `ask_user`
+- **SEC-05 (HIGH)**: Dual defense restored — bkit deny patterns run even with Policy Engine active
+- **SEC-08 (MEDIUM)**: Plan Mode restrictions — code writing denied in plan_mode for Starter level
+- **SEC-09 (MEDIUM)**: Security audit log — .gemini/security-audit.log records DENY/ASK/BLOCK events
+- **SEC-10 (MEDIUM)**: Agent file path exposure removed from error responses
+
+### New Features
+- **Phase-Aware Context Loading**: Dynamic context injection per PDCA phase (71% token reduction)
+- **Context Anchoring**: Design/Plan documents auto-injected into LLM context during implementation
+- **Model Routing Hints**: PDCA phase-based Pro/Flash model recommendations
+- **Tracker CRUD Direct Mode**: Structured tracker commands instead of instruction hints
+- **Progressive Onboarding**: Level-specific SessionStart (Starter: simple question, Enterprise: info-only)
+- **Skill Visibility Control**: Level-filtered skill lists (Starter: 5, Dynamic: 18, Enterprise: all)
+- **Transparent PDCA**: Natural language requests auto-trigger Plan→Design→Do flow
+- **Feature Report Conditional Output**: Level-based frequency (Starter: phase transitions only)
+- **Version Sync Script**: `scripts/sync-version.js` for single-source version management
+
+### Architecture Changes
+- **lib/adapters/gemini/ → lib/gemini/**: 8 files moved, 85 require paths updated across 45 files
+- **PlatformAdapter ABC deleted**: Direct GeminiAdapter class (no abstract base)
+- **Philosophy docs independent**: Symlink to bkit-claude-code broken, independent copies maintained
+- **GEMINI.md lean rewrite**: 62 lines → ~20 lines, @imports 7 → 2
+- **Context files restructured**: core-rules.md (3 files merged), tool-reference-v2.md (CC removed)
+
+### Metrics
+- **Session start tokens**: ~3,300 → ~970 (71% reduction)
+- **Feature Flags**: 50 → 14 (72% reduction)
+- **YAGNI code removed**: ~400 LOC
+- **Security issues resolved**: 2 CRITICAL + 3 HIGH + 3 MEDIUM = 8 total
+- **Files deleted**: 3 (platform-interface.js, adapters/index.js, lib/adapters/ directory)
+- **Files created**: 5 (core-rules.md, tool-reference-v2.md, scripts/sync-version.js, GEMINI-agents.md context consideration, security-audit.log infrastructure)
+
 ## [1.5.9] - 2026-03-18
 
 ### Fixed

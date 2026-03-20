@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * SessionStart Hook - Enhanced Session Initialization (v1.5.9)
+ * SessionStart Hook - Enhanced Session Initialization (v2.0.0)
  * Dynamic context injection, output style loading, returning user detection,
  * agent triggers injection, PDCA rules injection, feature report template
  */
@@ -11,7 +11,7 @@ const libPath = path.resolve(__dirname, '..', '..', 'lib');
 
 function main() {
   try {
-    const { getAdapter } = require(path.join(libPath, 'adapters'));
+    const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
     const adapter = getAdapter();
 
     const projectDir = adapter.getProjectDir();
@@ -28,26 +28,15 @@ function main() {
     // 3. Save updated PDCA status
     pdcaStatusModule.savePdcaStatus(pdcaStatus, projectDir);
 
-    // 3.5. Auto-generate Policy Engine TOML (v0.30.0+)
+    // 3.5. Auto-generate Policy Engine TOML
+    // v2.0.0: Policy Engine always available (minVersion 0.34.0+)
     try {
-      const vd = require(path.join(libPath, 'adapters', 'gemini', 'version-detector'));
-      const flags = vd.getFeatureFlags();
-      if (flags.hasPolicyEngine) {
-        const pm = require(path.join(libPath, 'adapters', 'gemini', 'policy-migrator'));
-        const result = pm.generatePolicyFile(projectDir, pluginRoot);
-
-        // 3.6. Generate level-specific policy (v0.31.0+)
-        if (flags.hasProjectLevelPolicy) {
-          pm.generateLevelPolicy(level, projectDir);
-        }
-
-        // 3.7. Generate extension policy (v0.32.0+)
-        if (flags.hasExtensionPolicies) {
-          pm.generateExtensionPolicy(pluginRoot);
-        }
-      }
+      const pm = require(path.join(libPath, 'gemini', 'policy'));
+      pm.generatePolicyFile(projectDir, pluginRoot);
+      pm.generateLevelPolicy(level, projectDir);
+      pm.generateExtensionPolicy(pluginRoot);
     } catch (e) {
-      // Policy TOML generation skipped - non-fatal
+      // Policy generation is non-fatal
     }
 
     // 4. Load/Update memory store
@@ -71,7 +60,7 @@ function main() {
     // 6.5. Get tracker context (v0.32.0+)
     let trackerContext = '';
     try {
-      const { getTrackerContextInjection } = require(path.join(libPath, 'adapters', 'gemini', 'tracker-bridge'));
+      const { getTrackerContextInjection } = require(path.join(libPath, 'gemini', 'tracker'));
       if (pdcaStatus.primaryFeature) {
         const phase = pdcaStatus.features[pdcaStatus.primaryFeature]?.phase || 'plan';
         trackerContext = getTrackerContextInjection(pdcaStatus.primaryFeature, phase);
@@ -110,7 +99,7 @@ function main() {
     }
     console.log(JSON.stringify({
       status: 'allow',
-      context: 'bkit Vibecoding Kit v1.5.9 activated (Gemini CLI)',
+      context: 'bkit Vibecoding Kit v2.0.0 activated (Gemini CLI)',
       hookEvent: 'SessionStart'
     }));
     process.exit(0);
@@ -204,13 +193,76 @@ function detectReturningUser(pdcaStatus, memory) {
   return { isReturning, lastFeature, lastPhase, matchRate };
 }
 
+// --- Phase-Aware Context Loading (v2.0.0) ---
+
+const PHASE_CONTEXT_MAP = {
+  plan:   ['commands.md', 'pdca-rules.md', 'feature-report.md', 'executive-summary-rules.md'],
+  design: ['pdca-rules.md', 'feature-report.md', 'executive-summary-rules.md'],
+  do:     ['tool-reference.md', 'skill-triggers.md', 'feature-report.md'],
+  check:  ['pdca-rules.md', 'feature-report.md'],
+  act:    ['pdca-rules.md', 'feature-report.md'],
+  idle:   ['commands.md', 'pdca-rules.md', 'agent-triggers.md', 'skill-triggers.md', 'feature-report.md']
+};
+
+function loadPhaseAwareContext(pluginRoot, phase) {
+  const effectivePhase = phase && PHASE_CONTEXT_MAP[phase] ? phase : 'idle';
+  const files = PHASE_CONTEXT_MAP[effectivePhase];
+  const contextDir = path.join(pluginRoot, '.gemini', 'context');
+
+  const sections = [];
+  for (const fileName of files) {
+    try {
+      const filePath = path.join(contextDir, fileName);
+      if (fs.existsSync(filePath)) {
+        const content = fs.readFileSync(filePath, 'utf-8').trim();
+        if (content) sections.push(content);
+      }
+    } catch (e) { /* non-fatal */ }
+  }
+
+  return sections.length > 0
+    ? `## Phase-Aware Context (${effectivePhase})\n\n${sections.join('\n\n')}`
+    : '';
+}
+
+// --- Skill Visibility Control (v2.0.0) ---
+const LEVEL_SKILL_WHITELIST = {
+  Starter: ['starter', 'pdca', 'bkit-rules', 'bkit-templates', 'development-pipeline'],
+  Dynamic: [
+    'starter', 'pdca', 'bkit-rules', 'bkit-templates', 'development-pipeline',
+    'dynamic', 'bkend-quickstart', 'bkend-auth', 'bkend-data', 'bkend-storage',
+    'phase-1-schema', 'phase-2-convention', 'phase-3-mockup', 'phase-4-api',
+    'phase-5-design-system', 'phase-6-ui-integration',
+    'code-review', 'plan-plus', 'simplify', 'zero-script-qa'
+  ],
+  Enterprise: null // all skills available
+};
+
+function buildAvailableSkillsSection(level) {
+  const whitelist = LEVEL_SKILL_WHITELIST[level];
+  if (!whitelist) {
+    return `## Available Skills (Level: ${level})\nAll skills available. Use \`/development-pipeline\` for full list.\n`;
+  }
+
+  const lines = [`## Available Skills (Level: ${level})`, '', `${whitelist.length} skills active:`, ''];
+  for (const skill of whitelist) {
+    lines.push(`- \`/${skill}\``);
+  }
+
+  if (level === 'Starter') {
+    lines.push('', '> Need more? Run `/dynamic` or add `Level: Dynamic` to GEMINI.md');
+  }
+  lines.push('');
+  return lines.join('\n');
+}
+
 // ─── Dynamic Context Generation ────────────────────────────────
 
 function generateDynamicContext(pdcaStatus, level, memory, returningInfo, outputStyle, pluginRoot, trackerContext) {
   const sections = [];
 
   // Header
-  sections.push('# bkit Vibecoding Kit v1.5.9 - Session Start');
+  sections.push('# bkit Vibecoding Kit v2.0.0 - Session Start');
   sections.push('');
 
   // Core Rules (dynamically injected to address GEMINI.md ignore issue #13852)
@@ -231,6 +283,19 @@ function generateDynamicContext(pdcaStatus, level, memory, returningInfo, output
 
   // PDCA Status
   sections.push(buildPdcaStatusSection(pdcaStatus, level));
+
+  // Available Skills (v2.0.0)
+  sections.push(buildAvailableSkillsSection(level));
+
+  // Phase-Aware Context (v2.0.0)
+  const currentPhase = pdcaStatus.primaryFeature
+    ? (pdcaStatus.features?.[pdcaStatus.primaryFeature]?.phase ||
+       pdcaStatus.activeFeatures?.[pdcaStatus.primaryFeature]?.phase)
+    : null;
+  const phaseContext = loadPhaseAwareContext(pluginRoot, currentPhase);
+  if (phaseContext) {
+    sections.push(phaseContext);
+  }
 
   // Agent Triggers
   sections.push(buildAgentTriggersSection());
@@ -253,6 +318,18 @@ function buildCoreRules() {
     '- Gap Analysis >= 90% → Completion report with report-generator',
     '- Always include Feature Usage Report at end of every response',
     '- Always verify important decisions with user - AI is not perfect',
+    '',
+    '## Natural Language Feature Request Handling',
+    '',
+    'When user requests a feature (e.g., "build login feature"):',
+    '1. Auto-create Plan document with `/pdca plan <feature>`',
+    '2. Ask user to confirm before Design',
+    '3. Create Design with `/pdca design <feature>`',
+    '4. Ask user to confirm before implementation',
+    '5. Implement code',
+    '6. Suggest Gap analysis: `/pdca analyze <feature>`',
+    '',
+    'Exception: If user says "just build it" or "skip docs", proceed directly.',
     ''
   ].join('\n');
 }
@@ -391,7 +468,7 @@ function buildAutoTriggerSection() {
 
 function getGeminiCliFeatures() {
   try {
-    const vd = require(path.join(libPath, 'adapters', 'gemini', 'version-detector'));
+    const vd = require(path.join(libPath, 'gemini', 'version'));
     const version = vd.detectVersion();
     const flags = vd.getFeatureFlags();
     return {

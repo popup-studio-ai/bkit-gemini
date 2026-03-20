@@ -29,7 +29,7 @@ const tests = [
   {
     name: 'CFG-06: Tool Registry exports 23 built-in tools',
     fn: () => {
-      const { ALL_BUILTIN_TOOL_NAMES, BUILTIN_TOOLS } = require(path.join(PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'tool-registry'));
+      const { ALL_BUILTIN_TOOL_NAMES, BUILTIN_TOOLS } = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'tools'));
       assertEqual(ALL_BUILTIN_TOOL_NAMES.size, 23, 'Should have 23 built-in tools');
       assert(ALL_BUILTIN_TOOL_NAMES.has('glob'), 'Should have glob (not glob_tool)');
       assert(ALL_BUILTIN_TOOL_NAMES.has('google_web_search'), 'Should have google_web_search (not web_search)');
@@ -42,7 +42,7 @@ const tests = [
   {
     name: 'CFG-07: Tool Registry resolveToolName handles legacy names',
     fn: () => {
-      const { resolveToolName } = require(path.join(PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'tool-registry'));
+      const { resolveToolName } = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'tools'));
       assertEqual(resolveToolName('glob_tool'), 'glob', 'glob_tool should resolve to glob');
       assertEqual(resolveToolName('web_search'), 'google_web_search', 'web_search should resolve to google_web_search');
       assertEqual(resolveToolName('task_write'), 'write_todos', 'task_write should resolve to write_todos');
@@ -53,7 +53,7 @@ const tests = [
   {
     name: 'CFG-08: Agent frontmatter uses valid tool names only',
     fn: () => {
-      const { isValidToolName } = require(path.join(PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'tool-registry'));
+      const { isValidToolName } = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'tools'));
       const agentsDir = path.join(PLUGIN_ROOT, 'agents');
       const agents = fs.readdirSync(agentsDir).filter(f => f.endsWith('.md'));
       const invalidTools = [];

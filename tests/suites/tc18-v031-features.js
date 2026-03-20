@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const { assert, assertEqual, PLUGIN_ROOT } = require('../test-utils');
 
-const { getFeatureFlags, resetCache } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/version-detector'));
-const { TOOL_ANNOTATIONS, getToolAnnotations, isReadOnlyTool, getStrictReadOnlyTools, BUILTIN_TOOLS } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/tool-registry'));
+const { getFeatureFlags, resetCache } = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
+const { TOOL_ANNOTATIONS, getToolAnnotations, isReadOnlyTool, getStrictReadOnlyTools, BUILTIN_TOOLS } = require(path.join(PLUGIN_ROOT, 'lib/gemini/tools'));
 
 module.exports = {
   tests: [

@@ -44,7 +44,7 @@ const tests = [
     teardown: cleanupTestProject
   },
   { name: 'TC67-05: version detector resetCache 반복 호출', fn: () => {
-    const vd = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/version-detector'));
+    const vd = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
     for (let i = 0; i < 20; i++) {
       vd.resetCache();
     }

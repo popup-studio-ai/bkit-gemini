@@ -2,7 +2,7 @@
 const { PLUGIN_ROOT, assert, assertEqual, assertContains, assertExists, assertType, assertHasKey } = require('../test-utils');
 const path = require('path');
 
-const tr = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/tool-registry'));
+const tr = require(path.join(PLUGIN_ROOT, 'lib/gemini/tools'));
 
 const tests = [
   {

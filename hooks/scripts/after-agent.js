@@ -32,7 +32,7 @@ function main() {
   const depth = parseInt(process.env[LOOP_GUARD_KEY] || '0');
   if (depth >= MAX_REENTRY) {
     try {
-      const { getAdapter } = require(path.join(libPath, 'adapters'));
+      const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
       getAdapter().outputEmpty();
     } catch (e) {
       process.exit(0);
@@ -42,7 +42,7 @@ function main() {
   process.env[LOOP_GUARD_KEY] = String(depth + 1);
 
   try {
-    const { getAdapter } = require(path.join(libPath, 'adapters'));
+    const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
     const adapter = getAdapter();
 
     // Read input

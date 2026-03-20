@@ -10,7 +10,7 @@ const libPath = path.resolve(__dirname, '..', '..', 'lib');
 
 function main() {
   try {
-    const { getAdapter } = require(path.join(libPath, 'adapters'));
+    const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
     const adapter = getAdapter();
 
     const projectDir = adapter.getProjectDir();

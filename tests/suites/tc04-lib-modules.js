@@ -167,7 +167,7 @@ const tests = [
   {
     name: 'LIB-32: Variable substitution in path',
     fn: async () => {
-      const { resolveImports, clearCache } = require(path.join(PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'import-resolver'));
+      const { resolveImports, clearCache } = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'import-resolver'));
       clearCache();
       const contextFile = path.join(PLUGIN_ROOT, '.gemini', 'context', 'pdca-rules.md');
       if (fs.existsSync(contextFile)) {
@@ -183,7 +183,7 @@ const tests = [
       createTestProject({ 'docs/.pdca-status.json': PDCA_STATUS_FIXTURE });
     },
     fn: () => {
-      const { forkContext, discardFork } = require(path.join(PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'context-fork'));
+      const { forkContext, discardFork } = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'context-fork'));
       const fork = forkContext('gap-detector', { name: 'test-fork', projectDir: TEST_PROJECT_DIR });
       assert(fork.forkId, 'Should have forkId');
       assertEqual(fork.name, 'test-fork', 'Should use provided name');
@@ -199,7 +199,7 @@ const tests = [
       createTestProject({ 'docs/.pdca-status.json': PDCA_STATUS_FIXTURE });
     },
     fn: () => {
-      const { forkContext } = require(path.join(PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'context-fork'));
+      const { forkContext } = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'context-fork'));
       for (let i = 0; i < 12; i++) {
         forkContext('test-agent', { projectDir: TEST_PROJECT_DIR });
       }

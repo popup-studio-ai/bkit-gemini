@@ -2,7 +2,7 @@
 const { PLUGIN_ROOT, assert, assertEqual, assertType, withVersion } = require('../test-utils');
 const path = require('path');
 
-const { isValidSemVer, parseVersion, compareVersions, isVersionAtLeast, getFeatureFlags } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/version-detector'));
+const { isValidSemVer, parseVersion, compareVersions, isVersionAtLeast, getFeatureFlags } = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
 
 const tests = [
   { name: 'TC69-01: 최소 지원 버전 0.26.0', fn: () => {

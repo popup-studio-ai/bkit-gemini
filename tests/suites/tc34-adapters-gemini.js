@@ -2,10 +2,10 @@
 const { PLUGIN_ROOT, assert, assertEqual, assertType, assertContains, withVersion } = require('../test-utils');
 const path = require('path');
 
-const pm = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/policy-migrator'));
-const ha = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/hook-adapter'));
-const tb = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/tracker-bridge'));
-const cf = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/context-fork'));
+const pm = require(path.join(PLUGIN_ROOT, 'lib/gemini/policy'));
+const ha = require(path.join(PLUGIN_ROOT, 'lib/gemini/hooks'));
+const tb = require(path.join(PLUGIN_ROOT, 'lib/gemini/tracker'));
+const cf = require(path.join(PLUGIN_ROOT, 'lib/gemini/context-fork'));
 
 const tests = [
   // policy-migrator

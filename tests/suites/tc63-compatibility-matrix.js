@@ -3,7 +3,7 @@ const { PLUGIN_ROOT, assert, assertEqual, assertContains, withVersion } = requir
 const path = require('path');
 const fs = require('fs');
 
-const { detectVersion, getFeatureFlags, getBkitFeatureFlags, compareVersions, isVersionAtLeast } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/version-detector'));
+const { detectVersion, getFeatureFlags, getBkitFeatureFlags, compareVersions, isVersionAtLeast } = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
 
 const COMPAT_VERSIONS = ['0.26.0', '0.27.0', '0.28.0', '0.29.0', '0.30.0', '0.31.0', '0.32.0', '0.33.0'];
 
@@ -27,7 +27,7 @@ const tests = [
     });
   }},
   { name: 'TC63-04: compareVersions 정렬 일관성', fn: () => {
-    const { parseVersion } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/version-detector'));
+    const { parseVersion } = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
     assert(compareVersions(parseVersion('0.31.0'), parseVersion('0.30.0')) > 0, '0.31 > 0.30');
     assert(compareVersions(parseVersion('0.30.0'), parseVersion('0.31.0')) < 0, '0.30 < 0.31');
     assertEqual(compareVersions(parseVersion('0.31.0'), parseVersion('0.31.0')), 0, '0.31 == 0.31');
@@ -77,7 +77,7 @@ const tests = [
     assert(!fs.existsSync(path.join(PLUGIN_ROOT, 'node_modules')), 'Should have no node_modules');
   }},
   { name: 'TC63-13: version detector cache reset 안전', fn: () => {
-    const vd = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/version-detector'));
+    const vd = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
     vd.resetCache();
     // Should not throw
     assert(true, 'Cache reset should be safe');

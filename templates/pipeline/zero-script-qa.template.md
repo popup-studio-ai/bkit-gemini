@@ -20,9 +20,9 @@ Zero Script: Log infrastructure → Manual UX testing → AI log analysis → Au
 ### 1.2 Workflow
 ```
 1. docker compose up -d
-2. docker compose logs -f  ← Claude Code monitoring
+2. docker compose logs -f  ← Gemini CLI monitoring
 3. User: Manual UX testing in browser
-4. Claude Code: Log analysis → Issue detection → Documentation → Fix
+4. Gemini CLI: Log analysis → Issue detection → Documentation → Fix
 ```
 
 ---

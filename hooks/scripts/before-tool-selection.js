@@ -8,7 +8,7 @@ const fs = require('fs');
 const path = require('path');
 
 const libPath = path.resolve(__dirname, '..', '..', 'lib');
-const toolRegistryPath = path.join(libPath, 'adapters', 'gemini', 'tool-registry');
+const toolRegistryPath = path.join(libPath, 'gemini', 'tools');
 
 // --- Core processing logic ---
 function processHook(input) {
@@ -52,7 +52,7 @@ async function handler(event) {
 // --- Legacy command mode ---
 function main() {
   try {
-    const { getAdapter } = require(path.join(libPath, 'adapters'));
+    const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
     const adapter = getAdapter();
     const input = adapter.readHookInput();
     input.projectDir = adapter.getProjectDir();

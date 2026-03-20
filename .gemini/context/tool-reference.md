@@ -1,4 +1,4 @@
-## Tool Name Reference
+## Tool Name Reference (v2.0.0)
 
 bkit uses Gemini CLI native tool names (v0.29.0~v0.34.x verified):
 
@@ -63,32 +63,7 @@ When using tools, follow these version-aware guidelines:
 - **`replace`**: When `old_string` matches multiple locations, you MUST set `allow_multiple: true`.
 - **`grep_search`**: Use `include_pattern` (not `glob`) for file pattern filtering.
 
-## Tool Alias Reference (v1.5.9)
-
-### Forward Aliases (Future Compatibility)
-
-These aliases are pre-mapped for potential future Gemini CLI tool renames:
-
-| Current Name (v0.29.0) | Potential Future Name | Status |
-|------------------------|----------------------|--------|
-| `replace` | `edit_file` | Proposed (Issue #1391) |
-| `glob` | `find_files` | Proposed (Issue #1391) |
-| `grep_search` | `find_in_file` | Proposed (Issue #1391) |
-| `google_web_search` | `web_search` | Proposed (Issue #1391) |
-| `read_many_files` | `read_files` | Proposed (Issue #1391) |
-
-bkit-gemini resolves both current and future names automatically via `tool-registry.js`.
-
-### Claude Code Mappings (v1.5.8)
-
-| Claude Code Tool | Gemini CLI Tool |
-|-----------------|-----------------|
-| TaskCreate | tracker_create_task |
-| TaskUpdate | tracker_update_task |
-| TaskGet | tracker_get_task |
-| TaskList | tracker_list_tasks |
-
-## Tool Annotations (v1.5.8)
+## Tool Annotations (v2.0.0)
 
 Tool annotations provide hints for Gemini CLI's v0.31.0+ trust model and parallel execution:
 

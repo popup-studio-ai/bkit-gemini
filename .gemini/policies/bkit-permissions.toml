@@ -1,4 +1,4 @@
-# bkit-gemini v1.5.6 - Auto-generated Policy File
+# bkit-gemini v2.0.0 - Auto-generated Policy File
 # Source: bkit.config.json permissions
 # Generated: 2026-02-28
 
@@ -16,6 +16,18 @@ commandPrefix = "git push --force"
 decision = "deny"
 priority = 100
 
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "curl"
+decision = "deny"
+priority = 100
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "wget"
+decision = "deny"
+priority = 100
+
 # --- Ask Rules ---
 
 [[rule]]
@@ -29,6 +41,69 @@ toolName = "run_shell_command"
 commandPrefix = "git reset --hard"
 decision = "ask_user"
 priority = 50
+
+# --- Default shell command: ask_user (SEC-04) ---
+
+[[rule]]
+toolName = "run_shell_command"
+decision = "ask_user"
+priority = 5
+
+# --- Safe Command Allowlist ---
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "git status"
+decision = "allow"
+priority = 20
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "git log"
+decision = "allow"
+priority = 20
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "git diff"
+decision = "allow"
+priority = 20
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "ls"
+decision = "allow"
+priority = 20
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "cat"
+decision = "allow"
+priority = 20
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "echo"
+decision = "allow"
+priority = 20
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "npm test"
+decision = "allow"
+priority = 20
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "npm run"
+decision = "allow"
+priority = 20
+
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "node"
+decision = "allow"
+priority = 20
 
 # --- Allow Rules ---
 
@@ -44,10 +119,5 @@ priority = 10
 
 [[rule]]
 toolName = "read_file"
-decision = "allow"
-priority = 10
-
-[[rule]]
-toolName = "run_shell_command"
 decision = "allow"
 priority = 10

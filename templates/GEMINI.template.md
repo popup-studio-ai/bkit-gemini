@@ -42,7 +42,7 @@ Never guess
 
 {{#if TIER_1}}
 > **Tier 1 (AI-Native Essential)**
-> - Full AI tool support (Copilot, Claude, Cursor, Gemini)
+> - Full AI tool support (Gemini CLI, Copilot, Cursor)
 > - Vibe Coding optimized
 > - PDCA automation fully supported
 {{/if}}

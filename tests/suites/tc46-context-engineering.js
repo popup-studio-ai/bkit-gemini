@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 const { ContextHierarchy } = require(path.join(PLUGIN_ROOT, 'lib/context-hierarchy'));
-const { resolveImports, clearCache } = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/import-resolver'));
+const { resolveImports, clearCache } = require(path.join(PLUGIN_ROOT, 'lib/gemini/import-resolver'));
 
 const tests = [
   { name: 'TC46-01: ContextHierarchy plugin→project→session 우선순위', fn: () => {

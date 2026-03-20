@@ -13,6 +13,18 @@ const fs = require('fs');
 const extensionPath = path.resolve(__dirname, '..');
 
 /**
+ * Agent Safety Tiers
+ * Tier 0 (READONLY): Read/analyze only - no file writes, no shell commands
+ * Tier 1 (DOCWRITE): Can write docs/reports - shell commands denied
+ * Tier 2 (FULL): Full access - existing yolo behavior for orchestrators
+ */
+const SAFETY_TIERS = Object.freeze({
+  READONLY: 0,
+  DOCWRITE: 1,
+  FULL: 2
+});
+
+/**
  * Available agents registry
  * Maps agent names to their files and descriptions
  */
@@ -20,82 +32,98 @@ const AGENTS = {
   'gap-detector': {
     file: 'gap-detector.md',
     description: 'Detect gaps between design documents and implementation',
-    recommendedModel: 'pro'
+    recommendedModel: 'pro',
+    safetyTier: SAFETY_TIERS.READONLY
   },
   'design-validator': {
     file: 'design-validator.md',
     description: 'Validate design document completeness and consistency',
-    recommendedModel: 'pro'
+    recommendedModel: 'pro',
+    safetyTier: SAFETY_TIERS.READONLY
   },
   'pdca-iterator': {
     file: 'pdca-iterator.md',
     description: 'Auto-iterate through evaluation and improvement cycles',
-    recommendedModel: 'flash'
+    recommendedModel: 'flash',
+    safetyTier: SAFETY_TIERS.FULL
   },
   'code-analyzer': {
     file: 'code-analyzer.md',
     description: 'Analyze code quality, security, and architecture compliance',
-    recommendedModel: 'pro'
+    recommendedModel: 'pro',
+    safetyTier: SAFETY_TIERS.READONLY
   },
   'report-generator': {
     file: 'report-generator.md',
     description: 'Generate PDCA completion reports',
-    recommendedModel: 'flash-lite'
+    recommendedModel: 'flash-lite',
+    safetyTier: SAFETY_TIERS.DOCWRITE
   },
   'qa-monitor': {
     file: 'qa-monitor.md',
     description: 'Zero Script QA via Docker log monitoring',
-    recommendedModel: 'flash-lite'
+    recommendedModel: 'flash-lite',
+    safetyTier: SAFETY_TIERS.READONLY
   },
   'starter-guide': {
     file: 'starter-guide.md',
     description: 'Beginner-friendly guidance for new developers',
-    recommendedModel: 'flash'
+    recommendedModel: 'flash',
+    safetyTier: SAFETY_TIERS.READONLY
   },
   'pipeline-guide': {
     file: 'pipeline-guide.md',
     description: '9-phase development pipeline guidance',
-    recommendedModel: 'flash'
+    recommendedModel: 'flash',
+    safetyTier: SAFETY_TIERS.READONLY
   },
   'bkend-expert': {
     file: 'bkend-expert.md',
     description: 'bkend.ai BaaS integration expert',
-    recommendedModel: 'flash'
+    recommendedModel: 'flash',
+    safetyTier: SAFETY_TIERS.READONLY
   },
   'enterprise-expert': {
     file: 'enterprise-expert.md',
     description: 'Enterprise architecture and AI-Native patterns',
-    recommendedModel: 'pro'
+    recommendedModel: 'pro',
+    safetyTier: SAFETY_TIERS.READONLY
   },
   'infra-architect': {
     file: 'infra-architect.md',
     description: 'AWS, Kubernetes, Terraform infrastructure design',
-    recommendedModel: 'pro'
+    recommendedModel: 'pro',
+    safetyTier: SAFETY_TIERS.DOCWRITE
   },
   'cto-lead': {
     file: 'cto-lead.md',
     description: 'CTO-level orchestrator, PDCA workflow management, team composition',
-    recommendedModel: 'pro'
+    recommendedModel: 'pro',
+    safetyTier: SAFETY_TIERS.FULL
   },
   'frontend-architect': {
     file: 'frontend-architect.md',
     description: 'UI/UX architecture, component design, design system expert',
-    recommendedModel: 'pro'
+    recommendedModel: 'pro',
+    safetyTier: SAFETY_TIERS.DOCWRITE
   },
   'security-architect': {
     file: 'security-architect.md',
     description: 'Vulnerability analysis, auth design, OWASP compliance (read-only)',
-    recommendedModel: 'pro'
+    recommendedModel: 'pro',
+    safetyTier: SAFETY_TIERS.READONLY
   },
   'product-manager': {
     file: 'product-manager.md',
     description: 'Requirements analysis, feature specs, user stories, product roadmap',
-    recommendedModel: 'flash'
+    recommendedModel: 'flash',
+    safetyTier: SAFETY_TIERS.DOCWRITE
   },
   'qa-strategist': {
     file: 'qa-strategist.md',
     description: 'Test strategy, quality metrics, verification coordination',
-    recommendedModel: 'pro'
+    recommendedModel: 'pro',
+    safetyTier: SAFETY_TIERS.READONLY
   }
 };
 
@@ -432,8 +460,8 @@ class SpawnAgentServer {
     }
 
     try {
-      console.error(`Spawning agent: ${agent_name}`);
-      const result = await this.executeAgent(agentPath, task, context, timeout);
+      console.error(`Spawning agent: ${agent_name} (safety tier: ${agentInfo.safetyTier})`);
+      const result = await this.executeAgent(agentPath, task, context, timeout, agentInfo.safetyTier);
 
       return {
         content: [{
@@ -519,7 +547,7 @@ class SpawnAgentServer {
           file: agentInfo.file,
           description: agentInfo.description,
           recommendedModel: agentInfo.recommendedModel,
-          path: agentPath,
+          safetyTier: agentInfo.safetyTier,
           exists: fs.existsSync(agentPath)
         }, null, 2)
       }]
@@ -592,6 +620,18 @@ class SpawnAgentServer {
   }
 
   /**
+   * Sanitize team name to prevent path traversal (SEC-03)
+   * @param {string} teamName
+   * @returns {string|null} Sanitized name or null if invalid
+   */
+  sanitizeTeamName(teamName) {
+    if (!teamName || typeof teamName !== 'string') return null;
+    const sanitized = teamName.replace(/[^a-zA-Z0-9_-]/g, '');
+    if (sanitized !== teamName || sanitized.length === 0 || sanitized.length > 64) return null;
+    return sanitized;
+  }
+
+  /**
    * Handle team_assign tool call
    * @param {object} args
    * @returns {object}
@@ -599,7 +639,17 @@ class SpawnAgentServer {
   async handleTeamAssign(args) {
     const { team_name, agent_name, task, context } = args;
 
-    const teamPath = path.join(process.cwd(), '.gemini', 'teams', `${team_name}.json`);
+    // SEC-03: Sanitize team name to prevent path traversal
+    const safeName = this.sanitizeTeamName(team_name);
+    if (!safeName) {
+      return {
+        content: [{ type: 'text', text: JSON.stringify({
+          success: false, error: `Invalid team name: "${team_name}". Use only alphanumeric, hyphens, underscores (max 64 chars).`
+        }, null, 2) }]
+      };
+    }
+
+    const teamPath = path.join(process.cwd(), '.gemini', 'teams', `${safeName}.json`);
     if (!fs.existsSync(teamPath)) {
       return {
         content: [{ type: 'text', text: JSON.stringify({
@@ -663,7 +713,17 @@ class SpawnAgentServer {
   handleTeamStatus(args) {
     const { team_name } = args;
 
-    const teamPath = path.join(process.cwd(), '.gemini', 'teams', `${team_name}.json`);
+    // SEC-03: Sanitize team name to prevent path traversal
+    const safeName = this.sanitizeTeamName(team_name);
+    if (!safeName) {
+      return {
+        content: [{ type: 'text', text: JSON.stringify({
+          success: false, error: `Invalid team name: "${team_name}". Use only alphanumeric, hyphens, underscores (max 64 chars).`
+        }, null, 2) }]
+      };
+    }
+
+    const teamPath = path.join(process.cwd(), '.gemini', 'teams', `${safeName}.json`);
     if (!fs.existsSync(teamPath)) {
       return {
         content: [{ type: 'text', text: JSON.stringify({
@@ -686,21 +746,29 @@ class SpawnAgentServer {
    * @param {string} task - Task description
    * @param {object} context - Additional context
    * @param {number} timeout - Timeout in ms
+   * @param {number} safetyTier - Safety tier from SAFETY_TIERS
    * @returns {Promise<{output: string, exitCode: number, duration: number}>}
    */
-  executeAgent(agentPath, task, context, timeout) {
+  executeAgent(agentPath, task, context, timeout, safetyTier = SAFETY_TIERS.FULL) {
     return new Promise((resolve, reject) => {
       const startTime = Date.now();
 
       // Build gemini CLI command
       // Using gemini with extension flag and approval mode for non-interactive execution
-      const { getFeatureFlags } = require(path.join(__dirname, '..', 'lib', 'adapters', 'gemini', 'version-detector'));
+      const { getFeatureFlags } = require(path.join(__dirname, '..', 'lib', 'gemini', 'version'));
       const flags = getFeatureFlags();
-      const approvalFlag = flags.hasApprovalMode ? '--approval-mode=yolo' : '--yolo';
+      // Safety tier determines approval mode (SEC-01)
+      let approvalFlag;
+      if (safetyTier === SAFETY_TIERS.FULL) {
+        approvalFlag = flags.hasApprovalMode ? '--approval-mode=yolo' : '--yolo';
+      } else {
+        // Tier 0 and Tier 1: require user approval for destructive actions
+        approvalFlag = flags.hasApprovalMode ? '--approval-mode=auto' : '';
+      }
 
       const args = [
         '-e', agentPath,
-        approvalFlag,
+        ...(approvalFlag ? [approvalFlag] : []),
         task
       ];
 

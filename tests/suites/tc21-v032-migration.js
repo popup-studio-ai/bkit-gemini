@@ -6,8 +6,8 @@ const fs = require('fs');
 const path = require('path');
 const { assert, assertEqual, PLUGIN_ROOT } = require('../test-utils');
 
-const vd = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/version-detector'));
-const tr = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/tool-registry'));
+const vd = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
+const tr = require(path.join(PLUGIN_ROOT, 'lib/gemini/tools'));
 
 module.exports = {
   tests: [
@@ -58,7 +58,7 @@ module.exports = {
     {
       name: 'TC-24: Extension policy generates DENY/ASK_USER only',
       fn: () => {
-        const pm = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/policy-migrator'));
+        const pm = require(path.join(PLUGIN_ROOT, 'lib/gemini/policy'));
         assert(typeof pm.generateExtensionPolicy === 'function', 'generateExtensionPolicy should exist');
         // Static policy file should exist
         const policyPath = path.join(PLUGIN_ROOT, 'policies', 'bkit-extension-policy.toml');
@@ -71,7 +71,7 @@ module.exports = {
     {
       name: 'TC-25: validateTomlStructure rejects lowercase toolname',
       fn: () => {
-        const pm = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/policy-migrator'));
+        const pm = require(path.join(PLUGIN_ROOT, 'lib/gemini/policy'));
         const badToml = '[[rule]]\ntoolname = "read_file"\ndecision = "allow"\npriority = 10\n';
         assertEqual(pm.validateTomlStructure(badToml), false, 'Should reject lowercase toolname');
       }
@@ -101,7 +101,7 @@ module.exports = {
     {
       name: 'TC-28: Tracker bridge reports availability based on feature flag',
       fn: () => {
-        const tb = require(path.join(PLUGIN_ROOT, 'lib/adapters/gemini/tracker-bridge'));
+        const tb = require(path.join(PLUGIN_ROOT, 'lib/gemini/tracker'));
         vd.resetCache();
         const original = process.env.GEMINI_CLI_VERSION;
 

@@ -5,7 +5,7 @@ const {
 } = require('../test-utils');
 
 // Require the modules directly for unit tests
-const hookAdapter = require(path.join(PLUGIN_ROOT, 'lib', 'adapters', 'gemini', 'hook-adapter'));
+const hookAdapter = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'hooks'));
 const runtimeHooks = require(path.join(PLUGIN_ROOT, 'hooks', 'runtime-hooks'));
 
 const tests = [
