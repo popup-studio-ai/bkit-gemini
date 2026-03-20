@@ -128,6 +128,24 @@ async function main() {
 
     // ═══ 관점 11: v1.5.9 신규 (TC-79) ═══
     { name: 'TC-79: v0.34.0 Features', file: 'suites/tc79-v034-features.js', priority: 'P0', category: 'unit', sprint: 4 },
+
+    // ═══ Sprint 5: v2.0.0 Comprehensive Tests ═══
+    { name: 'TC-80: Gemini Platform', file: 'suites/tc80-gemini-platform.js', priority: 'P0', category: 'unit', sprint: 5 },
+    { name: 'TC-81: Gemini Tools', file: 'suites/tc81-gemini-tools.js', priority: 'P0', category: 'unit', sprint: 5 },
+    { name: 'TC-82: Gemini Version', file: 'suites/tc82-gemini-version.js', priority: 'P0', category: 'unit', sprint: 5 },
+    { name: 'TC-84: Gemini Policy', file: 'suites/tc84-gemini-policy.js', priority: 'P0', category: 'unit', sprint: 5 },
+    { name: 'TC-85: Gemini Tracker', file: 'suites/tc85-gemini-tracker.js', priority: 'P0', category: 'unit', sprint: 5 },
+    { name: 'TC-88: Hooks Session Start', file: 'suites/tc88-hooks-session-start.js', priority: 'P0', category: 'e2e', sprint: 5 },
+    { name: 'TC-89: Hooks Before Model', file: 'suites/tc89-hooks-before-model.js', priority: 'P1', category: 'e2e', sprint: 5 },
+    { name: 'TC-90: Hooks Tool Security', file: 'suites/tc90-hooks-tool-security.js', priority: 'P0', category: 'security', sprint: 5 },
+    { name: 'TC-91: Security v2.0.0', file: 'suites/tc91-security-v200.js', priority: 'P0', category: 'security', sprint: 5 },
+    { name: 'TC-92: PDCA Workflow', file: 'suites/tc92-pdca-workflow.js', priority: 'P0', category: 'e2e', sprint: 5 },
+    { name: 'TC-93: Skills Agents', file: 'suites/tc93-skills-agents.js', priority: 'P1', category: 'integration', sprint: 5 },
+    { name: 'TC-94: Config Context', file: 'suites/tc94-config-context-eng.js', priority: 'P0', category: 'integration', sprint: 5 },
+    { name: 'TC-95: Architecture', file: 'suites/tc95-architecture-migration.js', priority: 'P0', category: 'regression', sprint: 5 },
+    { name: 'TC-96: Edge Recovery', file: 'suites/tc96-edge-recovery.js', priority: 'P1', category: 'edge', sprint: 5 },
+    { name: 'TC-97: E2E Integration', file: 'suites/tc97-e2e-integration.js', priority: 'P0', category: 'e2e', sprint: 5 },
+    { name: 'TC-98: Performance', file: 'suites/tc98-performance.js', priority: 'P1', category: 'infra', sprint: 5 },
   ];
 
   const filtered = filterSuites(suites, opts);
