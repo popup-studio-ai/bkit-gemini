@@ -1,7 +1,16 @@
 {
   "version": "2.0",
-  "primaryFeature": "bkit-gemini-v200-refactoring-supplement",
+  "primaryFeature": "v200-doc-sync",
   "activeFeatures": {
+    "v200-doc-sync": {
+      "phase": "completed",
+      "matchRate": 100,
+      "iterationCount": 0,
+      "lastUpdated": "2026-03-20T19:00:00Z",
+      "documents": {
+        "plan": "docs/01-plan/features/v200-doc-sync.plan.md"
+      }
+    },
     "bkit-gemini-v200-refactoring-supplement": {
       "phase": "completed",
       "matchRate": 100,

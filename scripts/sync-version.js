@@ -53,6 +53,13 @@ function main() {
     `bkit Vibecoding Kit v${version}`
   ));
 
+  // README.md version badge
+  results.push(syncFile(
+    path.join(ROOT, 'README.md'),
+    /Version-[\d.]+(-\w+\.?\d*)?-green/,
+    `Version-${version}-green`
+  ));
+
   // Report results
   let errors = 0;
   for (const r of results) {

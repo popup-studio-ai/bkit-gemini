@@ -1,8 +1,8 @@
 # bkit - Vibecoding Kit (Gemini CLI Edition)
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-v0.29.0~v0.33.x-blue.svg)](https://github.com/google-gemini/gemini-cli)
-[![Version](https://img.shields.io/badge/Version-1.5.8-green.svg)](CHANGELOG.md)
+[![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-v0.34.0+-blue.svg)](https://github.com/google-gemini/gemini-cli)
+[![Version](https://img.shields.io/badge/Version-2.0.0-green.svg)](CHANGELOG.md)
 [![Author](https://img.shields.io/badge/Author-POPUP%20STUDIO-orange.svg)](https://popupstudio.ai)
 
 > **PDCA methodology + Context Engineering for AI-native development**
@@ -62,7 +62,7 @@ Event 10: SessionEnd           -> Session cleanup, memory persistence
 
 ```
 bkit-gemini/
-|-- gemini-extension.json         # Extension manifest (v1.5.8)
+|-- gemini-extension.json         # Extension manifest (v2.0.0)
 |-- GEMINI.md                     # Global context with 7 @import modules
 |-- bkit.config.json              # Centralized configuration (12 sections)
 |-- CHANGELOG.md                  # Version history
@@ -72,7 +72,7 @@ bkit-gemini/
 |   |-- commands.md               # Command reference
 |   |-- agent-triggers.md         # Agent activation triggers
 |   |-- skill-triggers.md         # Skill activation triggers
-|   |-- tool-reference.md         # Tool name mapping
+|   |-- tool-reference-v2.md      # Tool name reference (Gemini CLI native)
 |   |-- feature-report.md         # Feature usage report format
 |   +-- executive-summary-rules.md # Executive summary output rules
 |
@@ -180,10 +180,10 @@ bkit-gemini/
 |   |-- skill-orchestrator.js     # Custom YAML parser, agent delegation, Skills 2.0 classification
 |   |-- context-hierarchy.js      # 4-level config merge (209 lines)
 |   |-- core/
-|   |   |-- paths.js              # Centralized path registry (v1.5.8)
+|   |   |-- paths.js              # Centralized path registry (v2.0.0)
 |   |   |-- agent-memory.js       # Per-agent persistence (214 lines)
 |   |   +-- permission.js         # Glob pattern permission engine (381 lines)
-|   |-- team/                     # Team orchestration (v1.5.8, 9 modules)
+|   |-- team/                     # Team orchestration (v2.0.0, 9 modules)
 |   |   |-- coordinator.js        # Task coordination
 |   |   |-- cto-logic.js          # CTO-level orchestration (5 patterns)
 |   |   |-- communication.js      # MCP/memory protocols
@@ -211,6 +211,17 @@ bkit-gemini/
 ---
 
 ## Features
+
+### v2.0.0 Highlights
+
+- **Gemini CLI Native Architecture** -- Complete removal of Claude Code legacy; standalone Gemini CLI extension with zero external dependencies
+- **Phase-Aware Context** -- `PHASE_CONTEXT_MAP` loads only relevant context files per PDCA phase (plan/design/do/check/act/idle), reducing idle session tokens by ~60%
+- **3-Tier Agent Security Model** -- `readonly` (8 agents, read-only), `docwrite` (6 agents, file creation), `full` (3 agents, implementation/orchestration) with TOML Policy Engine enforcement
+- **19 Feature Flags** -- Version-gated capabilities for Gemini CLI v0.30.0~v0.34.0+ (Policy Engine, Project-Level Policy, Extension Policies, Task Tracker, RuntimeHook)
+- **Skill Visibility Control** -- Level-based skill filtering (Starter: 5 skills, Dynamic: 22 skills, Enterprise: all)
+- **Flat Module Architecture** -- `lib/gemini/` replaces adapter pattern; direct imports with no bridge modules
+- **115 v2.0.0 Test Cases** -- Sprint 5 (103 TCs) + Sprint 6 (12 TCs) covering architecture migration, security tiers, and policy engine
+- **Minimum CLI Version: v0.34.0** -- Leverages native skill system, ACP, extension validation, and subagent policies
 
 ### v1.5.8 Highlights
 
