@@ -19,6 +19,13 @@ function main() {
 
     // 1. Load/Initialize PDCA status
     const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
+
+    // Ensure .bkit/ directory structure exists (CC bkit parity)
+    try {
+      const { ensureDirectories } = require(path.join(libPath, 'core', 'paths'));
+      ensureDirectories(projectDir);
+    } catch (e) { /* non-fatal */ }
+
     const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
 
     // 2. Detect project level

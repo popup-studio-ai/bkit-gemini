@@ -14,7 +14,8 @@ function main() {
     const adapter = getAdapter();
 
     const projectDir = adapter.getProjectDir();
-    const pdcaStatusPath = path.join(projectDir, 'docs', '.pdca-status.json');
+    const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
+    const pdcaStatusPath = pdcaStatusModule.getPdcaStatusPath(projectDir);
 
     if (!fs.existsSync(pdcaStatusPath)) {
       adapter.outputEmpty();
@@ -22,10 +23,10 @@ function main() {
     }
 
     // Read current PDCA status
-    const pdcaStatus = JSON.parse(fs.readFileSync(pdcaStatusPath, 'utf-8'));
+    const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
 
     // Create snapshot directory
-    const snapshotDir = path.join(projectDir, 'docs', '.pdca-snapshots');
+    const snapshotDir = path.join(projectDir, '.bkit', 'snapshots');
     if (!fs.existsSync(snapshotDir)) {
       fs.mkdirSync(snapshotDir, { recursive: true });
     }

@@ -30,10 +30,11 @@ function extractDocumentAnchors(projectDir, phase) {
   const MAX_ANCHOR_CHARS = 2000;
 
   try {
-    const statusPath = path.join(projectDir, '.pdca-status.json');
+    const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
+    const statusPath = pdcaStatusModule.getPdcaStatusPath(projectDir);
     if (!fs.existsSync(statusPath)) return null;
 
-    const status = JSON.parse(fs.readFileSync(statusPath, 'utf-8'));
+    const status = pdcaStatusModule.loadPdcaStatus(projectDir);
     const feature = status.primaryFeature;
     if (!feature) return null;
 
@@ -146,10 +147,8 @@ function main() {
  */
 function getCurrentPdcaPhase(projectDir) {
   try {
-    const statusPath = path.join(projectDir, 'docs', '.pdca-status.json');
-    if (!fs.existsSync(statusPath)) return null;
-
-    const status = JSON.parse(fs.readFileSync(statusPath, 'utf-8'));
+    const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
+    const status = pdcaStatusModule.loadPdcaStatus(projectDir);
     const feature = status.primaryFeature;
     if (!feature || !status.features[feature]) return null;
 
