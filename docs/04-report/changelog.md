@@ -1,23 +1,29 @@
 # bkit v2.0.0 Changelog
 
-## [2026-03-23] - Gemini CLI v0.35.0 Stable 마이그레이션 갱신 (4차)
+## [2026-03-23] - Gemini CLI v0.35.0 마이그레이션 완료 (bkit v2.0.1)
 
-### Changed
-- v0.35.0 Stable 출시 확정 (npm latest=0.35.0, 2026-03-24T20:06:31Z)
-- 전략 갱신: Strategy B → Strategy B' (Updated Targeted Upgrade)
-- Wave 구조 갱신: 3-Wave → 4-Wave (Wave 3: P0 modes, Wave 4: P1 4건)
-- YAGNI 리뷰: 8건 제외로 42% 공수 절감
+### Added
+- `buildPathAwareCommandRegex()` — v0.35.0+ 전체 경로 명령어 보안 매칭
+- `hasFullPathCommands()` — v0.35.0+ 버전 감지
+- `emitCommandMatchToml()` — commandPrefix/commandRegex 조건부 TOML 출력
+- `isJITMode()` + `waitForFile()` — JIT Context lazy 로딩 안전장치
+- `normalizeInput()` — v0.35.0 BeforeAgent/AfterAgent envelope 처리
+- after-agent.js SDK dual-mode handler export
+- context-fork.js / pre-compress.js JIT 불완전 상태 감지 (`jitPartial`)
+- session-start.js JIT @import 중복 방지
 
-### Discovered
-- P0 `modes` 값 불일치: `plan_mode` → `plan` 수정 필요 (59개소)
-- preview.3 `normalizeCommandName` 전체 경로 보존 (PR #23558) — 보안 영향
-- v0.36.0-preview.0 `toolName` 필수화 (PR #23330) — bkit 100% 호환 확인 ✅
+### Fixed
+- **P0 Critical**: `modes: ['plan_mode']` → `modes: ['plan']` 전수 수정 (JS 6 + TOML 3 + 테스트 ~50개소)
+- **P1 Security**: normalizeCommandName 전체 경로 보존 대응 (commandRegex)
+- **P1 Hooks**: after-agent.js SDK handler + v0.35.0 envelope unwrapping
+- **P1 JIT**: import-resolver.js 재시도 + fallback + context-fork 안전장치
 
 ### Analysis
-- **v0.35.0 Stable**: 159 commits, 52명 기여자, preview.5 거쳐 확정
-- **npm dist-tags**: latest=0.35.0, preview=0.36.0-preview.0
-- **잔여 작업**: P0 1건 (1h) + P1 4건 (7h) = 8h
-- **누적 공수**: 11.8h (완료 3.8h + 잔여 8h)
+- **Gap Analysis**: 100% Match Rate (27/27 항목 전부 통과)
+- **v0.35.0 Stable**: 2026-03-24 출시 확정 (159 commits, 52명 기여자)
+- **v0.36.0 호환**: toolName 필수화 100% 호환
+- **총 공수**: ~11.8h (4-Wave 완료)
+- **수정 파일**: 16개 (+4,124 / -244 lines)
 
 ---
 
