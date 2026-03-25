@@ -2,6 +2,9 @@
 /**
  * AfterAgent Hook - Agent Completion Handler
  * Handles cleanup and phase transitions after agent/skill completion
+ * Dual-mode: handler export (v0.31.0+ SDK) + stdin command (legacy)
+ *
+ * v0.35.0 compat: #18514 BeforeAgent event structure, #20439 AfterAgent stability
  */
 const fs = require('fs');
 const path = require('path');
@@ -28,6 +31,87 @@ const SKILL_HANDLERS = {
 const LOOP_GUARD_KEY = '__BKIT_AFTER_AGENT_DEPTH';
 const MAX_REENTRY = 3;
 
+// SDK function-mode loop guard (process.env not shared across SDK calls)
+let _sdkCallDepth = 0;
+
+/**
+ * Normalize event input across v0.34.0 and v0.35.0 event structures.
+ * v0.35.0 #20439: event fields may be nested under `data` or `result`.
+ * v0.35.0 #18514: field names may differ (agent_name vs agent, etc.)
+ */
+function normalizeInput(input) {
+  if (!input || typeof input !== 'object') return { agent_name: null, skill_name: null, tool_input: null, context: '', _raw: input };
+
+  // v0.35.0: unwrap nested data/result envelope if present
+  const base = input.data || input.result || input;
+
+  return {
+    agent_name: base.agent_name || base.agent || input.agent_name || input.agent || null,
+    skill_name: base.skill_name || base.skill || input.skill_name || input.skill || null,
+    tool_input: base.tool_input || input.tool_input || null,
+    context: base.context || base.output || input.context || input.output || '',
+    // Preserve original for handler access
+    _raw: input
+  };
+}
+
+// --- Helper to build allow result ---
+function _allowMsg(message) {
+  return { status: 'allow', message, hookEvent: 'AfterAgent' };
+}
+
+function _getProjectDir() {
+  try {
+    const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
+    return getAdapter().getProjectDir();
+  } catch (e) {
+    return process.env.GEMINI_PROJECT_DIR || process.cwd();
+  }
+}
+
+// --- Core processing logic (shared by SDK + command mode) ---
+function processHook(normalized) {
+  const activeAgent = normalized.agent_name;
+  const activeSkill = normalized.skill_name ||
+    (normalized.tool_input?.skill || null);
+
+  if (activeAgent && AGENT_HANDLERS[activeAgent]) {
+    try {
+      return AGENT_HANDLERS[activeAgent](normalized) || { status: 'allow' };
+    } catch (e) {
+      return { status: 'allow' };
+    }
+  }
+
+  if (activeSkill && SKILL_HANDLERS[activeSkill]) {
+    try {
+      return SKILL_HANDLERS[activeSkill](normalized) || { status: 'allow' };
+    } catch (e) {
+      return { status: 'allow' };
+    }
+  }
+
+  return { status: 'allow' };
+}
+
+// --- RuntimeHook function export (v0.31.0+ SDK) ---
+async function handler(event) {
+  // SDK-mode loop guard
+  if (_sdkCallDepth >= MAX_REENTRY) {
+    return { status: 'allow' };
+  }
+  _sdkCallDepth++;
+
+  try {
+    return processHook(normalizeInput(event));
+  } catch (e) {
+    return { status: 'allow' };
+  } finally {
+    _sdkCallDepth = Math.max(0, _sdkCallDepth - 1);
+  }
+}
+
+// --- Legacy command mode ---
 function main() {
   const depth = parseInt(process.env[LOOP_GUARD_KEY] || '0');
   if (depth >= MAX_REENTRY) {
@@ -45,30 +129,16 @@ function main() {
     const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
     const adapter = getAdapter();
 
-    // Read input
+    // Read input and normalize for v0.35.0 compat
     const input = adapter.readHookInput();
+    const normalized = normalizeInput(input);
+    const result = processHook(normalized);
 
-    // Try to detect active skill/agent
-    let activeAgent = input.agent_name || input.agent;
-    let activeSkill = input.skill_name || input.skill;
-
-    // Check tool_input for skill invocation
-    if (!activeSkill && input.tool_input?.skill) {
-      activeSkill = input.tool_input.skill;
+    if (result.message) {
+      adapter.outputAllow(result.message, result.hookEvent || 'AfterAgent');
+    } else {
+      adapter.outputEmpty();
     }
-
-    // Execute appropriate handler
-    if (activeAgent && AGENT_HANDLERS[activeAgent]) {
-      AGENT_HANDLERS[activeAgent](adapter, input);
-      return;
-    }
-
-    if (activeSkill && SKILL_HANDLERS[activeSkill]) {
-      SKILL_HANDLERS[activeSkill](adapter, input);
-      return;
-    }
-
-    adapter.outputEmpty();
 
   } catch (error) {
     process.exit(0);
@@ -77,32 +147,26 @@ function main() {
   }
 }
 
-function handleGapDetectorComplete(adapter, input) {
-  const projectDir = adapter.getProjectDir();
-  const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
+// --- Handler functions (return result objects for dual-mode compat) ---
+
+function handleGapDetectorComplete(normalized) {
+  const projectDir = _getProjectDir();
 
   try {
+    const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
     const pdcaStatusPath = pdcaStatusModule.getPdcaStatusPath(projectDir);
-    if (!fs.existsSync(pdcaStatusPath)) {
-      adapter.outputEmpty();
-      return;
-    }
+    if (!fs.existsSync(pdcaStatusPath)) return { status: 'allow' };
 
     const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
     const primaryFeature = pdcaStatus.primaryFeature;
-
-    if (!primaryFeature) {
-      adapter.outputEmpty();
-      return;
-    }
+    if (!primaryFeature) return { status: 'allow' };
 
     // Try to extract match rate from context
-    const context = input.context || input.output || '';
+    const context = normalized.context || '';
     const matchRateMatch = context.match(/(?:Match Rate|매치율|一致率)[^\d]*(\d+)/i);
     const matchRate = matchRateMatch ? parseInt(matchRateMatch[1]) : null;
 
     if (matchRate !== null) {
-      // Update PDCA status
       pdcaStatus.features[primaryFeature].phase = 'check';
       pdcaStatus.features[primaryFeature].matchRate = matchRate;
       pdcaStatus.features[primaryFeature].updatedAt = new Date().toISOString();
@@ -117,47 +181,31 @@ function handleGapDetectorComplete(adapter, input) {
 
       pdcaStatusModule.savePdcaStatus(pdcaStatus, projectDir);
 
-      // Suggest next action based on match rate
       if (matchRate >= 90) {
-        adapter.outputAllow(
-          `**Gap Analysis Complete**: Match rate ${matchRate}% (>=90%). Run \`/pdca report ${primaryFeature}\` to generate completion report.`,
-          'AfterAgent'
-        );
+        return _allowMsg(`**Gap Analysis Complete**: Match rate ${matchRate}% (>=90%). Run \`/pdca report ${primaryFeature}\` to generate completion report.`);
       } else {
-        adapter.outputAllow(
-          `**Gap Analysis Complete**: Match rate ${matchRate}% (<90%). Run \`/pdca iterate ${primaryFeature}\` for auto-improvement.`,
-          'AfterAgent'
-        );
+        return _allowMsg(`**Gap Analysis Complete**: Match rate ${matchRate}% (<90%). Run \`/pdca iterate ${primaryFeature}\` for auto-improvement.`);
       }
-      return;
     }
   } catch (e) {
     // Ignore errors
   }
 
-  adapter.outputEmpty();
+  return { status: 'allow' };
 }
 
-function handleIteratorComplete(adapter, input) {
-  const projectDir = adapter.getProjectDir();
-  const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
+function handleIteratorComplete(normalized) {
+  const projectDir = _getProjectDir();
 
   try {
+    const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
     const pdcaStatusPath = pdcaStatusModule.getPdcaStatusPath(projectDir);
-    if (!fs.existsSync(pdcaStatusPath)) {
-      adapter.outputEmpty();
-      return;
-    }
+    if (!fs.existsSync(pdcaStatusPath)) return { status: 'allow' };
 
     const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
     const primaryFeature = pdcaStatus.primaryFeature;
+    if (!primaryFeature) return { status: 'allow' };
 
-    if (!primaryFeature) {
-      adapter.outputEmpty();
-      return;
-    }
-
-    // Increment iteration count
     const featureStatus = pdcaStatus.features[primaryFeature];
     featureStatus.iterationCount = (featureStatus.iterationCount || 0) + 1;
     featureStatus.phase = 'act';
@@ -174,41 +222,28 @@ function handleIteratorComplete(adapter, input) {
     pdcaStatusModule.savePdcaStatus(pdcaStatus, projectDir);
 
     if (featureStatus.iterationCount >= 5) {
-      adapter.outputAllow(
-        `**Iteration Limit Reached**: Max iterations (5) reached for "${primaryFeature}". Consider manual review or \`/pdca report ${primaryFeature}\`.`,
-        'AfterAgent'
-      );
+      return _allowMsg(`**Iteration Limit Reached**: Max iterations (5) reached for "${primaryFeature}". Consider manual review or \`/pdca report ${primaryFeature}\`.`);
     } else {
-      adapter.outputAllow(
-        `**Iteration ${featureStatus.iterationCount} Complete**: Run \`/pdca analyze ${primaryFeature}\` to verify improvements.`,
-        'AfterAgent'
-      );
+      return _allowMsg(`**Iteration ${featureStatus.iterationCount} Complete**: Run \`/pdca analyze ${primaryFeature}\` to verify improvements.`);
     }
-
   } catch (e) {
-    adapter.outputEmpty();
+    return { status: 'allow' };
   }
 }
 
-function handleAnalyzerComplete(adapter, input) {
-  adapter.outputAllow(
-    '**Code Analysis Complete**: Review the findings and address any critical issues.',
-    'AfterAgent'
-  );
+function handleAnalyzerComplete() {
+  return _allowMsg('**Code Analysis Complete**: Review the findings and address any critical issues.');
 }
 
-function handleQaComplete(adapter, input) {
-  adapter.outputAllow(
-    '**QA Monitoring Complete**: Check the log analysis results for any issues.',
-    'AfterAgent'
-  );
+function handleQaComplete() {
+  return _allowMsg('**QA Monitoring Complete**: Check the log analysis results for any issues.');
 }
 
-function handleReportComplete(adapter, input) {
-  const projectDir = adapter.getProjectDir();
-  const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
+function handleReportComplete(normalized) {
+  const projectDir = _getProjectDir();
 
   try {
+    const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
     const pdcaStatusPath = pdcaStatusModule.getPdcaStatusPath(projectDir);
     if (fs.existsSync(pdcaStatusPath)) {
       const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
@@ -228,31 +263,29 @@ function handleReportComplete(adapter, input) {
 
         pdcaStatusModule.savePdcaStatus(pdcaStatus, projectDir);
 
-        adapter.outputAllow(
-          `**PDCA Complete**: Feature "${primaryFeature}" development cycle completed. Consider \`/pdca archive ${primaryFeature}\` to archive documents.`,
-          'AfterAgent'
-        );
-        return;
+        return _allowMsg(`**PDCA Complete**: Feature "${primaryFeature}" development cycle completed. Consider \`/pdca archive ${primaryFeature}\` to archive documents.`);
       }
     }
   } catch (e) {
     // Ignore errors
   }
 
-  adapter.outputAllow('**Report Complete**: PDCA completion report generated.', 'AfterAgent');
+  return _allowMsg('**Report Complete**: PDCA completion report generated.');
 }
 
-function handlePdcaSkillComplete(adapter, input) {
-  // Generic PDCA skill completion
-  adapter.outputAllow('**PDCA Skill Complete**: Check /pdca status for current progress.', 'AfterAgent');
+function handlePdcaSkillComplete() {
+  return _allowMsg('**PDCA Skill Complete**: Check /pdca status for current progress.');
 }
 
-function handleCodeReviewComplete(adapter, input) {
-  adapter.outputAllow('**Code Review Complete**: Address any findings in the review report.', 'AfterAgent');
+function handleCodeReviewComplete() {
+  return _allowMsg('**Code Review Complete**: Address any findings in the review report.');
 }
 
-function handlePhase8Complete(adapter, input) {
-  adapter.outputAllow('**Phase 8 Review Complete**: Ready for deployment phase.', 'AfterAgent');
+function handlePhase8Complete() {
+  return _allowMsg('**Phase 8 Review Complete**: Ready for deployment phase.');
 }
 
-main();
+// --- Entry point ---
+if (require.main === module) { main(); }
+
+module.exports = { handler };

@@ -211,10 +211,26 @@ const PHASE_CONTEXT_MAP = {
   idle:   ['commands.md', 'pdca-rules.md', 'agent-triggers.md', 'skill-triggers.md', 'feature-report.md']
 };
 
+// Files already imported by GEMINI.md @import directives.
+// In JIT mode (v0.35.0+), the CLI lazy-loads these, so session-start must not
+// duplicate them to avoid redundant token usage.
+const GEMINI_MD_IMPORTS = new Set(['commands.md', 'core-rules.md']);
+
 function loadPhaseAwareContext(pluginRoot, phase) {
   const effectivePhase = phase && PHASE_CONTEXT_MAP[phase] ? phase : 'idle';
-  const files = PHASE_CONTEXT_MAP[effectivePhase];
+  let files = PHASE_CONTEXT_MAP[effectivePhase];
   const contextDir = path.join(pluginRoot, '.gemini', 'context');
+
+  // JIT dedup (v0.35.0+): skip files that GEMINI.md @import already provides
+  let jitMode = false;
+  try {
+    const vd = require(path.join(libPath, 'gemini', 'version'));
+    jitMode = !!vd.getFeatureFlags().hasJITContextLoading;
+  } catch (e) { /* non-fatal */ }
+
+  if (jitMode) {
+    files = files.filter(f => !GEMINI_MD_IMPORTS.has(f));
+  }
 
   const sections = [];
   const missing = [];
@@ -304,6 +320,9 @@ function generateDynamicContext(pdcaStatus, level, memory, returningInfo, output
   sections.push(buildAvailableSkillsSection(level));
 
   // Phase-Aware Context (v2.0.0)
+  // JIT guard (v0.35.0+): In JIT mode, Gemini CLI lazy-loads @import files from GEMINI.md.
+  // GEMINI.md already imports commands.md and core-rules.md, so Phase-Aware injection
+  // skips those files to prevent duplicate context tokens.
   const currentPhase = pdcaStatus.primaryFeature
     ? (pdcaStatus.features?.[pdcaStatus.primaryFeature]?.phase ||
        pdcaStatus.activeFeatures?.[pdcaStatus.primaryFeature]?.phase)

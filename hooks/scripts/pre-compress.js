@@ -25,6 +25,19 @@ function main() {
     // Read current PDCA status
     const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
 
+    // JIT safeguard (v0.35.0+): detect if context may be partially loaded
+    let jitPartial = false;
+    try {
+      const { getFeatureFlags } = require(path.join(libPath, 'gemini', 'version'));
+      if (getFeatureFlags().hasJITContextLoading) {
+        const hasFeatures = pdcaStatus.features && Object.keys(pdcaStatus.features).length > 0;
+        if (!hasFeatures && pdcaStatus.primaryFeature) {
+          // primaryFeature set but no features data -- likely incomplete load
+          jitPartial = true;
+        }
+      }
+    } catch (e) { /* non-fatal */ }
+
     // Create snapshot directory
     const snapshotDir = path.join(projectDir, '.bkit', 'snapshots');
     if (!fs.existsSync(snapshotDir)) {
@@ -38,7 +51,8 @@ function main() {
     fs.writeFileSync(snapshotPath, JSON.stringify({
       ...pdcaStatus,
       _snapshotTimestamp: new Date().toISOString(),
-      _reason: 'pre-compress'
+      _reason: 'pre-compress',
+      _jitPartial: jitPartial
     }, null, 2));
 
     // Cleanup old snapshots (keep last 10)
