@@ -792,52 +792,52 @@ const tests = [
     }
   },
 
-  { name: 'TC80-67: SEC-08 Starter policy has plan_mode deny for write_file',
+  { name: 'TC80-67: SEC-08 Starter policy has plan mode deny for write_file',
     fn: () => {
       const starterPath = path.join(PLUGIN_ROOT, '.gemini', 'policies', 'bkit-starter-policy.toml');
       const content = fs.readFileSync(starterPath, 'utf-8');
-      // Find write_file + plan_mode block
+      // Find write_file + plan mode block
       const blocks = content.split('[[rule]]').filter(b => b.trim());
       const writePlanBlock = blocks.find(b =>
-        b.includes('toolName = "write_file"') && b.includes('plan_mode'));
-      assert(writePlanBlock, 'Should have write_file plan_mode rule');
+        b.includes('toolName = "write_file"') && b.includes('modes = ["plan"]'));
+      assert(writePlanBlock, 'Should have write_file plan mode rule');
       assert(writePlanBlock.includes('decision = "deny"'),
-        'write_file in plan_mode should be deny');
+        'write_file in plan mode should be deny');
     }
   },
 
-  { name: 'TC80-68: SEC-08 Starter policy has plan_mode deny for replace',
+  { name: 'TC80-68: SEC-08 Starter policy has plan mode deny for replace',
     fn: () => {
       const starterPath = path.join(PLUGIN_ROOT, '.gemini', 'policies', 'bkit-starter-policy.toml');
       const content = fs.readFileSync(starterPath, 'utf-8');
       const blocks = content.split('[[rule]]').filter(b => b.trim());
       const replacePlanBlock = blocks.find(b =>
-        b.includes('toolName = "replace"') && b.includes('plan_mode'));
-      assert(replacePlanBlock, 'Should have replace plan_mode rule');
+        b.includes('toolName = "replace"') && b.includes('modes = ["plan"]'));
+      assert(replacePlanBlock, 'Should have replace plan mode rule');
       assert(replacePlanBlock.includes('decision = "deny"'),
-        'replace in plan_mode should be deny');
+        'replace in plan mode should be deny');
     }
   },
 
-  { name: 'TC80-69: SEC-08 Starter policy has plan_mode deny for run_shell_command',
+  { name: 'TC80-69: SEC-08 Starter policy has plan mode deny for run_shell_command',
     fn: () => {
       const starterPath = path.join(PLUGIN_ROOT, '.gemini', 'policies', 'bkit-starter-policy.toml');
       const content = fs.readFileSync(starterPath, 'utf-8');
       const blocks = content.split('[[rule]]').filter(b => b.trim());
       const shellPlanBlock = blocks.find(b =>
-        b.includes('toolName = "run_shell_command"') && b.includes('plan_mode'));
-      assert(shellPlanBlock, 'Should have run_shell_command plan_mode rule');
+        b.includes('toolName = "run_shell_command"') && b.includes('modes = ["plan"]'));
+      assert(shellPlanBlock, 'Should have run_shell_command plan mode rule');
       assert(shellPlanBlock.includes('decision = "deny"'),
-        'run_shell_command in plan_mode should be deny');
+        'run_shell_command in plan mode should be deny');
     }
   },
 
-  { name: 'TC80-70: SEC-08 Starter plan_mode deny priority is 110 (higher than normal)',
+  { name: 'TC80-70: SEC-08 Starter plan mode deny priority is 110 (higher than normal)',
     fn: () => {
       const starterPath = path.join(PLUGIN_ROOT, '.gemini', 'policies', 'bkit-starter-policy.toml');
       const content = fs.readFileSync(starterPath, 'utf-8');
       const blocks = content.split('[[rule]]').filter(b => b.trim());
-      const planBlocks = blocks.filter(b => b.includes('plan_mode'));
+      const planBlocks = blocks.filter(b => b.includes('modes = ["plan"]'));
       for (const block of planBlocks) {
         assert(block.includes('priority = 110'),
           'Plan mode deny rules should have priority 110');
@@ -845,27 +845,27 @@ const tests = [
     }
   },
 
-  { name: 'TC80-71: SEC-08 Dynamic policy has plan_mode ask_user (not deny)',
+  { name: 'TC80-71: SEC-08 Dynamic policy has plan mode ask_user (not deny)',
     fn: () => {
       const pm = require(policyPath);
       const dynamicTemplate = pm.LEVEL_POLICY_TEMPLATES.Dynamic;
-      const planRules = dynamicTemplate.rules.filter(r => r.modes && r.modes.includes('plan_mode'));
-      assert(planRules.length > 0, 'Dynamic should have plan_mode rules');
+      const planRules = dynamicTemplate.rules.filter(r => r.modes && r.modes.includes('plan'));
+      assert(planRules.length > 0, 'Dynamic should have plan mode rules');
       for (const rule of planRules) {
         assertEqual(rule.decision, 'ask_user',
-          `Dynamic plan_mode rule for ${rule.toolName} should be ask_user`);
+          `Dynamic plan mode rule for ${rule.toolName} should be ask_user`);
       }
     }
   },
 
-  { name: 'TC80-72: SEC-08 Dynamic plan_mode rules have priority 60',
+  { name: 'TC80-72: SEC-08 Dynamic plan mode rules have priority 60',
     fn: () => {
       const pm = require(policyPath);
       const dynamicTemplate = pm.LEVEL_POLICY_TEMPLATES.Dynamic;
-      const planRules = dynamicTemplate.rules.filter(r => r.modes && r.modes.includes('plan_mode'));
+      const planRules = dynamicTemplate.rules.filter(r => r.modes && r.modes.includes('plan'));
       for (const rule of planRules) {
         assertEqual(rule.priority, 60,
-          `Dynamic plan_mode rule for ${rule.toolName} should have priority 60`);
+          `Dynamic plan mode rule for ${rule.toolName} should have priority 60`);
       }
     }
   },
@@ -874,13 +874,13 @@ const tests = [
     fn: () => {
       const starterPath = path.join(PLUGIN_ROOT, '.gemini', 'policies', 'bkit-starter-policy.toml');
       const content = fs.readFileSync(starterPath, 'utf-8');
-      const modesMatches = content.match(/modes\s*=\s*\["plan_mode"\]/g);
+      const modesMatches = content.match(/modes\s*=\s*["plan"]/g);
       assert(modesMatches && modesMatches.length >= 3,
-        'Should have at least 3 plan_mode rules with array syntax');
+        'Should have at least 3 plan mode rules with array syntax');
     }
   },
 
-  { name: 'TC80-74: SEC-08 plan_mode deny priority > normal ask_user priority',
+  { name: 'TC80-74: SEC-08 plan mode deny priority > normal ask_user priority',
     fn: () => {
       const starterPath = path.join(PLUGIN_ROOT, '.gemini', 'policies', 'bkit-starter-policy.toml');
       const content = fs.readFileSync(starterPath, 'utf-8');
@@ -891,24 +891,24 @@ const tests = [
         const priority = block.match(/priority\s*=\s*(\d+)/);
         if (!priority) continue;
         const p = parseInt(priority[1]);
-        if (block.includes('plan_mode') && block.includes('decision = "deny"')) {
+        if (block.includes('modes = ["plan"]') && block.includes('decision = "deny"')) {
           if (p < planDenyPriority) planDenyPriority = p;
-        } else if (block.includes('decision = "ask_user"') && !block.includes('plan_mode')) {
+        } else if (block.includes('decision = "ask_user"') && !block.includes('modes = ["plan"]')) {
           if (p > normalAskPriority) normalAskPriority = p;
         }
       }
       assert(planDenyPriority > normalAskPriority,
-        `plan_mode deny priority (${planDenyPriority}) must be > normal ask_user priority (${normalAskPriority})`);
+        `plan mode deny priority (${planDenyPriority}) must be > normal ask_user priority (${normalAskPriority})`);
     }
   },
 
-  { name: 'TC80-75: SEC-08 Enterprise template has no plan_mode rules (permissive)',
+  { name: 'TC80-75: SEC-08 Enterprise template has no plan mode rules (permissive)',
     fn: () => {
       const pm = require(policyPath);
       const enterpriseTemplate = pm.LEVEL_POLICY_TEMPLATES.Enterprise;
-      const planRules = enterpriseTemplate.rules.filter(r => r.modes && r.modes.includes('plan_mode'));
+      const planRules = enterpriseTemplate.rules.filter(r => r.modes && r.modes.includes('plan'));
       assertEqual(planRules.length, 0,
-        'Enterprise should have no plan_mode restrictions');
+        'Enterprise should have no plan mode restrictions');
     }
   },
 

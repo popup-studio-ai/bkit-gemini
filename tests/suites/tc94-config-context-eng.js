@@ -238,9 +238,9 @@ const tests = [
     const content = fs.readFileSync(path.join(POLICIES_DIR, 'bkit-starter-policy.toml'), 'utf-8');
     assertContains(content, 'modes', 'starter policy should have modes rules');
   }},
-  { name: 'TC94-56: starter policy has plan_mode deny for write_file', fn: () => {
+  { name: 'TC94-56: starter policy has plan mode deny for write_file', fn: () => {
     const content = fs.readFileSync(path.join(POLICIES_DIR, 'bkit-starter-policy.toml'), 'utf-8');
-    assertContains(content, 'plan_mode', 'should reference plan_mode');
+    assertContains(content, 'modes = ["plan"]', 'should reference plan mode');
     assertContains(content, 'write_file', 'should reference write_file');
   }},
   { name: 'TC94-57: starter policy has allow for read_file', fn: () => {

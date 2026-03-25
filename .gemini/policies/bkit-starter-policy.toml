@@ -57,22 +57,22 @@ decision = "allow"
 priority = 10
 
 # --- Plan Mode Restrictions (v2.0.0, SEC-08) ---
-# During plan_mode, code writing is denied for Starter level
+# During plan mode, code writing is denied for Starter level
 
 [[rule]]
 toolName = "write_file"
-modes = ["plan_mode"]
+modes = ["plan"]
 decision = "deny"
 priority = 110
 
 [[rule]]
 toolName = "replace"
-modes = ["plan_mode"]
+modes = ["plan"]
 decision = "deny"
 priority = 110
 
 [[rule]]
 toolName = "run_shell_command"
-modes = ["plan_mode"]
+modes = ["plan"]
 decision = "deny"
 priority = 110
