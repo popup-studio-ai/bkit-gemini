@@ -845,14 +845,14 @@ test('SEC-06', 'version.js rejects version beyond plausible range', () => {
   assert(isVersionBeyondPlausible('0.34.0') === false, 'Plausible version falsely rejected');
 });
 
-test('SEC-07', 'policy.js Starter level denies code writes in plan_mode', () => {
+test('SEC-07', 'policy.js Starter level denies code writes in plan mode', () => {
   const { LEVEL_POLICY_TEMPLATES } = require(path.join(GEMINI_DIR, 'policy.js'));
   const starterRules = LEVEL_POLICY_TEMPLATES.Starter.rules;
   const planModeDeny = starterRules.filter(r =>
-    r.modes && r.modes.includes('plan_mode') && r.decision === 'deny'
+    r.modes && r.modes.includes('plan') && r.decision === 'deny'
   );
   assert(planModeDeny.length >= 3,
-    `Expected at least 3 plan_mode deny rules for Starter, found ${planModeDeny.length}`);
+    `Expected at least 3 plan mode deny rules for Starter, found ${planModeDeny.length}`);
 });
 
 test('SEC-08', 'policy.js Extension policy is Tier 2 (no "allow" decisions)', () => {

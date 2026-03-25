@@ -689,59 +689,59 @@ const tests = [
   // SEC-08: Plan Mode Restrictions (10 TC)
   // ═══════════════════════════════════════════════════════════
 
-  { name: 'TC91-66: SEC-08 starter TOML has modes = ["plan_mode"] rules',
+  { name: 'TC91-66: SEC-08 starter TOML has modes = ["plan"] rules',
     fn: () => {
       const toml = fs.readFileSync(starterTomlPath, 'utf-8');
-      assert(toml.includes('modes = ["plan_mode"]'),
-        'Starter policy should have plan_mode rules');
+      assert(toml.includes('modes = ["plan"]'),
+        'Starter policy should have plan mode rules');
     }
   },
 
-  { name: 'TC91-67: SEC-08 write_file deny in plan_mode',
+  { name: 'TC91-67: SEC-08 write_file deny in plan mode',
     fn: () => {
       const toml = fs.readFileSync(starterTomlPath, 'utf-8');
       const blocks = toml.split('[[rule]]').slice(1);
       const planWriteBlock = blocks.find(b =>
-        b.includes('toolName = "write_file"') && b.includes('modes = ["plan_mode"]')
+        b.includes('toolName = "write_file"') && b.includes('modes = ["plan"]')
       );
-      assert(planWriteBlock, 'Should have write_file plan_mode rule');
+      assert(planWriteBlock, 'Should have write_file plan mode rule');
       assert(planWriteBlock.includes('decision = "deny"'),
-        'write_file in plan_mode should be denied');
+        'write_file in plan mode should be denied');
     }
   },
 
-  { name: 'TC91-68: SEC-08 replace deny in plan_mode',
+  { name: 'TC91-68: SEC-08 replace deny in plan mode',
     fn: () => {
       const toml = fs.readFileSync(starterTomlPath, 'utf-8');
       const blocks = toml.split('[[rule]]').slice(1);
       const planReplaceBlock = blocks.find(b =>
-        b.includes('toolName = "replace"') && b.includes('modes = ["plan_mode"]')
+        b.includes('toolName = "replace"') && b.includes('modes = ["plan"]')
       );
-      assert(planReplaceBlock, 'Should have replace plan_mode rule');
+      assert(planReplaceBlock, 'Should have replace plan mode rule');
       assert(planReplaceBlock.includes('decision = "deny"'),
-        'replace in plan_mode should be denied');
+        'replace in plan mode should be denied');
     }
   },
 
-  { name: 'TC91-69: SEC-08 run_shell_command deny in plan_mode',
+  { name: 'TC91-69: SEC-08 run_shell_command deny in plan mode',
     fn: () => {
       const toml = fs.readFileSync(starterTomlPath, 'utf-8');
       const blocks = toml.split('[[rule]]').slice(1);
       const planShellBlock = blocks.find(b =>
-        b.includes('toolName = "run_shell_command"') && b.includes('modes = ["plan_mode"]')
+        b.includes('toolName = "run_shell_command"') && b.includes('modes = ["plan"]')
       );
-      assert(planShellBlock, 'Should have run_shell_command plan_mode rule');
+      assert(planShellBlock, 'Should have run_shell_command plan mode rule');
       assert(planShellBlock.includes('decision = "deny"'),
-        'run_shell_command in plan_mode should be denied');
+        'run_shell_command in plan mode should be denied');
     }
   },
 
-  { name: 'TC91-70: SEC-08 plan_mode rules have priority 110 (higher than normal)',
+  { name: 'TC91-70: SEC-08 plan mode rules have priority 110 (higher than normal)',
     fn: () => {
       const toml = fs.readFileSync(starterTomlPath, 'utf-8');
       const blocks = toml.split('[[rule]]').slice(1);
-      const planBlocks = blocks.filter(b => b.includes('modes = ["plan_mode"]'));
-      assert(planBlocks.length >= 3, 'Should have at least 3 plan_mode rules');
+      const planBlocks = blocks.filter(b => b.includes('modes = ["plan"]'));
+      assert(planBlocks.length >= 3, 'Should have at least 3 plan mode rules');
       for (const block of planBlocks) {
         assert(block.includes('priority = 110'),
           'Plan mode rules should have priority 110');
@@ -749,7 +749,7 @@ const tests = [
     }
   },
 
-  { name: 'TC91-71: SEC-08 plan_mode priority 110 exceeds deny priority 100',
+  { name: 'TC91-71: SEC-08 plan mode priority 110 exceeds deny priority 100',
     fn: () => {
       // Plan mode deny at 110 overrides even regular deny at 100
       const toml = fs.readFileSync(starterTomlPath, 'utf-8');
@@ -760,7 +760,7 @@ const tests = [
         const priorityMatch = block.match(/priority\s*=\s*(\d+)/);
         if (!priorityMatch) continue;
         const priority = parseInt(priorityMatch[1]);
-        if (block.includes('modes = ["plan_mode"]')) {
+        if (block.includes('modes = ["plan"]')) {
           minPlanPriority = Math.min(minPlanPriority, priority);
         } else {
           maxNormalPriority = Math.max(maxNormalPriority, priority);
@@ -778,14 +778,14 @@ const tests = [
     }
   },
 
-  { name: 'TC91-73: SEC-08 read_file is allowed (not blocked in plan_mode)',
+  { name: 'TC91-73: SEC-08 read_file is allowed (not blocked in plan mode)',
     fn: () => {
       const toml = fs.readFileSync(starterTomlPath, 'utf-8');
       const blocks = toml.split('[[rule]]').slice(1);
       const readPlanBlock = blocks.find(b =>
-        b.includes('toolName = "read_file"') && b.includes('modes = ["plan_mode"]')
+        b.includes('toolName = "read_file"') && b.includes('modes = ["plan"]')
       );
-      assert(!readPlanBlock, 'read_file should NOT be blocked in plan_mode');
+      assert(!readPlanBlock, 'read_file should NOT be blocked in plan mode');
       // But read_file should have an allow rule
       const readBlock = blocks.find(b => b.includes('toolName = "read_file"'));
       assert(readBlock, 'read_file should have a rule');
@@ -793,19 +793,19 @@ const tests = [
     }
   },
 
-  { name: 'TC91-74: SEC-08 policy module LEVEL_POLICY_TEMPLATES includes plan_mode for Starter',
+  { name: 'TC91-74: SEC-08 policy module LEVEL_POLICY_TEMPLATES includes plan mode for Starter',
     fn: () => {
       const policySrc = fs.readFileSync(policyPath, 'utf-8');
-      assert(policySrc.includes("modes: ['plan_mode']"),
-        'Policy module should have plan_mode in Starter template');
+      assert(policySrc.includes("modes: ['plan']"),
+        'Policy module should have plan mode in Starter template');
     }
   },
 
-  { name: 'TC91-75: SEC-08 exactly 3 plan_mode rules in starter TOML',
+  { name: 'TC91-75: SEC-08 exactly 3 plan mode rules in starter TOML',
     fn: () => {
       const toml = fs.readFileSync(starterTomlPath, 'utf-8');
-      const planModeCount = (toml.match(/modes\s*=\s*\["plan_mode"\]/g) || []).length;
-      assertEqual(planModeCount, 3, 'Should have exactly 3 plan_mode rules');
+      const planModeCount = (toml.match(/modes\s*=\s*\["plan"\]/g) || []).length;
+      assertEqual(planModeCount, 3, 'Should have exactly 3 plan mode rules');
     }
   },
 

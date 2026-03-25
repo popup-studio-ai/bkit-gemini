@@ -1,4 +1,4 @@
-// tests/run-all.js - Main test runner for bkit-gemini v1.5.9
+// tests/run-all.js - Main test runner for bkit-gemini v2.0.1
 const { runSuite } = require('./test-utils');
 
 function parseArgs() {
@@ -151,7 +151,19 @@ async function main() {
 
     // ═══ Sprint 6: v2.0.1 Supplement Verification ═══
     { name: 'TC-99: v2.0.1 Supplement', file: 'suites/tc99-v201-supplement.js', priority: 'P0', category: 'unit', sprint: 6 },
-    { name: 'TC-100: Comprehensive v2.0', file: 'suites/tc100-comprehensive-v200.js', priority: 'P0', category: 'unit', sprint: 6 }
+    { name: 'TC-100: Comprehensive v2.0', file: 'suites/tc100-comprehensive-v200.js', priority: 'P0', category: 'unit', sprint: 6 },
+
+    // ═══ Sprint 7: v2.0.1 + Gemini CLI v0.35.0 Comprehensive Tests ═══
+    { name: 'TC-101: v0.35.0 Policy Full-Path', file: 'suites/tc101-v035-policy-fullpath.js', priority: 'P0', category: 'unit', sprint: 7 },
+    { name: 'TC-102: v0.35.0 JIT Context', file: 'suites/tc102-v035-jit-context.js', priority: 'P0', category: 'unit', sprint: 7 },
+    { name: 'TC-103: v0.35.0 Import Resolver', file: 'suites/tc103-v035-import-resolver.js', priority: 'P0', category: 'unit', sprint: 7 },
+    { name: 'TC-104: v0.35.0 Context Fork', file: 'suites/tc104-v035-context-fork.js', priority: 'P1', category: 'unit', sprint: 7 },
+    { name: 'TC-105: v0.35.0 Feature Gates', file: 'suites/tc105-v035-feature-gates.js', priority: 'P0', category: 'unit', sprint: 7 },
+    { name: 'TC-106: v0.35.0 Hooks Integration', file: 'suites/tc106-v035-hooks-integration.js', priority: 'P0', category: 'e2e', sprint: 7 },
+    { name: 'TC-107: v0.35.0 Modes Migration', file: 'suites/tc107-v035-modes-migration.js', priority: 'P0', category: 'integration', sprint: 7 },
+    { name: 'TC-108: v0.35.0 Security Full-Path', file: 'suites/tc108-v035-security-fullpath.js', priority: 'P0', category: 'security', sprint: 7 },
+    { name: 'TC-109: v0.35.0 Skill Agent Compat', file: 'suites/tc109-v035-skill-agent-compat.js', priority: 'P1', category: 'integration', sprint: 7 },
+    { name: 'TC-110: v0.35.0 E2E Regression', file: 'suites/tc110-v035-e2e-regression.js', priority: 'P0', category: 'e2e', sprint: 7 }
   ];
 
   const filtered = filterSuites(suites, opts);

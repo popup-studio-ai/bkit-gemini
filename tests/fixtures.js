@@ -128,8 +128,42 @@ const LEVEL_DETECTION_FIXTURES = {
   starter: { dirs: [], files: [] }
 };
 
+// v2.0.1 + Gemini CLI v0.35.0 fixtures
+const V035_HOOK_INPUT_FIXTURES = {
+  sessionStart: {},
+  beforeToolDenyFullPath: { toolName: 'run_shell_command', input: { command: '/usr/bin/rm -rf /' } },
+  beforeToolDenyBare: { toolName: 'run_shell_command', input: { command: 'rm -rf /' } },
+  beforeToolSafeFullPath: { toolName: 'run_shell_command', input: { command: '/usr/bin/ls -la' } },
+  beforeToolGitForceFullPath: { toolName: 'run_shell_command', input: { command: '/usr/local/bin/git push --force' } }
+};
+
+const V035_POLICY_PERMISSIONS = {
+  'run_shell_command(rm -rf*)': 'deny',
+  'run_shell_command(git push --force*)': 'deny',
+  'run_shell_command(git reset --hard*)': 'ask',
+  'write_file': 'allow'
+};
+
+const V035_FEATURE_FLAGS_EXPECTED = {
+  hasJITContextLoading: true,
+  hasToolIsolation: true,
+  hasParallelToolScheduler: true,
+  hasAdminPolicy: true,
+  hasDisableAlwaysAllow: true,
+  hasCryptoVerification: true,
+  hasCustomKeybindings: true,
+  hasPolicyEngine: true,
+  hasProjectLevelPolicy: true,
+  hasExtensionPolicies: true,
+  hasTaskTracker: true,
+  hasRuntimeHookFunctions: true,
+  hasSubagentPolicies: true,
+  hasNativeSkillSystem: true
+};
+
 module.exports = {
   PDCA_STATUS_FIXTURE, BKIT_MEMORY_FIXTURE, BKIT_MEMORY_RETURNING, PDCA_STATUS_V157, TRACKER_BRIDGE_FIXTURE,
   PDCA_STATUS_V158, PDCA_STATUS_MULTI, TEAM_CONFIG_FIXTURE,
-  MULTILANG_INPUTS, HOOK_INPUT_FIXTURES, LEVEL_DETECTION_FIXTURES
+  MULTILANG_INPUTS, HOOK_INPUT_FIXTURES, LEVEL_DETECTION_FIXTURES,
+  V035_HOOK_INPUT_FIXTURES, V035_POLICY_PERMISSIONS, V035_FEATURE_FLAGS_EXPECTED
 };

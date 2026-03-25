@@ -12,7 +12,10 @@ const libPath = path.resolve(__dirname, '..', '..', 'lib');
 // --- Core processing logic ---
 function processHook(input) {
   try {
-    const prompt = input.prompt || input.user_message || input.message || '';
+    // v0.35.0 compat (#18514): unwrap nested data envelope if present
+    const base = (input && (input.data || input.result)) || input || {};
+    const prompt = base.prompt || base.user_message || base.message ||
+                   input.prompt || input.user_message || input.message || '';
 
     if (!prompt || prompt.length < 3) {
       return { status: 'allow' };

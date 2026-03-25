@@ -117,7 +117,7 @@
 
   "compatibility": {
     "minGeminiCliVersion": "0.34.0",
-    "testedVersions": ["0.34.0"],
+    "testedVersions": ["0.34.0", "0.35.0"],
     "policyEngine": {
       "autoGenerate": true,
       "outputDir": ".gemini/policies/",

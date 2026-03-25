@@ -72,19 +72,19 @@ const tests = [
     assert('Dynamic' in LEVEL_POLICY_TEMPLATES, 'should have Dynamic');
     assert('Enterprise' in LEVEL_POLICY_TEMPLATES, 'should have Enterprise');
   }},
-  { name: 'TC84-11: Starter has plan_mode rules with decision deny', fn: () => {
+  { name: 'TC84-11: Starter has plan mode rules with decision deny', fn: () => {
     const planModeRules = LEVEL_POLICY_TEMPLATES.Starter.rules.filter(
-      r => r.modes && r.modes.includes('plan_mode')
+      r => r.modes && r.modes.includes('plan')
     );
-    assert(planModeRules.length > 0, 'Starter should have plan_mode rules');
-    planModeRules.forEach(r => assertEqual(r.decision, 'deny', 'Starter plan_mode rules should deny'));
+    assert(planModeRules.length > 0, 'Starter should have plan mode rules');
+    planModeRules.forEach(r => assertEqual(r.decision, 'deny', 'Starter plan mode rules should deny'));
   }},
-  { name: 'TC84-12: Dynamic has plan_mode rules with decision ask_user', fn: () => {
+  { name: 'TC84-12: Dynamic has plan mode rules with decision ask_user', fn: () => {
     const planModeRules = LEVEL_POLICY_TEMPLATES.Dynamic.rules.filter(
-      r => r.modes && r.modes.includes('plan_mode')
+      r => r.modes && r.modes.includes('plan')
     );
-    assert(planModeRules.length > 0, 'Dynamic should have plan_mode rules');
-    planModeRules.forEach(r => assertEqual(r.decision, 'ask_user', 'Dynamic plan_mode rules should ask_user'));
+    assert(planModeRules.length > 0, 'Dynamic should have plan mode rules');
+    planModeRules.forEach(r => assertEqual(r.decision, 'ask_user', 'Dynamic plan mode rules should ask_user'));
   }},
 
   // ─── convertToToml (2 tests) ─────────────────────
