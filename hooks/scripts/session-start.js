@@ -47,8 +47,8 @@ function main() {
     }
 
     // 3.6. Ensure Agents Enabled for v0.36.0+ (P0 Critical)
-    // v0.36.0에서 experimental.enableAgents 기본값이 false로 변경됨 (PR #23546)
-    // bkit 에이전트 시스템 정상 동작을 위해 settings.json에 명시적 설정 보장
+    // v0.36.0 changed experimental.enableAgents default to false (PR #23546)
+    // Ensure settings.json has explicit enableAgents=true for bkit agent system
     ensureAgentsEnabled(projectDir);
 
     // 4. Load/Update memory store
@@ -88,7 +88,7 @@ function main() {
       context: dynamicContext,
       hookEvent: 'SessionStart',
       metadata: {
-        version: '2.0.0',
+        version: '2.0.2',
         platform: 'gemini',
         level: level,
         primaryFeature: pdcaStatus.primaryFeature,
@@ -111,7 +111,7 @@ function main() {
     }
     console.log(JSON.stringify({
       status: 'allow',
-      context: 'bkit Vibecoding Kit v2.0.0 activated (Gemini CLI)',
+      context: 'bkit Vibecoding Kit v2.0.2 activated (Gemini CLI)',
       hookEvent: 'SessionStart'
     }));
     process.exit(0);
@@ -329,7 +329,7 @@ function generateDynamicContext(pdcaStatus, level, memory, returningInfo, output
   const sections = [];
 
   // Header
-  sections.push('# bkit Vibecoding Kit v2.0.0 - Session Start');
+  sections.push('# bkit Vibecoding Kit v2.0.2 - Session Start');
   sections.push('');
 
   // Core Rules (dynamically injected to address GEMINI.md ignore issue #13852)

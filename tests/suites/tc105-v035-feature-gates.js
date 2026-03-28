@@ -83,7 +83,7 @@ const tests = [
     });
   }},
 
-  { name: 'TC105-12: v0.35.0 hasEnableAgentsDefaultFalse = false (하위 버전 검증)', fn: () => {
+  { name: 'TC105-12: v0.35.0 hasEnableAgentsDefaultFalse = false (lower version check)', fn: () => {
     withVersion('0.35.0', () => {
       const { getFeatureFlags } = require(versionPath);
       assertEqual(getFeatureFlags().hasEnableAgentsDefaultFalse, false, 'hasEnableAgentsDefaultFalse should be false for v0.35.0');

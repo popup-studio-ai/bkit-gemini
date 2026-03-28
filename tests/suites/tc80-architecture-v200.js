@@ -343,20 +343,20 @@ test('CCR-20', 'core/platform.js detectPlatform() returns "gemini" only', () => 
 // ═══════════════════════════════════════════════════════════════
 console.log('\n=== Section 4: Version Consistency ===');
 
-test('VER-01', 'bkit.config.json version is 2.0.0', () => {
+test('VER-01', 'bkit.config.json version is 2.0.2', () => {
   const config = JSON.parse(fs.readFileSync(path.join(ROOT, 'bkit.config.json'), 'utf-8'));
-  assert(config.version === '2.0.0', `bkit.config.json version is "${config.version}"`);
+  assert(config.version === '2.0.2', `bkit.config.json version is "${config.version}"`);
 });
 
-test('VER-02', 'gemini-extension.json version is 2.0.0', () => {
+test('VER-02', 'gemini-extension.json version is 2.0.2', () => {
   const ext = JSON.parse(fs.readFileSync(path.join(ROOT, 'gemini-extension.json'), 'utf-8'));
-  assert(ext.version === '2.0.0', `gemini-extension.json version is "${ext.version}"`);
+  assert(ext.version === '2.0.2', `gemini-extension.json version is "${ext.version}"`);
 });
 
-test('VER-03', 'hooks/hooks.json description contains v2.0.0', () => {
+test('VER-03', 'hooks/hooks.json description contains v2.0.2', () => {
   const hooks = JSON.parse(fs.readFileSync(path.join(HOOKS_DIR, 'hooks.json'), 'utf-8'));
-  assert(hooks.description.includes('v2.0.0'),
-    `hooks.json description does not contain v2.0.0: "${hooks.description}"`);
+  assert(hooks.description.includes('v2.0.2'),
+    `hooks.json description does not contain v2.0.2: "${hooks.description}"`);
 });
 
 test('VER-04', 'No "v1.5.x" version strings in session-start.js', () => {
@@ -365,9 +365,9 @@ test('VER-04', 'No "v1.5.x" version strings in session-start.js', () => {
   assert(!match, `Found v1.5.x in session-start.js: ${match}`);
 });
 
-test('VER-05', 'session-start.js references v2.0.0 in context output', () => {
+test('VER-05', 'session-start.js references v2.0.2 in context output', () => {
   const content = fs.readFileSync(path.join(HOOKS_SCRIPTS, 'session-start.js'), 'utf-8');
-  assert(content.includes('v2.0.0'), 'session-start.js does not contain v2.0.0');
+  assert(content.includes('v2.0.2'), 'session-start.js does not contain v2.0.2');
 });
 
 test('VER-06', 'scripts/sync-version.js exists', () => {
@@ -717,13 +717,13 @@ test('LOG-07', 'CHANGELOG.md documents minimum CLI version change', () => {
     'CHANGELOG.md does not document v0.34.0 minimum');
 });
 
-test('LOG-08', 'CHANGELOG.md v2.0.0 entry is first (most recent)', () => {
+test('LOG-08', 'CHANGELOG.md v2.0.2 entry is first (most recent)', () => {
   const content = fs.readFileSync(path.join(ROOT, 'CHANGELOG.md'), 'utf-8');
   const firstH2 = content.indexOf('## ');
-  const v200Pos = content.indexOf('v2.0.0');
-  // v2.0.0 should appear at or very near the first ## heading
-  assert(v200Pos < firstH2 + 100,
-    'v2.0.0 is not the most recent changelog entry');
+  const v202Pos = content.indexOf('v2.0.2');
+  // v2.0.2 should appear at or very near the first ## heading
+  assert(v202Pos < firstH2 + 100,
+    'v2.0.2 is not the most recent changelog entry');
 });
 
 // ═══════════════════════════════════════════════════════════════

@@ -108,7 +108,7 @@ const tests = [
     assert(files.length >= 3, `Should have 3+ template files, found ${files.length}`);
   }},
 
-  // v0.36.0 enableAgents 검증 (v2.0.2)
+  // v0.36.0 enableAgents verification (v2.0.2)
   { name: 'TC109-11: .gemini/settings.json contains enableAgents key', fn: () => {
     const settingsPath = path.join(PLUGIN_ROOT, '.gemini', 'settings.json');
     assert(fs.existsSync(settingsPath), '.gemini/settings.json should exist');

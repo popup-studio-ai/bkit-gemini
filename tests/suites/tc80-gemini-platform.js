@@ -10,7 +10,7 @@ const tests = [
       const adapter = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'platform'));
       assert(typeof adapter === 'object', 'Should export object (singleton)');
       assertEqual(adapter._name, 'gemini', 'Name should be gemini');
-      assertEqual(adapter._version, '2.0.0', 'Version should be 2.0.0');
+      assertEqual(adapter._version, '2.0.2', 'Version should be 2.0.2');
     }
   },
   {

@@ -27,8 +27,8 @@ const tests = [
   // SECTION 1: bkit.config.json Core Fields (15 tests)
   // ═══════════════════════════════════════════════════════════════
 
-  { name: 'TC94-01: bkit.config.json version is 2.0.0', fn: () => {
-    assertEqual(config.version, '2.0.0', 'config version');
+  { name: 'TC94-01: bkit.config.json version is 2.0.2', fn: () => {
+    assertEqual(config.version, '2.0.2', 'config version');
   }},
   { name: 'TC94-02: bkit.config.json platform is gemini', fn: () => {
     assertEqual(config.platform, 'gemini', 'config platform');
@@ -152,8 +152,8 @@ const tests = [
   // SECTION 4: gemini-extension.json (10 tests)
   // ═══════════════════════════════════════════════════════════════
 
-  { name: 'TC94-36: gemini-extension.json version is 2.0.0', fn: () => {
-    assertEqual(extension.version, '2.0.0', 'extension version');
+  { name: 'TC94-36: gemini-extension.json version is 2.0.2', fn: () => {
+    assertEqual(extension.version, '2.0.2', 'extension version');
   }},
   { name: 'TC94-37: gemini-extension.json contextFileName is an array', fn: () => {
     assert(Array.isArray(extension.contextFileName), 'contextFileName should be an array');

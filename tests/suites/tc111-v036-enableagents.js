@@ -41,7 +41,7 @@ function getEnsureAgentsEnabled() {
 }
 
 const tests = [
-  { name: 'TC111-01: settings.json 미존재 시 자동 생성', fn: () => {
+  { name: 'TC111-01: auto-create settings.json when not exists', fn: () => {
     const projectDir = createTestProject({});
     const geminiDir = path.join(projectDir, '.gemini');
     // Ensure no settings.json exists
@@ -56,7 +56,7 @@ const tests = [
     assertEqual(settings.experimental.enableAgents, true, 'enableAgents should be true');
   }},
 
-  { name: 'TC111-02: settings.json 존재 + enableAgents 미설정 시 true 추가', fn: () => {
+  { name: 'TC111-02: add enableAgents=true when key is missing', fn: () => {
     const projectDir = createTestProject({
       '.gemini/settings.json': JSON.stringify({ someOther: 'value' }, null, 2)
     });
@@ -70,7 +70,7 @@ const tests = [
     assertEqual(settings.someOther, 'value', 'existing keys should be preserved');
   }},
 
-  { name: 'TC111-03: settings.json 존재 + enableAgents=true 시 변경 없음', fn: () => {
+  { name: 'TC111-03: no change when enableAgents already true', fn: () => {
     const original = { experimental: { enableAgents: true } };
     const projectDir = createTestProject({
       '.gemini/settings.json': JSON.stringify(original, null, 2)
@@ -86,7 +86,7 @@ const tests = [
     assertEqual(beforeContent, afterContent, 'File should not be modified when enableAgents is already true');
   }},
 
-  { name: 'TC111-04: settings.json 존재 + enableAgents=false 시 사용자 의도 존중 (No Guessing)', fn: () => {
+  { name: 'TC111-04: respect user intent when enableAgents=false (No Guessing)', fn: () => {
     const original = { experimental: { enableAgents: false } };
     const projectDir = createTestProject({
       '.gemini/settings.json': JSON.stringify(original, null, 2)
@@ -100,7 +100,7 @@ const tests = [
     assertEqual(settings.experimental.enableAgents, false, 'enableAgents=false should be respected (No Guessing)');
   }},
 
-  { name: 'TC111-05: settings.json 생성 시 다른 설정 키 보존', fn: () => {
+  { name: 'TC111-05: preserve other settings keys when adding enableAgents', fn: () => {
     const original = { experimental: { someFlag: true }, theme: 'dark' };
     const projectDir = createTestProject({
       '.gemini/settings.json': JSON.stringify(original, null, 2)
