@@ -60,6 +60,16 @@ function processHook(input) {
 
     const contexts = [];
     if (permResult.level === 'ask') {
+      // v0.36.0+: BeforeTool Hook supports 'ask' decision natively (PR #21146)
+      try {
+        const { getFeatureFlags } = require(path.join(libPath, 'gemini', 'version'));
+        if (getFeatureFlags().hasBeforeToolAsk) {
+          writeSecurityAuditLog(projectDir, 'ASK', toolName, toolInput, permResult.reason);
+          return { status: 'ask', message: permResult.reason || 'This action requires user confirmation.' };
+        }
+      } catch (e) { /* version detection failure, fall through to legacy */ }
+
+      // Fallback for v0.35.x: allow with warning context
       contexts.push(`**Permission Warning**: ${permResult.reason || 'This action requires caution.'}`);
       writeSecurityAuditLog(projectDir, 'ASK', toolName, toolInput, permResult.reason);
     }

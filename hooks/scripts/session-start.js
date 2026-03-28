@@ -46,6 +46,11 @@ function main() {
       // Policy generation is non-fatal
     }
 
+    // 3.6. Ensure Agents Enabled for v0.36.0+ (P0 Critical)
+    // v0.36.0에서 experimental.enableAgents 기본값이 false로 변경됨 (PR #23546)
+    // bkit 에이전트 시스템 정상 동작을 위해 settings.json에 명시적 설정 보장
+    ensureAgentsEnabled(projectDir);
+
     // 4. Load/Update memory store
     const { getMemory } = require(path.join(libPath, 'core', 'memory'));
     const memoryManager = getMemory(projectDir);
@@ -115,6 +120,36 @@ function main() {
 
 // ─── PDCA Status ───────────────────────────────────────────────
 // Managed by lib/pdca/status.js
+
+// ─── Agents Enablement (v0.36.0+ P0) ─────────────────────────
+
+function ensureAgentsEnabled(projectDir) {
+  try {
+    const settingsDir = path.join(projectDir, '.gemini');
+    const settingsPath = path.join(settingsDir, 'settings.json');
+
+    let settings = {};
+    if (fs.existsSync(settingsPath)) {
+      const raw = fs.readFileSync(settingsPath, 'utf-8');
+      settings = JSON.parse(raw);
+    }
+
+    // No Guessing: respect explicit user setting of enableAgents=false
+    if (!settings.experimental) {
+      settings.experimental = {};
+    }
+    if (settings.experimental.enableAgents === undefined) {
+      settings.experimental.enableAgents = true;
+
+      if (!fs.existsSync(settingsDir)) {
+        fs.mkdirSync(settingsDir, { recursive: true });
+      }
+      fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + '\n', 'utf-8');
+    }
+  } catch (e) {
+    // Non-fatal: settings.json generation should not block session
+  }
+}
 
 // ─── Level Detection ───────────────────────────────────────────
 

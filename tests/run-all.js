@@ -163,7 +163,10 @@ async function main() {
     { name: 'TC-107: v0.35.0 Modes Migration', file: 'suites/tc107-v035-modes-migration.js', priority: 'P0', category: 'integration', sprint: 7 },
     { name: 'TC-108: v0.35.0 Security Full-Path', file: 'suites/tc108-v035-security-fullpath.js', priority: 'P0', category: 'security', sprint: 7 },
     { name: 'TC-109: v0.35.0 Skill Agent Compat', file: 'suites/tc109-v035-skill-agent-compat.js', priority: 'P1', category: 'integration', sprint: 7 },
-    { name: 'TC-110: v0.35.0 E2E Regression', file: 'suites/tc110-v035-e2e-regression.js', priority: 'P0', category: 'e2e', sprint: 7 }
+    { name: 'TC-110: v0.35.0 E2E Regression', file: 'suites/tc110-v035-e2e-regression.js', priority: 'P0', category: 'e2e', sprint: 7 },
+
+    // ═══ v2.0.2 Gemini CLI v0.36.0 Migration (Sprint 8) ═══
+    { name: 'TC-111: v0.36.0 enableAgents Settings', file: 'suites/tc111-v036-enableagents.js', priority: 'P0', category: 'unit', sprint: 8 }
   ];
 
   const filtered = filterSuites(suites, opts);

@@ -106,6 +106,23 @@ const tests = [
     }
     const files = fs.readdirSync(templatesDir).filter(f => f.endsWith('.md'));
     assert(files.length >= 3, `Should have 3+ template files, found ${files.length}`);
+  }},
+
+  // v0.36.0 enableAgents 검증 (v2.0.2)
+  { name: 'TC109-11: .gemini/settings.json contains enableAgents key', fn: () => {
+    const settingsPath = path.join(PLUGIN_ROOT, '.gemini', 'settings.json');
+    assert(fs.existsSync(settingsPath), '.gemini/settings.json should exist');
+    const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
+    assert(settings.experimental !== undefined, 'experimental section should exist');
+    assertEqual(settings.experimental.enableAgents, true, 'enableAgents should be true');
+  }},
+
+  { name: 'TC109-12: bkit.config.json testedVersions includes 0.36.0', fn: () => {
+    const configPath = path.join(PLUGIN_ROOT, 'bkit.config.json');
+    const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+    const versions = config.compatibility.testedVersions;
+    assert(versions.includes('0.36.0'), 'testedVersions should include 0.36.0');
+    assert(versions.includes('0.35.3'), 'testedVersions should include 0.35.3');
   }}
 ];
 
