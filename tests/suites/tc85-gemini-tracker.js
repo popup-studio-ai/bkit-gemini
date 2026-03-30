@@ -1,5 +1,5 @@
 // TC-85: Gemini Tracker Module Tests (16 TC)
-const { PLUGIN_ROOT, assert, assertEqual } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 
 const {

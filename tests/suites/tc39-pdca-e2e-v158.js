@@ -1,6 +1,5 @@
 // TC-39: PDCA E2E v1.5.8 Tests (18 TC)
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProjectV2, cleanupTestProject,
-        assert, assertEqual, assertExists, assertType } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, assert, assertEqual, assertExists, assertType, getPdcaStatus, withVersion } = require('../test-utils');
 const { PDCA_STATUS_V158, PDCA_STATUS_MULTI } = require('../fixtures');
 const path = require('path');
 const fs = require('fs');
@@ -12,7 +11,7 @@ const { getNextPdcaPhase } = require(path.join(PLUGIN_ROOT, 'lib/pdca/phase'));
 const tests = [
   {
     name: 'TC39-01: Plan→Design→Do→Check(100%)→Report 성공 경로',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       ensureDirectories(TEST_PROJECT_DIR);
       const s = loadPdcaStatus(TEST_PROJECT_DIR);
@@ -38,7 +37,7 @@ const tests = [
   },
   {
     name: 'TC39-02: Plan→Design→Do→Check(60%)→Act 반복 경로',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const s = loadPdcaStatus(TEST_PROJECT_DIR);
       s.primaryFeature = 'iter-test';
@@ -57,7 +56,7 @@ const tests = [
   },
   {
     name: 'TC39-03: 다중 Feature 동시 관리',
-    setup: () => createTestProjectV2({ '.pdca-status.json': PDCA_STATUS_MULTI }),
+    setup: () => createTestProject({ '.pdca-status.json': PDCA_STATUS_MULTI }),
     fn: () => {
       const s = loadPdcaStatus(TEST_PROJECT_DIR);
       assertEqual(Object.keys(s.activeFeatures).length, 3, 'Should have 3 features');
@@ -67,7 +66,7 @@ const tests = [
   },
   {
     name: 'TC39-04: primaryFeature 변경',
-    setup: () => createTestProjectV2({ '.pdca-status.json': PDCA_STATUS_MULTI }),
+    setup: () => createTestProject({ '.pdca-status.json': PDCA_STATUS_MULTI }),
     fn: () => {
       const s = loadPdcaStatus(TEST_PROJECT_DIR);
       s.primaryFeature = 'feature-b';
@@ -79,7 +78,7 @@ const tests = [
   },
   {
     name: 'TC39-05: archivedFeatures 이동',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const s = loadPdcaStatus(TEST_PROJECT_DIR);
       s.activeFeatures = { 'done-f': { phase: 'completed', matchRate: 100, completedAt: new Date().toISOString() } };
@@ -95,7 +94,7 @@ const tests = [
   },
   {
     name: 'TC39-06: Plan 문서 경로 기록',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       ensureDirectories(TEST_PROJECT_DIR);
       const s = loadPdcaStatus(TEST_PROJECT_DIR);
@@ -108,7 +107,7 @@ const tests = [
   },
   {
     name: 'TC39-07: Design 문서 경로 추가',
-    setup: () => createTestProjectV2({ '.pdca-status.json': PDCA_STATUS_V158 }),
+    setup: () => createTestProject({ '.pdca-status.json': PDCA_STATUS_V158 }),
     fn: () => {
       const s = loadPdcaStatus(TEST_PROJECT_DIR);
       s.activeFeatures['test-feature'].documents.design = 'docs/02-design/features/test-feature.design.md';
@@ -121,7 +120,7 @@ const tests = [
   },
   {
     name: 'TC39-08: pipeline.level 저장',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const s = loadPdcaStatus(TEST_PROJECT_DIR);
       s.pipeline = { level: 'Enterprise', currentPhase: 5, phaseHistory: [] };
@@ -141,7 +140,7 @@ const tests = [
   },
   {
     name: 'TC39-10: 빈 상태에서 시작',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const s = loadPdcaStatus(TEST_PROJECT_DIR);
       assertEqual(s.primaryFeature, null, 'Should have null primary');
@@ -151,7 +150,7 @@ const tests = [
   },
   {
     name: 'TC39-11: matchRate null → 숫자 전환',
-    setup: () => createTestProjectV2({ '.pdca-status.json': PDCA_STATUS_V158 }),
+    setup: () => createTestProject({ '.pdca-status.json': PDCA_STATUS_V158 }),
     fn: () => {
       const s = loadPdcaStatus(TEST_PROJECT_DIR);
       assertEqual(s.activeFeatures['test-feature'].matchRate, null, 'Should start null');
@@ -164,7 +163,7 @@ const tests = [
   },
   {
     name: 'TC39-12: iterationCount 증가',
-    setup: () => createTestProjectV2({ '.pdca-status.json': PDCA_STATUS_V158 }),
+    setup: () => createTestProject({ '.pdca-status.json': PDCA_STATUS_V158 }),
     fn: () => {
       const s = loadPdcaStatus(TEST_PROJECT_DIR);
       s.activeFeatures['test-feature'].iterationCount = 3;
@@ -176,7 +175,7 @@ const tests = [
   },
   {
     name: 'TC39-13: lastChecked 타임스탬프 갱신',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const s = loadPdcaStatus(TEST_PROJECT_DIR);
       s.lastChecked = new Date().toISOString();
@@ -188,7 +187,7 @@ const tests = [
   },
   {
     name: 'TC39-14: version 2.0 스키마 유지',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const s = loadPdcaStatus(TEST_PROJECT_DIR);
       assertEqual(s.version, '2.0', 'Should always be 2.0');
@@ -197,7 +196,7 @@ const tests = [
   },
   {
     name: 'TC39-15: 동시 Feature 5개 이상',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const s = loadPdcaStatus(TEST_PROJECT_DIR);
       s.activeFeatures = {};
@@ -212,7 +211,7 @@ const tests = [
   },
   {
     name: 'TC39-16: ensureDirectories 모든 PDCA 디렉토리',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       ensureDirectories(TEST_PROJECT_DIR);
       const paths = getPaths(TEST_PROJECT_DIR);
@@ -222,7 +221,7 @@ const tests = [
   },
   {
     name: 'TC39-17: completedAt 타임스탬프',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const s = loadPdcaStatus(TEST_PROJECT_DIR);
       s.activeFeatures = { 'x': { phase: 'completed', matchRate: 100, completedAt: '2026-03-11T00:00:00Z' } };
@@ -234,7 +233,7 @@ const tests = [
   },
   {
     name: 'TC39-18: documents 객체 확장 (analysis, report)',
-    setup: () => createTestProjectV2({ '.pdca-status.json': PDCA_STATUS_V158 }),
+    setup: () => createTestProject({ '.pdca-status.json': PDCA_STATUS_V158 }),
     fn: () => {
       const s = loadPdcaStatus(TEST_PROJECT_DIR);
       s.activeFeatures['test-feature'].documents.analysis = 'docs/03-analysis/test-feature.analysis.md';

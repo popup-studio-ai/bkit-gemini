@@ -1,6 +1,5 @@
 // TC-49: Hook-Lib-Config Chain Integration Tests (10 TC)
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject,
-        executeHook, assert, assertEqual, assertType, assertContains } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, executeHook, assert, assertEqual, assertType, assertContains, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 
 const { loadConfig } = require(path.join(PLUGIN_ROOT, 'lib/core/config'));

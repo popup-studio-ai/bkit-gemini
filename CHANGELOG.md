@@ -5,6 +5,29 @@ All notable changes to bkit-gemini will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.0.2 (2026-03-28) — Gemini CLI v0.36.0 Migration
+
+### Breaking Change Defense
+- **P0**: `ensureAgentsEnabled()` in session-start.js — auto-generates `.gemini/settings.json` with `enableAgents: true` to prevent v0.36.0 agent system deactivation (PR #23546)
+- **Config**: `bkit.config.json` testedVersions updated to include `0.35.3` and `0.36.0`
+
+### Added
+- **7 v0.36.0 Feature Flags** in `lib/gemini/version.js`: hasEnableAgentsDefaultFalse, hasToolNameRequired, hasStatelessSandbox, hasBeforeToolAsk, hasGitWorktree, hasPlanModeNonInteractive, hasMultiRegistry
+- **3 canUse flags** in getBkitFeatureFlags(): canUseBeforeToolAsk, canUseGitWorktree, canUsePlanModeNonInteractive
+- **BeforeTool Hook 'ask' decision** support in `hooks/scripts/before-tool.js` — v0.36.0+ only, with v0.35.x fallback (PR #21146)
+- **TC-111**: 5 test cases for enableAgents settings auto-generation
+- **TC-105**: 4 additional test cases for v0.36.0 feature flags (8→12 TC)
+- **TC-109**: 2 additional test cases for enableAgents verification (10→12 TC)
+- **`.gemini/settings.json`**: New file with `experimental.enableAgents: true`
+
+### Strategy
+- Strategy B (Enhancement) — 3rd consecutive proven pattern
+- YAGNI: 81% effort reduction (25.5h → 4.8h), 10 items deferred to v2.1.0
+- Gap Match Rate: 10/10 = 100%
+- Full regression: 120/120 PASS
+
+---
+
 ## v2.0.0 (2026-03-19) — Gemini CLI Native Architecture
 
 > "Write your idea. bkit does the rest."

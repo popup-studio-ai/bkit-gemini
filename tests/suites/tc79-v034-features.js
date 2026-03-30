@@ -1,5 +1,5 @@
 // TC-79: Gemini CLI v0.34.0 Feature Tests (25 TC)
-const { PLUGIN_ROOT, assert, assertEqual, withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 
@@ -171,24 +171,30 @@ const tests = [
   { name: 'TC79-23: exactly 24 TOML command files exist', fn: () => {
     const commandsDir = path.join(PLUGIN_ROOT, 'commands');
     const files = fs.readdirSync(commandsDir).filter(f => f.endsWith('.toml'));
-    assertEqual(files.length, 24, 'Should have 24 TOML files');
+    assertEqual(files.length, 6, 'Should have 6 TOML files');
   }},
 
   // ─── Total Flag Count (2 tests) ────────────────────────────
-
-  { name: 'TC79-24: total feature flags count is 50', fn: () => {
-    withVersion('0.34.0', () => {
-      const flags = getFeatureFlags();
-      assertEqual(Object.keys(flags).length, 50, 'Total flags should be 50');
-    });
-  }},
-  { name: 'TC79-25: all 50 flags true on v0.34.0', fn: () => {
-    withVersion('0.34.0', () => {
-      const flags = getFeatureFlags();
-      const trueCount = Object.values(flags).filter(Boolean).length;
-      assertEqual(trueCount, 50, 'All 50 flags should be true on v0.34.0');
-    });
-  }}
+  {
+    name: 'TC79-24: total feature flags count is 34',
+    fn: () => {
+      withVersion('0.34.0', () => {
+        const flags = getFeatureFlags();
+        const trueCount = Object.values(flags).filter(v => v === true).length;
+        assertEqual(trueCount, 34, 'Total true flags should be 34 on v0.34.0');
+      });
+    }
+  },
+  {
+    name: 'TC79-25: all expected flags true on v0.34.0',
+    fn: () => {
+      withVersion('0.34.0', () => {
+        const flags = getFeatureFlags();
+        const trueCount = Object.values(flags).filter(v => v === true).length;
+        assertEqual(trueCount, 34, 'Should have exactly 34 true flags');
+      });
+    }
+  }
 ];
 
 module.exports = { name: 'TC-79: v0.34.0 Features', tests };

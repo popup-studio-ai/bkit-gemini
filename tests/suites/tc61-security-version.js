@@ -1,8 +1,8 @@
 // TC-61: Security Version Tests (10 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertType } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertType, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
-const { withVersion } = require('../test-utils');
+
 
 const { detectVersion, parseVersion, isValidSemVer, getFeatureFlags } = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
 

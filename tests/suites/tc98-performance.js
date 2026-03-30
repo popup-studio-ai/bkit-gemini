@@ -1,5 +1,5 @@
 // TC-98: Performance Tests (20 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertType, withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertType, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 

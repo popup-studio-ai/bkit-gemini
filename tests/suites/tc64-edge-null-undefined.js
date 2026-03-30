@@ -1,5 +1,5 @@
 // TC-64: Edge Case Null/Undefined Tests (10 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertType } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertType, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 
 const { safeJsonParse } = require(path.join(PLUGIN_ROOT, 'lib/core/config'));

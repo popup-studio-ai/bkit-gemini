@@ -1,5 +1,5 @@
 // tests/suites/tc15-feature-report.js - Feature Usage Report Test
-const { PLUGIN_ROOT, assert, assertExists } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertExists, getPdcaStatus, withVersion } = require('../test-utils');
 const fs = require('fs');
 const path = require('path');
 

@@ -1,6 +1,5 @@
 // TC-72: Recovery File Corruption Tests (12 TC)
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, createTestProjectV2,
-        cleanupTestProject, assert, assertEqual, assertType } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, assert, assertEqual, assertType, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 
@@ -9,7 +8,7 @@ const { loadPdcaStatus, savePdcaStatus, createInitialStatusV2 } = require(path.j
 
 const tests = [
   { name: 'TC72-01: 깨진 pdca-status.json 복구',
-    setup: () => createTestProjectV2({ '.pdca-status.json': '{corrupt' }),
+    setup: () => createTestProject({ '.pdca-status.json': '{corrupt' }),
     fn: () => {
       try {
         const status = loadPdcaStatus(TEST_PROJECT_DIR);
@@ -21,7 +20,7 @@ const tests = [
     teardown: cleanupTestProject
   },
   { name: 'TC72-02: 빈 pdca-status.json 복구',
-    setup: () => createTestProjectV2({ '.pdca-status.json': '' }),
+    setup: () => createTestProject({ '.pdca-status.json': '' }),
     fn: () => {
       try {
         const status = loadPdcaStatus(TEST_PROJECT_DIR);
@@ -33,7 +32,7 @@ const tests = [
     teardown: cleanupTestProject
   },
   { name: 'TC72-03: 존재하지 않는 pdca-status.json',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       try {
         const status = loadPdcaStatus(TEST_PROJECT_DIR);
@@ -50,7 +49,7 @@ const tests = [
     assert(status.activeFeatures !== undefined, 'Should have activeFeatures');
   }},
   { name: 'TC72-05: savePdcaStatus 저장/로드 사이클',
-    setup: () => createTestProjectV2({ '.pdca-status.json': JSON.stringify(createInitialStatusV2()) }),
+    setup: () => createTestProject({ '.pdca-status.json': JSON.stringify(createInitialStatusV2()) }),
     fn: () => {
       const initial = createInitialStatusV2();
       savePdcaStatus(initial, TEST_PROJECT_DIR);
@@ -87,7 +86,7 @@ const tests = [
     assertEqual(r.a, 2, 'Last duplicate key should win');
   }},
   { name: 'TC72-11: null 값 pdca-status.json',
-    setup: () => createTestProjectV2({ '.pdca-status.json': 'null' }),
+    setup: () => createTestProject({ '.pdca-status.json': 'null' }),
     fn: () => {
       try {
         const status = loadPdcaStatus(TEST_PROJECT_DIR);
@@ -99,7 +98,7 @@ const tests = [
     teardown: cleanupTestProject
   },
   { name: 'TC72-12: 배열 pdca-status.json',
-    setup: () => createTestProjectV2({ '.pdca-status.json': '[]' }),
+    setup: () => createTestProject({ '.pdca-status.json': '[]' }),
     fn: () => {
       try {
         const status = loadPdcaStatus(TEST_PROJECT_DIR);

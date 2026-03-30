@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { assert, assertEqual, PLUGIN_ROOT } = require('../test-utils');
+const { assert, assertEqual, PLUGIN_ROOT, getPdcaStatus, withVersion } = require('../test-utils');
 
 const { getFeatureFlags, resetCache } = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
 const { TOOL_ANNOTATIONS, getToolAnnotations, isReadOnlyTool, getStrictReadOnlyTools, BUILTIN_TOOLS } = require(path.join(PLUGIN_ROOT, 'lib/gemini/tools'));
@@ -8,29 +8,20 @@ const { TOOL_ANNOTATIONS, getToolAnnotations, isReadOnlyTool, getStrictReadOnlyT
 module.exports = {
   tests: [
     {
-      name: 'V156-01: v0.31.0 has 18 true feature flags (29 total with v0.32.0 flags)',
+      name: 'V156-01: v0.34.0 has 34 true feature flags',
       fn: () => {
-        resetCache();
-        const original = process.env.GEMINI_CLI_VERSION;
-        process.env.GEMINI_CLI_VERSION = '0.31.0';
-        try {
+        withVersion('0.34.0', () => {
           const flags = getFeatureFlags();
-          const keys = Object.keys(flags);
-          assertEqual(keys.length, 50, 'Should have 50 feature flags');
-          const trueFlags = keys.filter(k => flags[k] === true);
-          assertEqual(trueFlags.length, 18, 'Should have 18 true flags for v0.31.0');
-        } finally {
-          if (original !== undefined) process.env.GEMINI_CLI_VERSION = original;
-          else delete process.env.GEMINI_CLI_VERSION;
-          resetCache();
-        }
+          const trueFlags = Object.values(flags).filter(v => v === true);
+          assertEqual(trueFlags.length, 34, 'Should have 34 true flags for v0.34.0');
+        });
       }
     },
     {
-      name: 'V156-02: hasRuntimeHookFunctions is true for v0.31.0',
+      name: 'V156-02: hasRuntimeHookFunctions is true for v0.34.0',
       fn: () => {
         resetCache();
-        process.env.GEMINI_CLI_VERSION = '0.31.0';
+        process.env.GEMINI_CLI_VERSION = '0.34.0';
         try {
           assertEqual(getFeatureFlags().hasRuntimeHookFunctions, true);
         } finally {
@@ -53,10 +44,10 @@ module.exports = {
       }
     },
     {
-      name: 'V156-04: hasBrowserAgent is true for v0.31.0',
+      name: 'V156-04: hasBrowserAgent is true for v0.34.0',
       fn: () => {
         resetCache();
-        process.env.GEMINI_CLI_VERSION = '0.31.0';
+        process.env.GEMINI_CLI_VERSION = '0.34.0';
         try {
           assertEqual(getFeatureFlags().hasBrowserAgent, true);
         } finally {
@@ -66,10 +57,10 @@ module.exports = {
       }
     },
     {
-      name: 'V156-05: hasProjectLevelPolicy is true for v0.31.0',
+      name: 'V156-05: hasProjectLevelPolicy is true for v0.34.0',
       fn: () => {
         resetCache();
-        process.env.GEMINI_CLI_VERSION = '0.31.0';
+        process.env.GEMINI_CLI_VERSION = '0.34.0';
         try {
           assertEqual(getFeatureFlags().hasProjectLevelPolicy, true);
         } finally {
@@ -79,10 +70,10 @@ module.exports = {
       }
     },
     {
-      name: 'V156-06: hasMcpProgress is true for v0.31.0',
+      name: 'V156-06: hasMcpProgress is true for v0.34.0',
       fn: () => {
         resetCache();
-        process.env.GEMINI_CLI_VERSION = '0.31.0';
+        process.env.GEMINI_CLI_VERSION = '0.34.0';
         try {
           assertEqual(getFeatureFlags().hasMcpProgress, true);
         } finally {
@@ -92,10 +83,10 @@ module.exports = {
       }
     },
     {
-      name: 'V156-07: hasParallelReadCalls is true for v0.31.0',
+      name: 'V156-07: hasParallelReadCalls is true for v0.34.0',
       fn: () => {
         resetCache();
-        process.env.GEMINI_CLI_VERSION = '0.31.0';
+        process.env.GEMINI_CLI_VERSION = '0.34.0';
         try {
           assertEqual(getFeatureFlags().hasParallelReadCalls, true);
         } finally {
@@ -105,10 +96,10 @@ module.exports = {
       }
     },
     {
-      name: 'V156-08: hasPlanModeCustomStorage is true for v0.31.0',
+      name: 'V156-08: hasPlanModeCustomStorage is true for v0.34.0',
       fn: () => {
         resetCache();
-        process.env.GEMINI_CLI_VERSION = '0.31.0';
+        process.env.GEMINI_CLI_VERSION = '0.34.0';
         try {
           assertEqual(getFeatureFlags().hasPlanModeCustomStorage, true);
         } finally {
@@ -118,10 +109,10 @@ module.exports = {
       }
     },
     {
-      name: 'V156-09: hasToolAnnotations is true for v0.31.0',
+      name: 'V156-09: hasToolAnnotations is true for v0.34.0',
       fn: () => {
         resetCache();
-        process.env.GEMINI_CLI_VERSION = '0.31.0';
+        process.env.GEMINI_CLI_VERSION = '0.34.0';
         try {
           assertEqual(getFeatureFlags().hasToolAnnotations, true);
         } finally {
@@ -131,10 +122,10 @@ module.exports = {
       }
     },
     {
-      name: 'V156-10: hasExtensionFolderTrust is true for v0.31.0',
+      name: 'V156-10: hasExtensionFolderTrust is true for v0.34.0',
       fn: () => {
         resetCache();
-        process.env.GEMINI_CLI_VERSION = '0.31.0';
+        process.env.GEMINI_CLI_VERSION = '0.34.0';
         try {
           assertEqual(getFeatureFlags().hasExtensionFolderTrust, true);
         } finally {
@@ -144,10 +135,10 @@ module.exports = {
       }
     },
     {
-      name: 'V156-11: hasAllowMultipleReplace is true for v0.31.0',
+      name: 'V156-11: hasAllowMultipleReplace is true for v0.34.0',
       fn: () => {
         resetCache();
-        process.env.GEMINI_CLI_VERSION = '0.31.0';
+        process.env.GEMINI_CLI_VERSION = '0.34.0';
         try {
           assertEqual(getFeatureFlags().hasAllowMultipleReplace, true);
         } finally {
@@ -203,10 +194,10 @@ module.exports = {
       }
     },
     {
-      name: 'V156-14: getFeatureFlags() returns 29 keys (v1.5.7: 18 v0.31.0 + 11 v0.32.0)',
+      name: 'V156-14: getFeatureFlags() returns 48 keys',
       fn: () => {
         const flags = getFeatureFlags();
-        assertEqual(Object.keys(flags).length, 50);
+        assertEqual(Object.keys(flags).length, 48);
       }
     },
     {
@@ -280,14 +271,14 @@ module.exports = {
       }
     },
     {
-      name: 'V156-24: bkit.config.json testedVersions includes "0.31.0"',
+      name: 'V156-24: bkit.config.json testedVersions includes "0.34.0"',
       fn: () => {
         const config = JSON.parse(fs.readFileSync(
           path.join(PLUGIN_ROOT, 'bkit.config.json'), 'utf-8'
         ));
         assert(
-          config.compatibility.testedVersions.includes('0.31.0'),
-          'testedVersions must include "0.31.0" for v1.5.6'
+          config.compatibility.testedVersions.includes('0.34.0'),
+          'testedVersions must include "0.34.0" for v1.5.6'
         );
       }
     },

@@ -1,5 +1,5 @@
 // tests/suites/tc10-philosophy.js
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, executeHook, assert, assertEqual, assertContains } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, executeHook, assert, assertEqual, assertContains, getPdcaStatus, withVersion } = require('../test-utils');
 
 const tests = [
   {

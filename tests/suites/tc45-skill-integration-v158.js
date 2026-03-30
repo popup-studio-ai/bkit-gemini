@@ -1,5 +1,5 @@
 // TC-45: Skill Integration v1.5.8 Tests (18 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertContains, assertExists } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertContains, assertExists, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 

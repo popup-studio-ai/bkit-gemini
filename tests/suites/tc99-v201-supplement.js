@@ -1,5 +1,5 @@
 // TC-99: v2.0.1 Supplement Verification (12 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertContains, withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertContains, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 

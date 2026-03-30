@@ -1,9 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { 
-  assert, assertEqual, assertContains, assertExists, 
-  PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, executeHook 
-} = require('../test-utils');
+const { assert, assertEqual, assertContains, assertExists, PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, executeHook, getPdcaStatus, withVersion } = require('../test-utils');
 
 const { resetCache } = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
 const { LEVEL_POLICY_TEMPLATES, generateLevelPolicy, generatePolicyFile } = require(path.join(PLUGIN_ROOT, 'lib/gemini/policy'));
@@ -263,25 +260,25 @@ module.exports = {
       }
     },
     {
-      name: 'V156-47: session-start.js references v1.5.9 version',
+      name: 'V156-47: session-start.js references v2.0.2 version',
       fn: () => {
         const content = fs.readFileSync(
           path.join(PLUGIN_ROOT, 'hooks', 'scripts', 'session-start.js'), 'utf-8'
         );
-        const matches = content.match(/1\.5\.9/g) || [];
+        const matches = content.match(/2\.0\.2/g) || [];
         assert(matches.length >= 3,
-          `session-start.js should reference v1.5.9 at least 3 times, found ${matches.length}`);
+          `session-start.js should reference v2.0.2 at least 3 times, found ${matches.length}`);
       }
     },
     {
-      name: 'V156-48: session-start generates level policy TOML for v0.31.0',
+      name: 'V156-48: session-start generates level policy TOML for v0.34.0',
       setup: () => createTestProject({}),
       fn: () => {
         const result = executeHook('session-start.js', {}, {
-          GEMINI_CLI_VERSION: '0.31.0'
+          GEMINI_CLI_VERSION: '0.34.0'
         });
         assert(result.success || result.exitCode === 0,
-          'session-start.js must exit 0 with GEMINI_CLI_VERSION=0.31.0');
+          'session-start.js must exit 0 with GEMINI_CLI_VERSION=0.34.0');
         const policyDir = path.join(TEST_PROJECT_DIR, '.gemini', 'policies');
         if (fs.existsSync(policyDir)) {
           const files = fs.readdirSync(policyDir);
@@ -334,7 +331,7 @@ module.exports = {
       teardown: cleanupTestProject
     },
     {
-      name: 'V156-51: All config files reference version 1.5.9',
+      name: 'V156-51: All config files reference version 2.0.2',
       fn: () => {
         const config = JSON.parse(fs.readFileSync(
           path.join(PLUGIN_ROOT, 'bkit.config.json'), 'utf-8'
@@ -342,8 +339,8 @@ module.exports = {
         const ext = JSON.parse(fs.readFileSync(
           path.join(PLUGIN_ROOT, 'gemini-extension.json'), 'utf-8'
         ));
-        assertEqual(config.version, '1.5.9', 'bkit.config.json version');
-        assertEqual(ext.version, '1.5.9', 'gemini-extension.json version');
+        assertEqual(config.version, '2.0.2', 'bkit.config.json version');
+        assertEqual(ext.version, '2.0.2', 'gemini-extension.json version');
       }
     }
   ]

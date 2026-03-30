@@ -1,7 +1,5 @@
 // TC-97: E2E Integration Tests (40 TC)
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProjectV2, cleanupTestProject,
-        executeHook, assert, assertEqual, assertType, assertContains, assertExists,
-        withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, executeHook, assert, assertEqual, assertType, assertContains, assertExists, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 
@@ -9,7 +7,7 @@ const tests = [
   // ─── session-start.js + lib/gemini/policy.js integration (5 tests) ───
 
   { name: 'TC97-01: session-start hook loads without error',
-    setup: () => createTestProjectV2({ '.pdca-status.json': JSON.stringify({
+    setup: () => createTestProject({ '.pdca-status.json': JSON.stringify({
       version: '2.0', lastUpdated: new Date().toISOString(),
       activeFeatures: [], primaryFeature: null, features: {},
       pipeline: { currentPhase: 1, level: 'Starter', phaseHistory: [] },
@@ -87,7 +85,7 @@ const tests = [
   }},
 
   { name: 'TC97-10: before-model hook executes without crash',
-    setup: () => createTestProjectV2({ '.pdca-status.json': JSON.stringify({
+    setup: () => createTestProject({ '.pdca-status.json': JSON.stringify({
       version: '2.0', lastUpdated: new Date().toISOString(),
       activeFeatures: [], primaryFeature: null, features: {},
       pipeline: { currentPhase: 1, level: 'Starter', phaseHistory: [] },
@@ -117,7 +115,7 @@ const tests = [
   }},
 
   { name: 'TC97-13: before-tool hook handles write_file tool',
-    setup: () => createTestProjectV2({ '.pdca-status.json': JSON.stringify({
+    setup: () => createTestProject({ '.pdca-status.json': JSON.stringify({
       version: '2.0', lastUpdated: new Date().toISOString(),
       activeFeatures: [], primaryFeature: null, features: {},
       pipeline: { currentPhase: 1, level: 'Starter', phaseHistory: [] },
@@ -154,7 +152,7 @@ const tests = [
   }},
 
   { name: 'TC97-17: after-tool hook handles write_file event',
-    setup: () => createTestProjectV2({ '.pdca-status.json': JSON.stringify({
+    setup: () => createTestProject({ '.pdca-status.json': JSON.stringify({
       version: '2.0', lastUpdated: new Date().toISOString(),
       activeFeatures: [], primaryFeature: null, features: {},
       pipeline: { currentPhase: 1, level: 'Starter', phaseHistory: [] },
@@ -179,7 +177,7 @@ const tests = [
   }},
 
   { name: 'TC97-19: PDCA status file persists between save and load',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const { createInitialStatusV2, savePdcaStatus, loadPdcaStatus } = require(path.join(PLUGIN_ROOT, 'lib/pdca/status'));
       const initial = createInitialStatusV2();
@@ -195,7 +193,7 @@ const tests = [
   },
 
   { name: 'TC97-20: PDCA status preserves activeFeatures array',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const { createInitialStatusV2, savePdcaStatus, loadPdcaStatus } = require(path.join(PLUGIN_ROOT, 'lib/pdca/status'));
       const initial = createInitialStatusV2();

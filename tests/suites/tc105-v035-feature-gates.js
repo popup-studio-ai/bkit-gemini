@@ -1,5 +1,5 @@
 // TC-105: v0.35.0 Feature Gates (8 TC)
-const { PLUGIN_ROOT, assert, assertEqual, withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 
 const versionPath = path.join(PLUGIN_ROOT, 'lib/gemini/version');
@@ -58,6 +58,35 @@ const tests = [
     withVersion('0.35.0', () => {
       const { getFeatureFlags } = require(versionPath);
       assertEqual(getFeatureFlags().hasCryptoVerification, true, 'hasCryptoVerification should be true');
+    });
+  }},
+
+  // v0.36.0 Feature Flag tests (v2.0.2)
+  { name: 'TC105-09: v0.36.0 hasEnableAgentsDefaultFalse = true', fn: () => {
+    withVersion('0.36.0', () => {
+      const { getFeatureFlags } = require(versionPath);
+      assertEqual(getFeatureFlags().hasEnableAgentsDefaultFalse, true, 'hasEnableAgentsDefaultFalse should be true');
+    });
+  }},
+
+  { name: 'TC105-10: v0.36.0 hasBeforeToolAsk = true', fn: () => {
+    withVersion('0.36.0', () => {
+      const { getFeatureFlags } = require(versionPath);
+      assertEqual(getFeatureFlags().hasBeforeToolAsk, true, 'hasBeforeToolAsk should be true');
+    });
+  }},
+
+  { name: 'TC105-11: v0.36.0 hasGitWorktree = true', fn: () => {
+    withVersion('0.36.0', () => {
+      const { getFeatureFlags } = require(versionPath);
+      assertEqual(getFeatureFlags().hasGitWorktree, true, 'hasGitWorktree should be true');
+    });
+  }},
+
+  { name: 'TC105-12: v0.35.0 hasEnableAgentsDefaultFalse = false (lower version check)', fn: () => {
+    withVersion('0.35.0', () => {
+      const { getFeatureFlags } = require(versionPath);
+      assertEqual(getFeatureFlags().hasEnableAgentsDefaultFalse, false, 'hasEnableAgentsDefaultFalse should be false for v0.35.0');
     });
   }}
 ];

@@ -1,5 +1,5 @@
 // tests/suites/tc12-agent-memory.js - Agent Memory Test
-const { PLUGIN_ROOT, assert, assertExists, assertEqual } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertExists, assertEqual, getPdcaStatus, withVersion } = require('../test-utils');
 const fs = require('fs');
 const path = require('path');
 

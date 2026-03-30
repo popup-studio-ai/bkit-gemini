@@ -1,5 +1,5 @@
 // tests/suites/tc08-context.js
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, executeHook, assert, assertEqual, assertContains, assertExists } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, executeHook, assert, assertEqual, assertContains, assertExists, getPdcaStatus, withVersion } = require('../test-utils');
 const { PDCA_STATUS_FIXTURE } = require('../fixtures');
 const path = require('path');
 const fs = require('fs');

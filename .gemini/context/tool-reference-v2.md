@@ -1,4 +1,4 @@
-## Tool Reference (v2.0.0)
+## Tool Reference (v2.0.2)
 
 ### Built-in Tools (23)
 | Tool | Purpose | Category |

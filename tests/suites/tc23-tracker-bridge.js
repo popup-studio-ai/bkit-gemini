@@ -1,8 +1,5 @@
 const path = require('path');
-const { 
-  PLUGIN_ROOT, 
-  assert, assertEqual, assertContains, withVersion 
-} = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertContains, withVersion, getPdcaStatus } = require('../test-utils');
 
 // Require the module directly for unit tests
 const trackerBridge = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'tracker'));

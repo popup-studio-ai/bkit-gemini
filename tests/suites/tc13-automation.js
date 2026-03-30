@@ -1,5 +1,5 @@
 // tests/suites/tc13-automation.js - Multi-language Automation Test
-const { PLUGIN_ROOT, assert, assertEqual } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, getPdcaStatus, withVersion } = require('../test-utils');
 const fs = require('fs');
 const path = require('path');
 

@@ -1,5 +1,5 @@
 // tests/suites/tc11-output-styles.js - Output Style Test
-const { PLUGIN_ROOT, assert, assertExists, assertEqual } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertExists, assertEqual, getPdcaStatus, withVersion } = require('../test-utils');
 const fs = require('fs');
 const path = require('path');
 

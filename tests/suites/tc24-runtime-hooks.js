@@ -1,8 +1,5 @@
 const path = require('path');
-const { 
-  PLUGIN_ROOT, 
-  assert, assertEqual, withVersion 
-} = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, withVersion, getPdcaStatus } = require('../test-utils');
 
 // Require the modules directly for unit tests
 const hookAdapter = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'hooks'));

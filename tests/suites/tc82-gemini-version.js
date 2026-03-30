@@ -1,4 +1,4 @@
-const { PLUGIN_ROOT, assert, assertEqual, withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 
 const versionModule = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'version'));

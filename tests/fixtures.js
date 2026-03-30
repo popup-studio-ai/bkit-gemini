@@ -1,6 +1,6 @@
 // tests/fixtures.js
 const PDCA_STATUS_FIXTURE = {
-  version: '2.0',
+  version: '2.0.2',
   lastUpdated: new Date().toISOString(),
   activeFeatures: ['test-feature'],
   primaryFeature: 'test-feature',
@@ -10,7 +10,10 @@ const PDCA_STATUS_FIXTURE = {
       matchRate: null,
       iterationCount: 0,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      documents: {
+        plan: 'docs/01-plan/features/test-feature.plan.md'
+      }
     }
   },
   pipeline: { currentPhase: 1, level: 'Starter', phaseHistory: [] },

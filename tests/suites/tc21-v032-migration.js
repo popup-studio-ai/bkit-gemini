@@ -4,7 +4,7 @@
  */
 const fs = require('fs');
 const path = require('path');
-const { assert, assertEqual, PLUGIN_ROOT } = require('../test-utils');
+const { assert, assertEqual, PLUGIN_ROOT, getPdcaStatus, withVersion } = require('../test-utils');
 
 const vd = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
 const tr = require(path.join(PLUGIN_ROOT, 'lib/gemini/tools'));

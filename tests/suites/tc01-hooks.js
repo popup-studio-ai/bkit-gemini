@@ -1,9 +1,5 @@
 // tests/suites/tc01-hooks.js
-const { 
-  PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, 
-  executeHook, assert, assertEqual, assertContains, 
-  readPdcaStatus, readGlobalMemory 
-} = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, executeHook, assert, assertEqual, assertContains, readPdcaStatus, readGlobalMemory, getPdcaStatus, withVersion } = require('../test-utils');
 const { PDCA_STATUS_FIXTURE, BKIT_MEMORY_FIXTURE, BKIT_MEMORY_RETURNING } = require('../fixtures');
 const fs = require('fs');
 const path = require('path');
@@ -180,9 +176,14 @@ const tests = [
   {
     name: 'HOOK-28: Design -> Do transition',
     setup: () => {
-      const status = JSON.parse(JSON.stringify(PDCA_STATUS_FIXTURE));
-      status.features['test-feature'].phase = 'design';
-      createTestProject({ 'docs/.pdca-status.json': status });
+      const status = getPdcaStatus({ 
+        primaryFeature: 'test-feature',
+        features: { 'test-feature': { phase: 'design' } }
+      });
+      createTestProject({ 
+        '.pdca-status.json': status,
+        'docs/02-design/features/test-feature.design.md': '# Design\n## 1.\n## 2.\n## 3.'
+      });
     },
     fn: () => {
       executeHook('after-tool.js', { tool_name: 'write_file', tool_input: { file_path: 'src/main.js', content: '...' } });

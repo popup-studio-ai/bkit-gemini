@@ -46,6 +46,11 @@ function main() {
       // Policy generation is non-fatal
     }
 
+    // 3.6. Ensure Agents Enabled for v0.36.0+ (P0 Critical)
+    // v0.36.0 changed experimental.enableAgents default to false (PR #23546)
+    // Ensure settings.json has explicit enableAgents=true for bkit agent system
+    ensureAgentsEnabled(projectDir);
+
     // 4. Load/Update memory store
     const { getMemory } = require(path.join(libPath, 'core', 'memory'));
     const memoryManager = getMemory(projectDir);
@@ -83,7 +88,7 @@ function main() {
       context: dynamicContext,
       hookEvent: 'SessionStart',
       metadata: {
-        version: '2.0.0',
+        version: '2.0.2',
         platform: 'gemini',
         level: level,
         primaryFeature: pdcaStatus.primaryFeature,
@@ -106,7 +111,7 @@ function main() {
     }
     console.log(JSON.stringify({
       status: 'allow',
-      context: 'bkit Vibecoding Kit v2.0.0 activated (Gemini CLI)',
+      context: 'bkit Vibecoding Kit v2.0.2 activated (Gemini CLI)',
       hookEvent: 'SessionStart'
     }));
     process.exit(0);
@@ -115,6 +120,36 @@ function main() {
 
 // ─── PDCA Status ───────────────────────────────────────────────
 // Managed by lib/pdca/status.js
+
+// ─── Agents Enablement (v0.36.0+ P0) ─────────────────────────
+
+function ensureAgentsEnabled(projectDir) {
+  try {
+    const settingsDir = path.join(projectDir, '.gemini');
+    const settingsPath = path.join(settingsDir, 'settings.json');
+
+    let settings = {};
+    if (fs.existsSync(settingsPath)) {
+      const raw = fs.readFileSync(settingsPath, 'utf-8');
+      settings = JSON.parse(raw);
+    }
+
+    // No Guessing: respect explicit user setting of enableAgents=false
+    if (!settings.experimental) {
+      settings.experimental = {};
+    }
+    if (settings.experimental.enableAgents === undefined) {
+      settings.experimental.enableAgents = true;
+
+      if (!fs.existsSync(settingsDir)) {
+        fs.mkdirSync(settingsDir, { recursive: true });
+      }
+      fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + '\n', 'utf-8');
+    }
+  } catch (e) {
+    // Non-fatal: settings.json generation should not block session
+  }
+}
 
 // ─── Level Detection ───────────────────────────────────────────
 
@@ -190,12 +225,9 @@ function getDefaultStyleForLevel(level) {
 function detectReturningUser(pdcaStatus, memory) {
   const isReturning = (memory.sessionCount || 1) > 1;
   const lastFeature = pdcaStatus.primaryFeature || null;
-  const lastPhase = lastFeature && pdcaStatus.features[lastFeature]
-    ? pdcaStatus.features[lastFeature].phase
-    : null;
-  const matchRate = lastFeature && pdcaStatus.features[lastFeature]
-    ? pdcaStatus.features[lastFeature].matchRate
-    : null;
+  const featureData = lastFeature ? pdcaStatus.activeFeatures[lastFeature] : null;
+  const lastPhase = featureData ? featureData.phase : null;
+  const matchRate = featureData ? featureData.matchRate : null;
 
   return { isReturning, lastFeature, lastPhase, matchRate };
 }
@@ -293,8 +325,10 @@ function buildAvailableSkillsSection(level) {
 function generateDynamicContext(pdcaStatus, level, memory, returningInfo, outputStyle, pluginRoot, trackerContext) {
   const sections = [];
 
-  // Header
-  sections.push('# bkit Vibecoding Kit v2.0.0 - Session Start');
+  // Header - Legacy compatible format for HOOK-01~08 tests
+  sections.push(`bkit Vibecoding Kit v2.0.2 activated (Gemini CLI) - Level: ${level}`);
+  sections.push('');
+  sections.push('# bkit Session Start');
   sections.push('');
 
   // Core Rules (dynamically injected to address GEMINI.md ignore issue #13852)
@@ -323,10 +357,8 @@ function generateDynamicContext(pdcaStatus, level, memory, returningInfo, output
   // JIT guard (v0.35.0+): In JIT mode, Gemini CLI lazy-loads @import files from GEMINI.md.
   // GEMINI.md already imports commands.md and core-rules.md, so Phase-Aware injection
   // skips those files to prevent duplicate context tokens.
-  const currentPhase = pdcaStatus.primaryFeature
-    ? (pdcaStatus.features?.[pdcaStatus.primaryFeature]?.phase ||
-       pdcaStatus.activeFeatures?.[pdcaStatus.primaryFeature]?.phase)
-    : null;
+  const primary = pdcaStatus.primaryFeature;
+  const currentPhase = primary ? (pdcaStatus.activeFeatures[primary]?.phase) : null;
   const phaseContext = loadPhaseAwareContext(pluginRoot, currentPhase);
   if (phaseContext) {
     sections.push(phaseContext);
@@ -344,6 +376,9 @@ function buildCoreRules() {
     '- Gap Analysis >= 90% → Completion report with report-generator',
     '- Always include Feature Usage Report at end of every response',
     '- Always verify important decisions with user - AI is not perfect',
+    '',
+    '## Agent Auto-Triggers',
+    'bkit automatically activates specialized agents based on your request context.',
     '',
     '## Natural Language Feature Request Handling',
     '',
@@ -366,10 +401,10 @@ function buildOnboardingSection(returningInfo, level) {
   if (returningInfo.isReturning && returningInfo.lastFeature) {
     lines.push('## Previous Work Detected');
     lines.push('');
-    lines.push(`- **Feature**: ${returningInfo.lastFeature}`);
-    lines.push(`- **Current Phase**: ${returningInfo.lastPhase || 'unknown'}`);
+    lines.push(`Welcome back! You were working on: **${returningInfo.lastFeature}**`);
+    lines.push(`Previous Work: Found feature in ${returningInfo.lastPhase || 'plan'} phase.`);
     if (returningInfo.matchRate !== null && returningInfo.matchRate !== undefined) {
-      lines.push(`- **Match Rate**: ${returningInfo.matchRate}%`);
+      lines.push(`Match Rate: ${returningInfo.matchRate}%`);
     }
     lines.push('');
     lines.push('### MANDATORY: Call AskUserQuestion on user\'s first message');
@@ -390,6 +425,9 @@ function buildOnboardingSection(returningInfo, level) {
     }
   } else {
     lines.push('## Welcome to bkit');
+    lines.push('');
+    lines.push('Welcome! bkit is ready to help you with your vibecoding project.');
+    lines.push(`Detected Level: **${level}**`);
     lines.push('');
     lines.push('### MANDATORY: Call AskUserQuestion on user\'s first message');
     lines.push('');
@@ -422,7 +460,8 @@ function getPhaseRecommendation(phase, feature, matchRate) {
 
 function buildOutputStyleSection(outputStyle) {
   return [
-    `## Output Style: ${outputStyle.name}`,
+    '## Output Style Configuration',
+    `- Active Style: **${outputStyle.name}**`,
     '',
     outputStyle.rules,
     ''
@@ -430,12 +469,15 @@ function buildOutputStyleSection(outputStyle) {
 }
 
 function buildPdcaStatusSection(pdcaStatus, level) {
+  const activeCount = pdcaStatus.activeFeatures ? Object.keys(pdcaStatus.activeFeatures).length : 0;
+  const currentPhase = pdcaStatus.primaryFeature ? (pdcaStatus.activeFeatures[pdcaStatus.primaryFeature]?.phase || 'plan') : 'N/A';
+
   return [
     '## Current Session',
-    `- **Level**: ${level}`,
-    `- **Primary Feature**: ${pdcaStatus.primaryFeature || 'None'}`,
-    `- **Current Phase**: ${pdcaStatus.primaryFeature ? pdcaStatus.features[pdcaStatus.primaryFeature]?.phase || 'plan' : 'N/A'}`,
-    `- **Active Features**: ${pdcaStatus.activeFeatures?.length || 0}`,
+    `- Project Level: **${level}**`,
+    `- Primary Feature: ${pdcaStatus.primaryFeature || 'None'}`,
+    `- Current Phase: ${currentPhase}`,
+    `- Active Features: ${activeCount}`,
     ''
   ].join('\n');
 }

@@ -1,5 +1,5 @@
 // TC-25: Tool Registry v1.5.8 Unit Tests (20 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertContains, assertExists, assertType, assertHasKey } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertContains, assertExists, assertType, assertHasKey, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 
 const tr = require(path.join(PLUGIN_ROOT, 'lib/gemini/tools'));

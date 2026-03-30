@@ -58,10 +58,13 @@ function setupEnvironment() {
   // Create docs directory structure
   fs.mkdirSync(path.join(TEST_DIR, 'docs/01-plan/features'), { recursive: true });
   fs.mkdirSync(path.join(TEST_DIR, 'docs/02-design/features'), { recursive: true });
-  fs.mkdirSync(path.join(TEST_DIR, 'docs/03-analysis'), { recursive: true });
+  fs.mkdirSync(path.join(TEST_DIR, 'docs/03-analysis/features'), { recursive: true });
   fs.mkdirSync(path.join(TEST_DIR, 'docs/04-report/features'), { recursive: true });
   fs.mkdirSync(path.join(TEST_DIR, 'docs/.pdca-snapshots'), { recursive: true });
+  fs.mkdirSync(path.join(TEST_DIR, '.gemini/policies'), { recursive: true });
+  fs.mkdirSync(path.join(TEST_DIR, '.bkit/state'), { recursive: true });
   fs.mkdirSync(path.join(TEST_DIR, 'src'), { recursive: true });
+  fs.mkdirSync(path.join(TEST_DIR, 'skills'), { recursive: true });
 
   // Hook expects .pdca-status.json in docs/
   fs.writeFileSync(path.join(TEST_DIR, 'docs/.pdca-status.json'), JSON.stringify(pdcaStatus, null, 2));

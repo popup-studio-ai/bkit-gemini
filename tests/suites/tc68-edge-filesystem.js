@@ -1,6 +1,5 @@
 // TC-68: Edge Case Filesystem Tests (10 TC)
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, createTestProjectV2,
-        cleanupTestProject, assert, assertEqual, assertExists } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, assert, assertEqual, assertExists, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 
@@ -14,7 +13,7 @@ const tests = [
     }
   },
   { name: 'TC68-02: ensureDirectories 빈 프로젝트',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       ensureDirectories(TEST_PROJECT_DIR);
       const paths = getPaths(TEST_PROJECT_DIR);
@@ -23,7 +22,7 @@ const tests = [
     teardown: cleanupTestProject
   },
   { name: 'TC68-03: ensureDirectories 이미 존재하는 디렉토리',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       ensureDirectories(TEST_PROJECT_DIR);
       ensureDirectories(TEST_PROJECT_DIR); // 중복 호출
@@ -33,7 +32,7 @@ const tests = [
   },
   { name: 'TC68-04: 읽기 전용 파일 처리',
     setup: () => {
-      createTestProjectV2({ 'readonly.json': '{"a":1}' });
+      createTestProject({ 'readonly.json': '{"a":1}' });
     },
     fn: () => {
       const filePath = path.join(TEST_PROJECT_DIR, 'readonly.json');
@@ -43,7 +42,7 @@ const tests = [
     teardown: cleanupTestProject
   },
   { name: 'TC68-05: 빈 파일 읽기',
-    setup: () => createTestProjectV2({ 'empty.json': '' }),
+    setup: () => createTestProject({ 'empty.json': '' }),
     fn: () => {
       const content = fs.readFileSync(path.join(TEST_PROJECT_DIR, 'empty.json'), 'utf-8');
       assertEqual(content, '', 'Should read empty file');
@@ -51,7 +50,7 @@ const tests = [
     teardown: cleanupTestProject
   },
   { name: 'TC68-06: 깊은 중첩 경로 생성',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const deepPath = path.join(TEST_PROJECT_DIR, 'a', 'b', 'c', 'd', 'e');
       fs.mkdirSync(deepPath, { recursive: true });
@@ -60,7 +59,7 @@ const tests = [
     teardown: cleanupTestProject
   },
   { name: 'TC68-07: 큰 파일 생성/읽기',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const bigContent = 'x'.repeat(100000);
       const filePath = path.join(TEST_PROJECT_DIR, 'big.txt');
@@ -84,7 +83,7 @@ const tests = [
     }
   },
   { name: 'TC68-10: 특수문자 디렉토리명 처리',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const specialDir = path.join(TEST_PROJECT_DIR, 'dir with spaces');
       fs.mkdirSync(specialDir, { recursive: true });

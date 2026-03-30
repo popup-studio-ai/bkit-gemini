@@ -1,5 +1,5 @@
 // TC-34: Adapters Gemini Unit Tests (25 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertType, assertContains, withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertType, assertContains, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 
 const pm = require(path.join(PLUGIN_ROOT, 'lib/gemini/policy'));

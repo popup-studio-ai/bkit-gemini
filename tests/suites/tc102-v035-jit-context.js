@@ -1,5 +1,5 @@
 // TC-102: v0.35.0 JIT Context Loading (12 TC)
-const { PLUGIN_ROOT, assert, assertEqual, withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');

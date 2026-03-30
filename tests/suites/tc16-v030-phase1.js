@@ -3,11 +3,7 @@
 // bkit-gemini v1.5.5
 // Task #14 - QA Strategist: Version compatibility and Policy Engine validation
 
-const {
-  PLUGIN_ROOT, TEST_PROJECT_DIR,
-  createTestProject, cleanupTestProject,
-  executeHook, assert, assertEqual, assertContains, assertExists
-} = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, executeHook, assert, assertEqual, assertContains, assertExists, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 
@@ -17,15 +13,15 @@ const tests = [
   // Analysis requirement: bkit.config.json must declare v0.30.0 tested
   // ─────────────────────────────────────────────────────────────────
   {
-    name: 'P1-02: testedVersions includes "0.30.0"',
+    name: 'P1-02: testedVersions includes "0.34.0"',
     fn: () => {
       const config = JSON.parse(fs.readFileSync(
         path.join(PLUGIN_ROOT, 'bkit.config.json'), 'utf-8'
       ));
       const tested = config.compatibility?.testedVersions || [];
       assert(
-        tested.includes('0.30.0'),
-        'bkit.config.json compatibility.testedVersions must include "0.30.0" for v1.5.5 release'
+        tested.includes('0.34.0'),
+        'bkit.config.json compatibility.testedVersions must include "0.34.0" for v2.0.2 release'
       );
     }
   },

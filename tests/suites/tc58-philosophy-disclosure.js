@@ -1,5 +1,5 @@
 // TC-58: Philosophy Disclosure Tests (8 TC)
-const { PLUGIN_ROOT, assert, assertContains, assertExists } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertContains, assertExists, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 

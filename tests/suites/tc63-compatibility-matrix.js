@@ -1,11 +1,11 @@
 // TC-63: Compatibility Matrix Tests (13 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertContains, withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertContains, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 
 const { detectVersion, getFeatureFlags, getBkitFeatureFlags, compareVersions, isVersionAtLeast } = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
 
-const COMPAT_VERSIONS = ['0.26.0', '0.27.0', '0.28.0', '0.29.0', '0.30.0', '0.31.0', '0.32.0', '0.33.0'];
+const COMPAT_VERSIONS = ['0.26.0', '0.27.0', '0.28.0', '0.29.0', '0.30.0', '0.31.0', '0.32.0', '0.33.0', '0.34.0'];
 
 const tests = [
   { name: 'TC63-01: v0.26 기본 플래그 호환', fn: () => {
@@ -14,10 +14,10 @@ const tests = [
       assert(flags !== undefined, 'v0.26 should have flags');
     });
   }},
-  { name: 'TC63-02: v0.31 advanced 플래그 호환', fn: () => {
-    withVersion('0.31.0', () => {
+  { name: 'TC63-02: v0.34 advanced 플래그 호환', fn: () => {
+    withVersion('0.34.0', () => {
       const flags = getFeatureFlags();
-      assert(flags !== undefined, 'v0.31 should have flags');
+      assert(flags !== undefined, 'v0.34 should have flags');
     });
   }},
   { name: 'TC63-03: v0.32 최신 플래그 호환', fn: () => {
@@ -28,19 +28,19 @@ const tests = [
   }},
   { name: 'TC63-04: compareVersions 정렬 일관성', fn: () => {
     const { parseVersion } = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
-    assert(compareVersions(parseVersion('0.31.0'), parseVersion('0.30.0')) > 0, '0.31 > 0.30');
-    assert(compareVersions(parseVersion('0.30.0'), parseVersion('0.31.0')) < 0, '0.30 < 0.31');
-    assertEqual(compareVersions(parseVersion('0.31.0'), parseVersion('0.31.0')), 0, '0.31 == 0.31');
+    assert(compareVersions(parseVersion('0.34.0'), parseVersion('0.33.0')) > 0, '0.34 > 0.33');
+    assert(compareVersions(parseVersion('0.33.0'), parseVersion('0.34.0')) < 0, '0.33 < 0.34');
+    assertEqual(compareVersions(parseVersion('0.34.0'), parseVersion('0.34.0')), 0, '0.34 == 0.34');
   }},
   { name: 'TC63-05: isVersionAtLeast 경계값', fn: () => {
-    withVersion('0.31.0', () => {
-      assert(isVersionAtLeast('0.31.0'), 'Should be at least 0.31.0');
-      assert(isVersionAtLeast('0.30.0'), 'Should be at least 0.30.0');
-      assert(!isVersionAtLeast('0.32.0'), 'Should not be at least 0.32.0');
+    withVersion('0.34.0', () => {
+      assert(isVersionAtLeast('0.34.0'), 'Should be at least 0.34.0');
+      assert(isVersionAtLeast('0.33.0'), 'Should be at least 0.33.0');
+      assert(!isVersionAtLeast('0.35.0'), 'Should not be at least 0.35.0');
     });
   }},
   { name: 'TC63-06: getBkitFeatureFlags 존재', fn: () => {
-    withVersion('0.31.0', () => {
+    withVersion('0.34.0', () => {
       const flags = getBkitFeatureFlags();
       assert(flags !== undefined, 'Should return bkit feature flags');
     });

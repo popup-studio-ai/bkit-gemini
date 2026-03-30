@@ -1,6 +1,5 @@
 // TC-74: Recovery Cache/State Tests (11 TC)
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProjectV2, cleanupTestProject,
-        assert, assertEqual, assertType } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, assert, assertEqual, assertType, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 
@@ -44,7 +43,7 @@ const tests = [
     cache.clear();
   }},
   { name: 'TC74-06: pdca-status 저장 후 즉시 로드',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const { createInitialStatusV2, savePdcaStatus, loadPdcaStatus } = require(path.join(PLUGIN_ROOT, 'lib/pdca/status'));
       const status = createInitialStatusV2();

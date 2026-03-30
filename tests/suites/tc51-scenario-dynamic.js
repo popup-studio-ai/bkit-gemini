@@ -1,6 +1,5 @@
 // TC-51: Scenario Dynamic Level Tests (10 TC)
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject,
-        executeHook, assert, assertEqual, assertExists } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, executeHook, assert, assertEqual, assertExists, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 const { detectLevel } = require(path.join(PLUGIN_ROOT, 'lib/pdca/level'));

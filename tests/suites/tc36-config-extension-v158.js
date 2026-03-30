@@ -1,5 +1,5 @@
 // TC-36: Config Extension v1.5.8 Unit Tests (15 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertType, assertContains, assertExists } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertType, assertContains, assertExists, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 

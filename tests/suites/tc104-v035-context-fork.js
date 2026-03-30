@@ -1,5 +1,5 @@
 // TC-104: v0.35.0 Context Fork JIT (10 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertType } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertType, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 
 const contextForkPath = path.join(PLUGIN_ROOT, 'lib/gemini/context-fork');
