@@ -1,6 +1,5 @@
 // TC-32: Paths Registry Unit Tests (15 TC)
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProjectV2, cleanupTestProject,
-        assert, assertEqual, assertType, assertContains } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, assert, assertEqual, assertType, assertContains, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 
 const { getPaths, ensureDirectories } = require(path.join(PLUGIN_ROOT, 'lib/core/paths'));
@@ -19,7 +18,7 @@ const tests = [
   { name: 'TC32-11: archiveDir docs/archive', fn: () => { assertContains(getPaths('/tmp/t').archiveDir, 'archive', 'Should include archive'); } },
   {
     name: 'TC32-12: ensureDirectories 실제 생성',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       ensureDirectories(TEST_PROJECT_DIR);
       const fs = require('fs');

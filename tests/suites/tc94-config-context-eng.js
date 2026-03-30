@@ -1,6 +1,6 @@
 // TC-94: Config + Context Engineering Tests (120 TC)
 // Validates bkit v2.0.0 configuration correctness and context engineering architecture
-const { PLUGIN_ROOT, assert, assertEqual, assertContains, assertExists } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertContains, assertExists, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 

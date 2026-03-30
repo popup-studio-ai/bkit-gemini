@@ -1,8 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { 
-  assert, assertEqual, assertContains, PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject 
-} = require('../test-utils');
+const { assert, assertEqual, assertContains, PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, getPdcaStatus, withVersion } = require('../test-utils');
 
 module.exports = {
   tests: [

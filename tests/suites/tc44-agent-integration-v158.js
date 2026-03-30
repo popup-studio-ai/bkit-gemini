@@ -1,5 +1,5 @@
 // TC-44: Agent Integration v1.5.8 Tests (18 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertContains, assertExists, parseYamlFrontmatter } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertContains, assertExists, parseYamlFrontmatter, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 

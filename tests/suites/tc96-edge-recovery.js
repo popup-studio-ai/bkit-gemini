@@ -1,6 +1,5 @@
 // TC-96: Edge Case & Recovery Tests (50 TC)
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProjectV2, cleanupTestProject,
-        assert, assertEqual, assertType, assertThrows, withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, assert, assertEqual, assertType, assertThrows, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 
@@ -177,7 +176,7 @@ const tests = [
   }},
 
   { name: 'TC96-24: missing .pdca-status.json -> createInitialStatusV2 fallback',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const { createInitialStatusV2, loadPdcaStatus } = require(path.join(PLUGIN_ROOT, 'lib/pdca/status'));
       // No .pdca-status.json in test project -> loadPdcaStatus should create initial
@@ -204,7 +203,7 @@ const tests = [
   }},
 
   { name: 'TC96-26: malformed .pdca-status.json -> graceful recovery',
-    setup: () => createTestProjectV2({ '.pdca-status.json': 'NOT VALID JSON {{{' }),
+    setup: () => createTestProject({ '.pdca-status.json': 'NOT VALID JSON {{{' }),
     fn: () => {
       const { loadPdcaStatus } = require(path.join(PLUGIN_ROOT, 'lib/pdca/status'));
       // Should not throw, should recover with initial status
@@ -350,8 +349,8 @@ const tests = [
     }, 'reading nonexistent file should throw');
   }},
 
-  { name: 'TC96-44: createTestProjectV2 creates required structure',
-    setup: () => createTestProjectV2({}),
+  { name: 'TC96-44: createTestProject creates required structure',
+    setup: () => createTestProject({}),
     fn: () => {
       assert(fs.existsSync(TEST_PROJECT_DIR), 'test project dir exists');
       assert(fs.existsSync(path.join(TEST_PROJECT_DIR, 'src')), 'src dir exists');
@@ -361,7 +360,7 @@ const tests = [
   },
 
   { name: 'TC96-45: cleanupTestProject removes directory',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       assert(fs.existsSync(TEST_PROJECT_DIR), 'should exist before cleanup');
       cleanupTestProject();

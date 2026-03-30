@@ -1,5 +1,5 @@
 // tests/suites/tc03-agents.js
-const { PLUGIN_ROOT, assert, assertEqual, assertContains, assertExists } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertContains, assertExists, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 

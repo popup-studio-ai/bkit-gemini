@@ -1,10 +1,6 @@
 // tests/suites/tc92-pdca-workflow.js
 // TC-92: PDCA Workflow - 80 tests
-const {
-  PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject,
-  assert, assertEqual, assertContains, assertExists, assertType, assertHasKey,
-  assertThrows, assertInRange
-} = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, assert, assertEqual, assertContains, assertExists, assertType, assertHasKey, assertThrows, assertInRange, withVersion } = require('../test-utils');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');

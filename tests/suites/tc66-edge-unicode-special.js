@@ -1,5 +1,5 @@
 // TC-66: Edge Case Unicode/Special Chars Tests (10 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertType, assertContains } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertType, assertContains, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 
 const { detectLanguage } = require(path.join(PLUGIN_ROOT, 'lib/intent/language'));

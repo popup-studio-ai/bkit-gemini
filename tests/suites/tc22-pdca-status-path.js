@@ -1,16 +1,13 @@
 const fs = require('fs');
 const path = require('path');
-const { 
-  createTestProject, createTestProjectV2, cleanupTestProject, 
-  executeHook, assert, assertEqual, assertExists, TEST_PROJECT_DIR 
-} = require('../test-utils');
+const { createTestProject, cleanupTestProject, executeHook, assert, assertEqual, assertExists, TEST_PROJECT_DIR, getPdcaStatus, withVersion } = require('../test-utils');
 const { PDCA_STATUS_V157 } = require('../fixtures');
 
 const tests = [
   {
     name: 'TC-22-01: PDCA status reads from root .pdca-status.json',
     fn: async () => {
-      createTestProjectV2({
+      createTestProject({
         '.pdca-status.json': PDCA_STATUS_V157
       });
       const result = executeHook('session-start.js');
@@ -32,7 +29,7 @@ const tests = [
   {
     name: 'TC-22-03: after-tool.js updates correct status path',
     fn: async () => {
-      createTestProjectV2({
+      createTestProject({
         '.pdca-status.json': PDCA_STATUS_V157
       });
       // Simulate tool that would trigger phase transition (not strictly needed for just path check, but let's test it)

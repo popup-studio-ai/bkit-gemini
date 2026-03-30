@@ -1,6 +1,5 @@
 // TC-78: Hook Config/Runtime Tests (10 TC)
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, createTestProjectV2,
-        cleanupTestProject, executeHook, assert, assertEqual, assertContains, assertExists } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, executeHook, assert, assertEqual, assertContains, assertExists, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 
@@ -18,7 +17,7 @@ const tests = [
     assertExists(path.join(PLUGIN_ROOT, 'hooks', 'scripts'), 'hooks/scripts dir');
   }},
   { name: 'TC78-03: session-start hook 실행',
-    setup: () => createTestProjectV2({ '.pdca-status.json': JSON.stringify({ version: '2.0', activeFeatures: {}, archivedFeatures: {} }) }),
+    setup: () => createTestProject({ '.pdca-status.json': JSON.stringify({ version: '2.0', activeFeatures: {}, archivedFeatures: {} }) }),
     fn: () => {
       const result = executeHook('session-start.js', {});
       assert(result !== undefined, 'Should return result');
@@ -26,7 +25,7 @@ const tests = [
     teardown: cleanupTestProject
   },
   { name: 'TC78-04: session-start context 주입 확인',
-    setup: () => createTestProjectV2({ '.pdca-status.json': JSON.stringify({ version: '2.0', activeFeatures: {}, archivedFeatures: {} }) }),
+    setup: () => createTestProject({ '.pdca-status.json': JSON.stringify({ version: '2.0', activeFeatures: {}, archivedFeatures: {} }) }),
     fn: () => {
       const result = executeHook('session-start.js', {});
       if (result.success && result.output) {
@@ -38,7 +37,7 @@ const tests = [
     teardown: cleanupTestProject
   },
   { name: 'TC78-05: before-tool hook 실행',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const result = executeHook('before-tool.js', { tool_name: 'write_file', tool_input: { file_path: 'test.js' } });
       assert(result !== undefined, 'Should return result');
@@ -46,7 +45,7 @@ const tests = [
     teardown: cleanupTestProject
   },
   { name: 'TC78-06: after-tool hook 실행',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const result = executeHook('after-tool.js', { tool_name: 'write_file', tool_input: {} });
       assert(result !== undefined, 'Should return result');
@@ -64,7 +63,7 @@ const tests = [
     assertContains(source, '10000', 'Should have 10 second timeout');
   }},
   { name: 'TC78-09: hook 에러 처리 (존재하지 않는 스크립트)',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const result = executeHook('nonexistent-hook.js', {});
       assertEqual(result.success, false, 'Should fail for missing hook');
@@ -72,7 +71,7 @@ const tests = [
     teardown: cleanupTestProject
   },
   { name: 'TC78-10: hook JSON 파싱 에러 처리',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       // Test with invalid JSON input (executeHook handles this internally)
       const result = executeHook('before-tool.js', 'not-json');

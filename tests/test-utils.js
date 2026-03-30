@@ -9,44 +9,56 @@ const TEST_PROJECT_DIR = path.join(os.tmpdir(), 'bkit-test-project');
 
 /**
  * Create a temporary test project with specified fixtures
+ * Standard v2.0.2 structure ensured by default.
  */
 function createTestProject(fixtures = {}) {
   if (fs.existsSync(TEST_PROJECT_DIR)) {
-    fs.rmSync(TEST_PROJECT_DIR, { recursive: true });
+    fs.rmSync(TEST_PROJECT_DIR, { recursive: true, force: true });
   }
   fs.mkdirSync(TEST_PROJECT_DIR, { recursive: true });
-  fs.mkdirSync(path.join(TEST_PROJECT_DIR, 'docs'), { recursive: true });
-  fs.mkdirSync(path.join(TEST_PROJECT_DIR, 'src'), { recursive: true });
+
+  // Standard v2.0.2 structure
+  const dirs = [
+    'src', '.bkit/state', '.gemini/policies',
+    'docs/01-plan/features', 'docs/02-design/features',
+    'docs/03-analysis/features', 'docs/04-report/features',
+    'docs/.pdca-snapshots'
+  ];
+  for (const d of dirs) {
+    fs.mkdirSync(path.join(TEST_PROJECT_DIR, d), { recursive: true });
+  }
 
   // Write fixture files
   for (const [filePath, content] of Object.entries(fixtures)) {
     const fullPath = path.join(TEST_PROJECT_DIR, filePath);
     fs.mkdirSync(path.dirname(fullPath), { recursive: true });
     fs.writeFileSync(fullPath, typeof content === 'object' ? JSON.stringify(content, null, 2) : content);
+  }
+
+  // Auto-generate status if not provided (default to root for v2)
+  const statusPath = path.join(TEST_PROJECT_DIR, '.pdca-status.json');
+  if (!fs.existsSync(statusPath) && !fixtures['.pdca-status.json']) {
+    const { PDCA_STATUS_FIXTURE } = require('./fixtures');
+    fs.writeFileSync(statusPath, JSON.stringify(PDCA_STATUS_FIXTURE, null, 2));
   }
 
   return TEST_PROJECT_DIR;
 }
 
 /**
- * Create a temporary test project with specified fixtures (v2 - root status path)
+ * Get a deep-cloned PDCA status fixture with optional overrides
  */
-function createTestProjectV2(fixtures = {}) {
-  if (fs.existsSync(TEST_PROJECT_DIR)) {
-    fs.rmSync(TEST_PROJECT_DIR, { recursive: true });
+function getPdcaStatus(overrides = {}) {
+  const { PDCA_STATUS_FIXTURE } = require('./fixtures');
+  const status = JSON.parse(JSON.stringify(PDCA_STATUS_FIXTURE));
+  // Deep merge primary feature data if exists
+  if (overrides.features) {
+    for (const [key, val] of Object.entries(overrides.features)) {
+      status.features[key] = { ...(status.features[key] || {}), ...val };
+    }
+    delete overrides.features;
   }
-  fs.mkdirSync(TEST_PROJECT_DIR, { recursive: true });
-  fs.mkdirSync(path.join(TEST_PROJECT_DIR, 'src'), { recursive: true });
-  fs.mkdirSync(path.join(TEST_PROJECT_DIR, '.bkit', 'state'), { recursive: true });
-
-  // Write fixture files
-  for (const [filePath, content] of Object.entries(fixtures)) {
-    const fullPath = path.join(TEST_PROJECT_DIR, filePath);
-    fs.mkdirSync(path.dirname(fullPath), { recursive: true });
-    fs.writeFileSync(fullPath, typeof content === 'object' ? JSON.stringify(content, null, 2) : content);
-  }
-
-  return TEST_PROJECT_DIR;
+  return { ...status, ...overrides };
 }
 
 /**
@@ -57,6 +69,7 @@ function withVersion(version, fn) {
   vd.resetCache();
   const original = process.env.GEMINI_CLI_VERSION;
   process.env.GEMINI_CLI_VERSION = version;
+  process.env.BKIT_PLUGIN_ROOT = PLUGIN_ROOT; // Ensure plugin root is known
   try {
     const result = fn();
     if (result instanceof Promise) {
@@ -66,15 +79,11 @@ function withVersion(version, fn) {
         else delete process.env.GEMINI_CLI_VERSION;
       });
     }
-    vd.resetCache();
-    if (original !== undefined) process.env.GEMINI_CLI_VERSION = original;
-    else delete process.env.GEMINI_CLI_VERSION;
     return result;
-  } catch (error) {
+  } finally {
     vd.resetCache();
     if (original !== undefined) process.env.GEMINI_CLI_VERSION = original;
     else delete process.env.GEMINI_CLI_VERSION;
-    throw error;
   }
 }
 
@@ -273,15 +282,15 @@ async function runSuite(suite) {
  * Read PDCA status with path resolution
  */
 function readPdcaStatus(projectDir = TEST_PROJECT_DIR) {
+  const bkitPath = path.join(projectDir, '.bkit', 'state', 'pdca-status.json');
   const rootPath = path.join(projectDir, '.pdca-status.json');
   const legacyPath = path.join(projectDir, 'docs', '.pdca-status.json');
-  const statusPath = fs.existsSync(rootPath) ? rootPath : legacyPath;
   
-  if (!fs.existsSync(statusPath)) {
-    throw new Error(`PDCA status file not found in ${projectDir}`);
-  }
+  if (fs.existsSync(bkitPath)) return JSON.parse(fs.readFileSync(bkitPath, 'utf8'));
+  if (fs.existsSync(rootPath)) return JSON.parse(fs.readFileSync(rootPath, 'utf8'));
+  if (fs.existsSync(legacyPath)) return JSON.parse(fs.readFileSync(legacyPath, 'utf8'));
   
-  return JSON.parse(fs.readFileSync(statusPath, 'utf8'));
+  throw new Error(`PDCA status file not found in ${projectDir} (Checked .bkit/state, root, and docs/)`);
 }
 
 /**
@@ -304,7 +313,7 @@ function readGlobalMemory(projectDir = TEST_PROJECT_DIR) {
 
 module.exports = {
   PLUGIN_ROOT, TEST_PROJECT_DIR,
-  createTestProject, createTestProjectV2, cleanupTestProject,
+  createTestProject, cleanupTestProject, getPdcaStatus,
   executeHook, sendMcpRequest,
   assert, assertEqual, assertContains, assertExists,
   assertThrows, assertType, assertLength, assertHasKey, assertInRange,

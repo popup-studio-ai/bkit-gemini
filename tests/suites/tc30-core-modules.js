@@ -1,6 +1,5 @@
 // TC-30: Core Modules Unit Tests (30 TC)
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, createTestProjectV2,
-        cleanupTestProject, assert, assertEqual, assertType, assertContains, assertExists } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, assert, assertEqual, assertType, assertContains, assertExists, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -127,7 +126,7 @@ const tests = [
   },
   {
     name: 'TC30-18: ensureDirectories 생성',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       ensureDirectories(TEST_PROJECT_DIR);
       const paths = getPaths(TEST_PROJECT_DIR);
@@ -190,7 +189,7 @@ const tests = [
   },
   {
     name: 'TC30-26: getMemory 인스턴스 생성',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const mem = getMemory(TEST_PROJECT_DIR);
       assert(mem !== undefined, 'Should create memory instance');

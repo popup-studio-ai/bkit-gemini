@@ -1,6 +1,5 @@
 // TC-40: Hook System E2E Tests (15 TC)
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, createTestProjectV2,
-        cleanupTestProject, executeHook, assert, assertEqual, assertContains } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, executeHook, assert, assertEqual, assertContains, getPdcaStatus, withVersion } = require('../test-utils');
 
 const tests = [
   {

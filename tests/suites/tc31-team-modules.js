@@ -1,5 +1,5 @@
 // TC-31: Team Modules Unit Tests (40 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertType, assertThrows, withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertType, assertThrows, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 
 const team = require(path.join(PLUGIN_ROOT, 'lib/team'));

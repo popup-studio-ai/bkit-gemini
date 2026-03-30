@@ -1,5 +1,5 @@
 // TC-107: v0.35.0 Modes Migration (10 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertContains, withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertContains, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 

@@ -1,9 +1,6 @@
 // tests/suites/tc100-comprehensive-v200.js
 // TC-100: Comprehensive v2.0 Testing - Various Perspectives
-const {
-  PLUGIN_ROOT, assert, assertEqual, assertContains, assertType,
-  withVersion, createTestProject, cleanupTestProject
-} = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertContains, assertType, withVersion, createTestProject, cleanupTestProject, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 

@@ -12,9 +12,7 @@
 //
 // Total: 95 TC
 
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject,
-        assert, assertEqual, assertType, assertContains, assertExists,
-        assertThrows, assertHasKey, assertLength, countMatches } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, assert, assertEqual, assertType, assertContains, assertExists, assertThrows, assertHasKey, assertLength, countMatches, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 

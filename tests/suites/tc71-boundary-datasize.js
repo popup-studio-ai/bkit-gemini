@@ -1,6 +1,5 @@
 // TC-71: Boundary Data Size Tests (11 TC)
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProjectV2, cleanupTestProject,
-        assert, assertEqual, assertType } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, assert, assertEqual, assertType, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 
@@ -44,7 +43,7 @@ const tests = [
     cache.invalidate('big-value');
   }},
   { name: 'TC71-07: JSON 파일 0 바이트',
-    setup: () => createTestProjectV2({ 'zero.json': '' }),
+    setup: () => createTestProject({ 'zero.json': '' }),
     fn: () => {
       const content = fs.readFileSync(path.join(TEST_PROJECT_DIR, 'zero.json'), 'utf-8');
       assertEqual(content.length, 0, 'Should handle 0-byte file');
@@ -52,7 +51,7 @@ const tests = [
     teardown: cleanupTestProject
   },
   { name: 'TC71-08: JSON 파일 정확히 1KB',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const content = JSON.stringify({ data: 'x'.repeat(1024 - 12) });
       fs.writeFileSync(path.join(TEST_PROJECT_DIR, '1kb.json'), content);

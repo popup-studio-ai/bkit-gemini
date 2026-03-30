@@ -1,5 +1,5 @@
 // TC-73: Recovery Module Missing Tests (12 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertType, assertExists } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertType, assertExists, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 

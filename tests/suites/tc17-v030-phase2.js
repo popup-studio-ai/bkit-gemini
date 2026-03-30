@@ -3,11 +3,7 @@
 // bkit-gemini v1.5.5
 // Task #14 - QA Strategist: TOML schema, AfterTool integrity, tool registry
 
-const {
-  PLUGIN_ROOT, TEST_PROJECT_DIR,
-  createTestProject, cleanupTestProject,
-  executeHook, assert, assertEqual, assertContains, readPdcaStatus
-} = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, executeHook, assert, assertEqual, assertContains, readPdcaStatus, getPdcaStatus, withVersion } = require('../test-utils');
 const { PDCA_STATUS_FIXTURE } = require('../fixtures');
 const path = require('path');
 const fs = require('fs');
@@ -144,7 +140,7 @@ const tests = [
   {
     name: 'P2-08: AfterTool hook updates PDCA tracking on src file write',
     setup: () => {
-      const status = JSON.parse(JSON.stringify(PDCA_STATUS_FIXTURE));
+      const status = getPdcaStatus();
       status.features['test-feature'].phase = 'design';
       createTestProject({ 'docs/.pdca-status.json': status });
     },

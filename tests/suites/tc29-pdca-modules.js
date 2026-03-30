@@ -1,6 +1,5 @@
 // TC-29: PDCA Modules Unit Tests (25 TC)
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, createTestProjectV2,
-        cleanupTestProject, assert, assertEqual, assertType, assertThrows } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, assert, assertEqual, assertType, assertThrows, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 
@@ -13,7 +12,7 @@ const tier = require(path.join(PLUGIN_ROOT, 'lib/pdca/tier'));
 const tests = [
   {
     name: 'TC29-01: loadPdcaStatus 정상 로드',
-    setup: () => createTestProjectV2({ '.pdca-status.json': { version: '2.0', primaryFeature: 'test', activeFeatures: {}, archivedFeatures: {}, pipeline: {}, lastChecked: '' } }),
+    setup: () => createTestProject({ '.pdca-status.json': { version: '2.0', primaryFeature: 'test', activeFeatures: {}, archivedFeatures: {}, pipeline: {}, lastChecked: '' } }),
     fn: () => {
       const s = status.loadPdcaStatus(TEST_PROJECT_DIR);
       assertEqual(s.version, '2.0', 'Should load v2.0 schema');
@@ -22,7 +21,7 @@ const tests = [
   },
   {
     name: 'TC29-02: loadPdcaStatus 파일 없을 때 기본 스키마',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const s = status.loadPdcaStatus(TEST_PROJECT_DIR);
       assertEqual(s.version, '2.0', 'Should create default v2.0');
@@ -32,7 +31,7 @@ const tests = [
   },
   {
     name: 'TC29-03: savePdcaStatus 저장 후 로드',
-    setup: () => createTestProjectV2({}),
+    setup: () => createTestProject({}),
     fn: () => {
       const s = status.createInitialStatusV2();
       s.primaryFeature = 'save-test';

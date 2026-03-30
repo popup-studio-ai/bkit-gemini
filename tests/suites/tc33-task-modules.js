@@ -1,5 +1,5 @@
 // TC-33: Task Modules Unit Tests (20 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertType } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertType, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 
 const classification = require(path.join(PLUGIN_ROOT, 'lib/task/classification'));

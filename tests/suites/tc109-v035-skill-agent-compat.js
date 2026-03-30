@@ -1,5 +1,5 @@
 // TC-109: v0.35.0 Skill & Agent Compatibility (10 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertExists, assertType, parseYamlFrontmatter } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertExists, assertType, parseYamlFrontmatter, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 

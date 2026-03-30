@@ -1,5 +1,5 @@
 // TC-56: Philosophy PDCA Tests (15 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertContains, assertType, assertExists } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertContains, assertType, assertExists, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 

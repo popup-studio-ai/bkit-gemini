@@ -1,5 +1,5 @@
 // TC-26: Version Detector v1.5.8 Unit Tests (25 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertType, withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertType, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 
 const vd = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));

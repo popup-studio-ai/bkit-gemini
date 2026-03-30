@@ -24,6 +24,14 @@ function filterSuites(suites, opts) {
 
 async function main() {
   const opts = parseArgs();
+  const fs = require('fs');
+  const path = require('path');
+  
+  let currentVersion = '2.0.2';
+  try {
+    const config = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../bkit.config.json'), 'utf-8'));
+    currentVersion = config.version || currentVersion;
+  } catch (e) {}
 
   const suites = [
     // ═══ 기존 TC-01~TC-24 (Regression) ═══
@@ -191,23 +199,23 @@ async function main() {
   console.log(`Total: ${passed + failed + skipped} | Pass: ${passed} | Fail: ${failed} | Skip: ${skipped}`);
   console.log(`Pass Rate: ${(((passed || 0) / ((passed + failed + skipped) || 1)) * 100).toFixed(1)}%`);
 
-  generatePDCACompletionReport(passed, failed, skipped);
+  generatePDCACompletionReport(passed, failed, skipped, currentVersion);
 
   process.exit(failed > 0 ? 1 : 0);
 }
 
-function generatePDCACompletionReport(passed, failed, skipped) {
+function generatePDCACompletionReport(passed, failed, skipped, currentVersion) {
   const fs = require('fs');
   const path = require('path');
   const date = new Date().toISOString().split('T')[0];
-  const reportPath = path.resolve(__dirname, '../docs/04-report/features/bkit-v200-comprehensive-test.report.md');
+  const reportPath = path.resolve(__dirname, `../docs/04-report/features/bkit-v${currentVersion.replace(/\./g, '')}-comprehensive-test.report.md`);
 
   fs.mkdirSync(path.dirname(reportPath), { recursive: true });
 
   const total = passed + failed + skipped;
   const matchRate = (((passed || 0) / (total || 1)) * 100).toFixed(1);
 
-  let report = `# bkit-gemini v1.5.9 Comprehensive Test Report
+  let report = `# bkit-gemini v${currentVersion} Comprehensive Test Report
 
 > **Feature**: bkit-v159-comprehensive-test
 > **Status**: ${failed === 0 ? 'COMPLETED' : 'IN_PROGRESS'}

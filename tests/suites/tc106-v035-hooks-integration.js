@@ -1,5 +1,5 @@
 // TC-106: v0.35.0 Hooks Integration (12 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertContains, assertExists } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertContains, assertExists, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 

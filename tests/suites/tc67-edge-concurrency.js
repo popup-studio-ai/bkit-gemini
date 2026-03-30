@@ -1,6 +1,5 @@
 // TC-67: Edge Case Concurrency Tests (8 TC)
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProjectV2, cleanupTestProject,
-        assert, assertEqual, assertType } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, assert, assertEqual, assertType, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 
@@ -31,7 +30,7 @@ const tests = [
     cache.invalidate('overwrite-key');
   }},
   { name: 'TC67-04: 동시 파일 읽기 안전',
-    setup: () => createTestProjectV2({ 'test.json': '{"a":1}' }),
+    setup: () => createTestProject({ 'test.json': '{"a":1}' }),
     fn: () => {
       const reads = [];
       for (let i = 0; i < 10; i++) {

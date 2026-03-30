@@ -1,5 +1,5 @@
 // tests/suites/tc05-mcp.js
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, sendMcpRequest, assert, assertEqual, assertContains } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, sendMcpRequest, assert, assertEqual, assertContains, getPdcaStatus, withVersion } = require('../test-utils');
 
 const tests = [
   {

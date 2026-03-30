@@ -1,5 +1,5 @@
 // TC-110: v0.35.0 E2E Regression (15 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertExists, assertContains, withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertExists, assertContains, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 

@@ -1,5 +1,5 @@
 // TC-54: Scenario Multilang Tests (10 TC)
-const { PLUGIN_ROOT, assert, assertEqual } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, getPdcaStatus, withVersion } = require('../test-utils');
 const { MULTILANG_INPUTS } = require('../fixtures');
 const path = require('path');
 

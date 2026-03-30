@@ -60,7 +60,13 @@ function validatePdcaDocument(filePath, projectDir) {
 }
 
 function processPostWrite(toolInput, projectDir) {
-  const filePath = toolInput.file_path || toolInput.path || toolInput.filePath || '';
+  let filePath = toolInput.file_path || toolInput.path || toolInput.filePath || '';
+  
+  // Ensure we have a relative path for internal logic
+  if (path.isAbsolute(filePath)) {
+    filePath = path.relative(projectDir, filePath);
+  }
+  const normalizedPath = filePath.replace(/\\/g, '/');
 
   // Template validation for PDCA documents (FR-36)
   if (filePath.includes('/docs/') && filePath.endsWith('.md')) {
@@ -85,7 +91,8 @@ function processPostWrite(toolInput, projectDir) {
     if (!primaryFeature || !pdcaStatus.features[primaryFeature]) return { status: 'allow' };
 
     const featureStatus = pdcaStatus.features[primaryFeature];
-    if (featureStatus.phase === 'design' && (filePath.includes('src/') || filePath.includes('lib/'))) {
+    if (featureStatus.phase === 'design' && (normalizedPath.includes('src/') || normalizedPath.includes('lib/'))) {
+      const oldPhase = featureStatus.phase;
       featureStatus.phase = 'do';
       featureStatus.updatedAt = new Date().toISOString();
       pdcaStatusModule.savePdcaStatus(pdcaStatus, projectDir);

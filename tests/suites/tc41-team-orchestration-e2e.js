@@ -1,5 +1,5 @@
 // TC-41: Team Orchestration E2E Tests (12 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertType, withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertType, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 
 const TeamCoordinator = require(path.join(PLUGIN_ROOT, 'lib/team/coordinator'));

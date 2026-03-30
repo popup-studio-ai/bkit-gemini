@@ -1,5 +1,5 @@
 // TC-84: Gemini Policy Module Tests (22 TC)
-const { PLUGIN_ROOT, assert, assertEqual } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 
 const {

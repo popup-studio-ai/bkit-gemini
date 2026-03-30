@@ -1,5 +1,5 @@
 // TC-28: Multilang Intent Unit Tests (25 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertType } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertType, getPdcaStatus, withVersion } = require('../test-utils');
 const { MULTILANG_INPUTS } = require('../fixtures');
 const path = require('path');
 

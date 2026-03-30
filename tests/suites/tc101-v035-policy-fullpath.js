@@ -1,5 +1,5 @@
 // TC-101: v0.35.0 Policy Full-Path Command Regex (15 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertContains, withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertContains, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 
 const {

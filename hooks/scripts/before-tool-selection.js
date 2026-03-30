@@ -24,7 +24,16 @@ function processHook(input) {
     const pdcaPhase = getCurrentPdcaPhase(projectDir);
     const phaseFilter = getPhaseToolFilter(pdcaPhase);
     const skillFilter = getActiveSkillToolFilter(projectDir, pluginRoot);
-    const allowedTools = mergeFilters(phaseFilter, skillFilter);
+    let allowedTools = mergeFilters(phaseFilter, skillFilter);
+
+    // Safety: Ensure CLI-critical tools (like plan mode) are never filtered out
+    // if they exist in the phase/skill filter or registry
+    const CRITICAL_TOOLS = ['enter_plan_mode', 'exit_plan_mode'];
+    if (allowedTools) {
+      for (const t of CRITICAL_TOOLS) {
+        if (!allowedTools.includes(t)) allowedTools.push(t);
+      }
+    }
 
     if (allowedTools && allowedTools.length > 0) {
       return {

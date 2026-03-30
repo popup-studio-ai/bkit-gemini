@@ -1,5 +1,5 @@
 // TC-69: Boundary Version Tests (12 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertType, withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertType, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 
 const { isValidSemVer, parseVersion, compareVersions, isVersionAtLeast, getFeatureFlags } = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));

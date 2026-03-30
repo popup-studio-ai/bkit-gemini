@@ -1,5 +1,5 @@
 // TC-111: v0.36.0 enableAgents Settings Auto-Generation (5 TC)
-const { PLUGIN_ROOT, assert, assertEqual, createTestProject } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, createTestProject, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 

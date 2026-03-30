@@ -1,5 +1,5 @@
 // TC-35: Adapters Common Unit Tests (10 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertType, assertExists } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertType, assertExists, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 
 const adapters = require(path.join(PLUGIN_ROOT, 'lib/gemini/platform'));

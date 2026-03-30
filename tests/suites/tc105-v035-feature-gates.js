@@ -1,5 +1,5 @@
 // TC-105: v0.35.0 Feature Gates (8 TC)
-const { PLUGIN_ROOT, assert, assertEqual, withVersion } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, withVersion, getPdcaStatus } = require('../test-utils');
 const path = require('path');
 
 const versionPath = path.join(PLUGIN_ROOT, 'lib/gemini/version');

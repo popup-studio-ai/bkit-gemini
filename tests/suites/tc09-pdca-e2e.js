@@ -1,9 +1,5 @@
 // tests/suites/tc09-pdca-e2e.js
-const { 
-  PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, 
-  executeHook, assert, assertEqual, assertContains, assertExists, 
-  readPdcaStatus 
-} = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, getPdcaStatus, executeHook, assert, assertEqual, assertContains, assertExists, readPdcaStatus, withVersion } = require('../test-utils');
 const fs = require('fs');
 const path = require('path');
 
@@ -26,9 +22,14 @@ const tests = [
   {
     name: 'E2E-03: Design document transition',
     setup: () => {
-      const status = JSON.parse(JSON.stringify(require('../fixtures').PDCA_STATUS_FIXTURE));
-      status.features['test-feature'].phase = 'plan';
-      createTestProject({ 'docs/.pdca-status.json': status });
+      const status = getPdcaStatus({ 
+        primaryFeature: 'test-feature',
+        features: { 'test-feature': { phase: 'plan' } }
+      });
+      createTestProject({ 
+        '.pdca-status.json': status,
+        'docs/01-plan/features/test-feature.plan.md': '# Plan\n## 1.\n## 2.\n## 3.'
+      });
     },
     fn: () => {
       const result = executeHook('after-tool.js', {
@@ -43,9 +44,14 @@ const tests = [
   {
     name: 'E2E-05: Implementation starts (Do phase)',
     setup: () => {
-      const status = JSON.parse(JSON.stringify(require('../fixtures').PDCA_STATUS_FIXTURE));
-      status.features['test-feature'].phase = 'design';
-      createTestProject({ 'docs/.pdca-status.json': status });
+      const status = getPdcaStatus({ 
+        primaryFeature: 'test-feature',
+        features: { 'test-feature': { phase: 'design' } }
+      });
+      createTestProject({ 
+        '.pdca-status.json': status,
+        'docs/02-design/features/test-feature.design.md': '# Design\n## 1.\n## 2.\n## 3.'
+      });
     },
     fn: () => {
       const result = executeHook('after-tool.js', {

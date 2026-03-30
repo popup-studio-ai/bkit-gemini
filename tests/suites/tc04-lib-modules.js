@@ -1,5 +1,5 @@
 // tests/suites/tc04-lib-modules.js
-const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, assert, assertEqual, assertContains, assertExists } = require('../test-utils');
+const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, assert, assertEqual, assertContains, assertExists, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const os = require('os');
 const fs = require('fs');
@@ -11,7 +11,7 @@ const tests = [
       const { ContextHierarchy } = require(path.join(PLUGIN_ROOT, 'lib', 'context-hierarchy'));
       const hierarchy = new ContextHierarchy(PLUGIN_ROOT, TEST_PROJECT_DIR);
       const version = hierarchy.get('version');
-      assertEqual(version, '1.5.9', 'Should load plugin version');
+      assertEqual(version, '2.0.2', 'Should load plugin version');
     }
   },
   {
@@ -196,7 +196,10 @@ const tests = [
     name: 'LIB-37: LRU snapshot limit (10)',
     setup: () => {
       const { PDCA_STATUS_FIXTURE } = require('../fixtures');
-      createTestProject({ 'docs/.pdca-status.json': PDCA_STATUS_FIXTURE });
+      createTestProject({ 
+        'docs/.pdca-status.json': PDCA_STATUS_FIXTURE,
+        'docs/.pdca-snapshots/.keep': '' 
+      });
     },
     fn: () => {
       const { forkContext } = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'context-fork'));

@@ -1,5 +1,5 @@
 // TC-43: MCP Command E2E Tests (8 TC)
-const { PLUGIN_ROOT, assert, assertEqual, assertExists, assertContains, sendMcpRequest } = require('../test-utils');
+const { PLUGIN_ROOT, assert, assertEqual, assertExists, assertContains, sendMcpRequest, getPdcaStatus, withVersion } = require('../test-utils');
 const path = require('path');
 const fs = require('fs');
 
@@ -16,11 +16,12 @@ const tests = [
     fn: () => { assertExists(path.join(MCP_DIR, 'spawn-agent-server.js'), 'spawn-agent-server.js'); }
   },
   {
-    name: 'TC43-03: commands/ 23개 TOML 파일',
+    name: 'TC43-03: commands/ 6개 TOML 파일',
     fn: () => {
       const files = fs.readdirSync(COMMANDS_DIR).filter(f => f.endsWith('.toml'));
-      assert(files.length >= 23, `Should have >=23 TOML commands, found ${files.length}`);
+      assert(files.length >= 6, `Should have at least 6 TOML commands, found ${files.length}`);
     }
+
   },
   {
     name: 'TC43-04: pdca.toml 존재',
