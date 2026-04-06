@@ -11,7 +11,7 @@ const tests = [
       const { ContextHierarchy } = require(path.join(PLUGIN_ROOT, 'lib', 'context-hierarchy'));
       const hierarchy = new ContextHierarchy(PLUGIN_ROOT, TEST_PROJECT_DIR);
       const version = hierarchy.get('version');
-      assertEqual(version, '2.0.2', 'Should load plugin version');
+      assertEqual(version, '2.0.3', 'Should load plugin version');
     }
   },
   {

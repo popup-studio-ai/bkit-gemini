@@ -219,10 +219,10 @@ const tests = [
     }
   },
   {
-    name: 'SS-24: Version string is v2.0.0 (not v1.5.x)',
+    name: 'SS-24: Version string is v2.0.3 (not v1.5.x)',
     fn: () => {
       const src = fs.readFileSync(HOOK_PATH, 'utf-8');
-      assertContains(src, 'v2.0.0', 'Should reference v2.0.0');
+      assertContains(src, 'v2.0.3', 'Should reference v2.0.3');
       assert(!src.includes('v1.5.8') && !src.includes('v1.5.7'), 'Should not reference old v1.5.x versions');
     }
   },

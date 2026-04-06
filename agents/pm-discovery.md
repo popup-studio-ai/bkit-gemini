@@ -16,7 +16,7 @@ description: |
 
   Do NOT use for: strategy analysis, competitor research, PRD writing.
 
-model: gemini-3.1-pro
+model: gemini-3-pro
 tools:
   - read_file
   - glob

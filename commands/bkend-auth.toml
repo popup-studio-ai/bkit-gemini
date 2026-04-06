@@ -1,0 +1,5 @@
+description = "bkit bkend-auth"
+prompt = """
+Use the bkend-auth skill for bkit enhancement.
+"""
+skill_name = "auth"

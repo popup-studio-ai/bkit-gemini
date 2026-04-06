@@ -1,0 +1,5 @@
+description = "bkit pm-discovery"
+prompt = """
+Use the pm-discovery skill for bkit enhancement.
+"""
+skill_name = "pm-discovery"

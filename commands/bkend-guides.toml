@@ -1,0 +1,5 @@
+description = "bkit bkend-guides"
+prompt = """
+Use the bkend-guides skill for bkit enhancement.
+"""
+skill_name = "guides"

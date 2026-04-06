@@ -11,6 +11,7 @@ const fs = require('fs');
 
 // Get extension path
 const extensionPath = path.resolve(__dirname, '..');
+const { resolveModel } = require(path.join(extensionPath, 'lib', 'gemini', 'model-resolver'));
 
 /**
  * Agent Safety Tiers
@@ -741,6 +742,55 @@ class SpawnAgentServer {
   }
 
   /**
+   * Resolve model name in agent frontmatter.
+   * Reads the agent file, checks if the model field needs normalization,
+   * and rewrites the file in-place if an alias is found.
+   * This ensures Gemini CLI receives a valid model ID.
+   *
+   * @param {string} agentPath - Path to agent markdown file
+   */
+  _resolveAgentModel(agentPath) {
+    try {
+      const content = fs.readFileSync(agentPath, 'utf-8');
+      const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
+      if (!fmMatch) return;
+
+      const modelMatch = fmMatch[1].match(/^model:\s*(.+)$/m);
+      if (!modelMatch) return;
+
+      const currentModel = modelMatch[1].trim();
+
+      // Load settings overrides if available
+      let settingsOverrides = null;
+      try {
+        const settingsPath = path.join(extensionPath, '.gemini', 'settings.json');
+        if (fs.existsSync(settingsPath)) {
+          const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
+          settingsOverrides = settings.agentModels || null;
+        }
+      } catch (e) { /* ignore settings read errors */ }
+
+      const agentName = path.basename(agentPath, '.md');
+      const result = resolveModel(currentModel, { settingsOverrides, agentName });
+
+      if (result.warning) {
+        console.error(result.warning);
+      }
+
+      if (result.wasAliased) {
+        const updated = content.replace(
+          `model: ${currentModel}`,
+          `model: ${result.resolved}`
+        );
+        fs.writeFileSync(agentPath, updated, 'utf-8');
+        console.error(`[model-resolver] ${agentName}: "${currentModel}" → "${result.resolved}"`);
+      }
+    } catch (e) {
+      console.error(`[model-resolver] Failed to resolve model for ${agentPath}: ${e.message}`);
+    }
+  }
+
+  /**
    * Execute an agent using Gemini CLI
    * @param {string} agentPath - Path to agent file
    * @param {string} task - Task description
@@ -752,6 +802,9 @@ class SpawnAgentServer {
   executeAgent(agentPath, task, context, timeout, safetyTier = SAFETY_TIERS.FULL) {
     return new Promise((resolve, reject) => {
       const startTime = Date.now();
+
+      // Resolve model name in agent frontmatter before execution
+      this._resolveAgentModel(agentPath);
 
       // Build gemini CLI command
       // Using gemini with extension flag and approval mode for non-interactive execution
@@ -766,9 +819,16 @@ class SpawnAgentServer {
         approvalFlag = flags.hasApprovalMode ? '--approval-mode=auto' : '';
       }
 
+      // v0.36.0+ Multi-Registry: native tool isolation for READONLY agents (PR #22712, #22718)
+      let toolIsolationArgs = [];
+      if (flags.hasMultiRegistry && safetyTier === SAFETY_TIERS.READONLY) {
+        toolIsolationArgs = ['--allowed-tools', 'read_file,read_many_files,list_directory,glob,grep_search,google_web_search,web_fetch'];
+      }
+
       const args = [
         '-e', agentPath,
         ...(approvalFlag ? [approvalFlag] : []),
+        ...toolIsolationArgs,
         task
       ];
 

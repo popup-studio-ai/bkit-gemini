@@ -74,7 +74,7 @@ function classifyAgentSafety(tools) {
   return 'READONLY';
 }
 
-const VALID_MODELS = ['gemini-3.1-pro', 'gemini-3-pro', 'gemini-3-flash', 'gemini-3-flash-lite'];
+const VALID_MODELS = ['gemini-3.1-pro-preview', 'gemini-3.1-pro-preview-customtools', 'gemini-3-pro', 'gemini-3-flash', 'gemini-3-flash-lite'];
 
 const tests = [
   // ═══════════════════════════════════════════════════════════════
@@ -456,9 +456,9 @@ const tests = [
       const agents = listAgentFiles();
       const proAgents = agents.filter(a => {
         const fm = readFrontmatter(path.join(AGENTS_DIR, a));
-        return fm.model === 'gemini-3.1-pro';
+        return fm.model === 'gemini-3.1-pro-preview';
       });
-      assert(proAgents.length > 0, 'Should have gemini-3.1-pro agents');
+      assert(proAgents.length > 0, 'Should have gemini-3.1-pro-preview agents');
     }
   },
   {
@@ -716,12 +716,12 @@ const tests = [
     }
   },
   {
-    name: 'AGENT-93-76: All 5 PM agents use gemini-3.1-pro model',
+    name: 'AGENT-93-76: All 5 PM agents use gemini-3.1-pro-preview model',
     fn: () => {
       const pmAgents = ['pm-lead', 'pm-discovery', 'pm-strategy', 'pm-research', 'pm-prd'];
       for (const agent of pmAgents) {
         const fm = readFrontmatter(path.join(AGENTS_DIR, `${agent}.md`));
-        assertEqual(fm.model, 'gemini-3.1-pro', `${agent} should use gemini-3.1-pro`);
+        assertEqual(fm.model, 'gemini-3.1-pro-preview', `${agent} should use gemini-3.1-pro-preview`);
       }
     }
   },
@@ -730,7 +730,7 @@ const tests = [
     fn: () => {
       assertExists(path.join(AGENTS_DIR, 'gap-detector.md'), 'gap-detector.md should exist');
       const fm = readFrontmatter(path.join(AGENTS_DIR, 'gap-detector.md'));
-      assertEqual(fm.model, 'gemini-3.1-pro', 'gap-detector should use gemini-3.1-pro');
+      assertEqual(fm.model, 'gemini-3.1-pro-preview', 'gap-detector should use gemini-3.1-pro-preview');
     }
   },
   {
@@ -744,7 +744,7 @@ const tests = [
     fn: () => {
       assertExists(path.join(AGENTS_DIR, 'cto-lead.md'), 'cto-lead.md should exist');
       const fm = readFrontmatter(path.join(AGENTS_DIR, 'cto-lead.md'));
-      assertEqual(fm.model, 'gemini-3.1-pro', 'cto-lead should use gemini-3.1-pro');
+      assertEqual(fm.model, 'gemini-3.1-pro-preview', 'cto-lead should use gemini-3.1-pro-preview');
     }
   },
   {

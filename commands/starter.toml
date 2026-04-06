@@ -1,0 +1,5 @@
+description = "bkit starter"
+prompt = """
+Use the starter skill for bkit enhancement.
+"""
+skill_name = "starter"

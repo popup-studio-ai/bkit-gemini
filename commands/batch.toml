@@ -1,0 +1,5 @@
+description = "bkit batch"
+prompt = """
+Use the batch skill for bkit enhancement.
+"""
+skill_name = "batch"

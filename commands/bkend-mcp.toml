@@ -1,0 +1,5 @@
+description = "bkit bkend-mcp"
+prompt = """
+Use the bkend-mcp skill for bkit enhancement.
+"""
+skill_name = "mcp"

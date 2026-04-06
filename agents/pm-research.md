@@ -15,7 +15,7 @@ description: |
 
   Do NOT use for: strategy formulation, PRD writing, implementation.
 
-model: gemini-3.1-pro
+model: gemini-3-pro
 tools:
   - read_file
   - glob

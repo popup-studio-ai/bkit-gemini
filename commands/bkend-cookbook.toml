@@ -1,0 +1,5 @@
+description = "bkit bkend-cookbook"
+prompt = """
+Use the bkend-cookbook skill for bkit enhancement.
+"""
+skill_name = "cookbook"

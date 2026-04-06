@@ -15,7 +15,7 @@ description: |
 
   Do NOT use for: discovery analysis, strategy analysis, market research.
 
-model: gemini-3.1-pro
+model: gemini-3-pro
 tools:
   - read_file
   - write_file

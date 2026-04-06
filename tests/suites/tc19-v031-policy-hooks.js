@@ -19,15 +19,15 @@ module.exports = {
       }
     },
     {
-      name: 'V156-27: Starter template has 10 rules',
+      name: 'V156-27: Starter template has 13 rules',
       fn: () => {
-        assertEqual(LEVEL_POLICY_TEMPLATES.Starter.rules.length, 10);
+        assertEqual(LEVEL_POLICY_TEMPLATES.Starter.rules.length, 13);
       }
     },
     {
-      name: 'V156-28: Dynamic template has 7 rules',
+      name: 'V156-28: Dynamic template has 10 rules',
       fn: () => {
-        assertEqual(LEVEL_POLICY_TEMPLATES.Dynamic.rules.length, 7);
+        assertEqual(LEVEL_POLICY_TEMPLATES.Dynamic.rules.length, 10);
       }
     },
     {
@@ -260,14 +260,14 @@ module.exports = {
       }
     },
     {
-      name: 'V156-47: session-start.js references v2.0.2 version',
+      name: 'V156-47: session-start.js references v2.0.3 version',
       fn: () => {
         const content = fs.readFileSync(
           path.join(PLUGIN_ROOT, 'hooks', 'scripts', 'session-start.js'), 'utf-8'
         );
         const matches = content.match(/2\.0\.2/g) || [];
         assert(matches.length >= 3,
-          `session-start.js should reference v2.0.2 at least 3 times, found ${matches.length}`);
+          `session-start.js should reference v2.0.3 at least 3 times, found ${matches.length}`);
       }
     },
     {
@@ -316,7 +316,7 @@ module.exports = {
           const { getFeatureFlags } = require(path.join(PLUGIN_ROOT, 'lib/gemini/version'));
           const flags = getFeatureFlags();
           const trueFlags = Object.values(flags).filter(v => v === true).length;
-          assertEqual(trueFlags, 9, 'v0.30.0 should have 9 true flags');
+          assertEqual(trueFlags, 7, 'v0.30.0 should have 7 true flags');
 
           const levelResult = generateLevelPolicy('Starter', TEST_PROJECT_DIR);
           assertEqual(levelResult.created, false, 'Level policy not available for v0.30.0');
@@ -331,7 +331,7 @@ module.exports = {
       teardown: cleanupTestProject
     },
     {
-      name: 'V156-51: All config files reference version 2.0.2',
+      name: 'V156-51: All config files reference version 2.0.3',
       fn: () => {
         const config = JSON.parse(fs.readFileSync(
           path.join(PLUGIN_ROOT, 'bkit.config.json'), 'utf-8'
@@ -339,8 +339,8 @@ module.exports = {
         const ext = JSON.parse(fs.readFileSync(
           path.join(PLUGIN_ROOT, 'gemini-extension.json'), 'utf-8'
         ));
-        assertEqual(config.version, '2.0.2', 'bkit.config.json version');
-        assertEqual(ext.version, '2.0.2', 'gemini-extension.json version');
+        assertEqual(config.version, '2.0.3', 'bkit.config.json version');
+        assertEqual(ext.version, '2.0.3', 'gemini-extension.json version');
       }
     }
   ]

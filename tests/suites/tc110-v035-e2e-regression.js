@@ -68,9 +68,9 @@ const tests = [
     assertEqual(ext.name, 'bkit', 'extension name should be bkit');
   }},
 
-  { name: 'TC110-10: gemini-extension.json version is 2.0.2', fn: () => {
+  { name: 'TC110-10: gemini-extension.json version is 2.0.3', fn: () => {
     const ext = JSON.parse(fs.readFileSync(path.join(PLUGIN_ROOT, 'gemini-extension.json'), 'utf-8'));
-    assertEqual(ext.version, '2.0.2', 'version should be 2.0.2');
+    assertEqual(ext.version, '2.0.3', 'version should be 2.0.3');
   }},
 
   // ─── All lib/ modules load without error ─────────────

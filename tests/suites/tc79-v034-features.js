@@ -168,10 +168,10 @@ const tests = [
       assert(!content.match(/^name\s*=/m), `${file} should not have name field`);
     }
   }},
-  { name: 'TC79-23: exactly 24 TOML command files exist', fn: () => {
+  { name: 'TC79-23: exactly 24+ TOML command files exist', fn: () => {
     const commandsDir = path.join(PLUGIN_ROOT, 'commands');
     const files = fs.readdirSync(commandsDir).filter(f => f.endsWith('.toml'));
-    assertEqual(files.length, 6, 'Should have 6 TOML files');
+    assertEqual(files.length, 26, 'Should have 26 TOML files');
   }},
 
   // ─── Total Flag Count (2 tests) ────────────────────────────

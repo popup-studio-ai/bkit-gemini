@@ -1,0 +1,5 @@
+description = "bkit plan-plus"
+prompt = """
+Use the plan-plus skill for bkit enhancement.
+"""
+skill_name = "plan-plus"

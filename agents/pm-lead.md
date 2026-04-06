@@ -12,7 +12,7 @@ description: |
 
   Do NOT use for: implementation, code review, PDCA Do/Check/Act phases.
 
-model: gemini-3.1-pro
+model: gemini-3-pro
 tools:
   - read_file
   - write_file

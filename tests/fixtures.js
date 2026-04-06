@@ -1,6 +1,6 @@
 // tests/fixtures.js
 const PDCA_STATUS_FIXTURE = {
-  version: '2.0.2',
+  version: '2.0.3',
   lastUpdated: new Date().toISOString(),
   activeFeatures: ['test-feature'],
   primaryFeature: 'test-feature',
