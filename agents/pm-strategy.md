@@ -15,7 +15,7 @@ description: |
 
   Do NOT use for: user research, competitor analysis, implementation planning.
 
-model: gemini-3.1-pro
+model: gemini-3-pro
 tools:
   - read_file
   - glob

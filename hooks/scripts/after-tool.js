@@ -8,6 +8,7 @@ const fs = require('fs');
 const path = require('path');
 
 const libPath = path.resolve(__dirname, '..', '..', 'lib');
+const { normalizeSkillName } = require('./utils/skill-normalizer');
 
 // --- Core processing logic ---
 function processHook(input) {
@@ -112,7 +113,8 @@ function processPostSkill(toolInput, projectDir) {
   const contexts = [];
 
   try {
-    if (skillName === 'pdca' || skillName.startsWith('bkit:pdca')) {
+    const normalized = normalizeSkillName(skillName);
+    if (normalized === 'pdca' || normalized.startsWith('pdca')) {
       const action = args.split(' ')[0];
       const feature = args.split(' ').slice(1).join(' ');
 

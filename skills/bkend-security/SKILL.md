@@ -333,7 +333,7 @@ BKEND_SECRET_KEY=ak_prod_secret_...
 ```
 
 **Rules:**
-- Add `.env*` to `.gitignore` to prevent committing secrets
+- Add `.env*` to `.gitignore` to prevent committing secrets (Note: In Gemini CLI v0.36.0+, `.gitignore` is write-protected by sandbox governance. Add entries manually.)
 - Use a secret manager (AWS Secrets Manager, Vault, etc.) for production deployments
 - Never log environment variables containing keys or tokens
 

@@ -10,6 +10,7 @@ const fs = require('fs');
 const path = require('path');
 
 const libPath = path.resolve(__dirname, '..', '..', 'lib');
+const { normalizeSkillName } = require('./utils/skill-normalizer');
 
 // Agent handler registry
 const AGENT_HANDLERS = {
@@ -83,9 +84,10 @@ function processHook(normalized) {
     }
   }
 
-  if (activeSkill && SKILL_HANDLERS[activeSkill]) {
+  const normalizedSkill = normalizeSkillName(activeSkill);
+  if (normalizedSkill && SKILL_HANDLERS[normalizedSkill]) {
     try {
-      return SKILL_HANDLERS[activeSkill](normalized) || { status: 'allow' };
+      return SKILL_HANDLERS[normalizedSkill](normalized) || { status: 'allow' };
     } catch (e) {
       return { status: 'allow' };
     }

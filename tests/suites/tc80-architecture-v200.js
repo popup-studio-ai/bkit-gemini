@@ -68,12 +68,13 @@ test('ARC-01', 'lib/gemini/ directory exists', () => {
 
 const EXPECTED_GEMINI_FILES = [
   'platform.js', 'tools.js', 'version.js', 'hooks.js',
-  'policy.js', 'tracker.js', 'context-fork.js', 'import-resolver.js'
+  'policy.js', 'tracker.js', 'context-fork.js', 'import-resolver.js',
+  'model-resolver.js'
 ];
 
-test('ARC-02', 'lib/gemini/ has exactly 8 expected files', () => {
+test('ARC-02', 'lib/gemini/ has exactly 9 expected files', () => {
   const files = fs.readdirSync(GEMINI_DIR).filter(f => f.endsWith('.js'));
-  assert(files.length === 8, `Expected 8 files, found ${files.length}: ${files.join(', ')}`);
+  assert(files.length === 9, `Expected 9 files, found ${files.length}: ${files.join(', ')}`);
 });
 
 EXPECTED_GEMINI_FILES.forEach((file, i) => {
