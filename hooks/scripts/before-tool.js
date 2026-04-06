@@ -144,9 +144,10 @@ function checkPdcaPhaseRestriction(toolName, projectDir) {
     const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
     const status = pdcaStatusModule.loadPdcaStatus(projectDir);
     const feature = status.primaryFeature;
-    if (!feature || !status.features[feature]) return null;
+    const active = status.activeFeatures || {};
+    if (!feature || !active[feature]) return null;
 
-    const phase = status.features[feature].phase;
+    const phase = active[feature].phase;
 
     // Plan/Check phases should be read-only
     if ((phase === 'plan' || phase === 'check') &&

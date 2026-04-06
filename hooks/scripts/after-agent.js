@@ -161,7 +161,8 @@ function handleGapDetectorComplete(normalized) {
 
     const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
     const primaryFeature = pdcaStatus.primaryFeature;
-    if (!primaryFeature) return { status: 'allow' };
+    const active = pdcaStatus.activeFeatures || {};
+    if (!primaryFeature || !active[primaryFeature]) return { status: 'allow' };
 
     // Try to extract match rate from context
     const context = normalized.context || '';
@@ -169,9 +170,9 @@ function handleGapDetectorComplete(normalized) {
     const matchRate = matchRateMatch ? parseInt(matchRateMatch[1]) : null;
 
     if (matchRate !== null) {
-      pdcaStatus.features[primaryFeature].phase = 'check';
-      pdcaStatus.features[primaryFeature].matchRate = matchRate;
-      pdcaStatus.features[primaryFeature].updatedAt = new Date().toISOString();
+      active[primaryFeature].phase = 'check';
+      active[primaryFeature].matchRate = matchRate;
+      active[primaryFeature].updatedAt = new Date().toISOString();
       pdcaStatus.lastUpdated = new Date().toISOString();
 
       pdcaStatus.history.push({
@@ -206,9 +207,10 @@ function handleIteratorComplete(normalized) {
 
     const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
     const primaryFeature = pdcaStatus.primaryFeature;
-    if (!primaryFeature) return { status: 'allow' };
+    const active = pdcaStatus.activeFeatures || {};
+    if (!primaryFeature || !active[primaryFeature]) return { status: 'allow' };
 
-    const featureStatus = pdcaStatus.features[primaryFeature];
+    const featureStatus = active[primaryFeature];
     featureStatus.iterationCount = (featureStatus.iterationCount || 0) + 1;
     featureStatus.phase = 'act';
     featureStatus.updatedAt = new Date().toISOString();
@@ -250,10 +252,11 @@ function handleReportComplete(normalized) {
     if (fs.existsSync(pdcaStatusPath)) {
       const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
       const primaryFeature = pdcaStatus.primaryFeature;
+      const active = pdcaStatus.activeFeatures || {};
 
-      if (primaryFeature && pdcaStatus.features[primaryFeature]) {
-        pdcaStatus.features[primaryFeature].phase = 'completed';
-        pdcaStatus.features[primaryFeature].updatedAt = new Date().toISOString();
+      if (primaryFeature && active[primaryFeature]) {
+        active[primaryFeature].phase = 'completed';
+        active[primaryFeature].updatedAt = new Date().toISOString();
         pdcaStatus.lastUpdated = new Date().toISOString();
 
         pdcaStatus.history.push({

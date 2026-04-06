@@ -9,7 +9,7 @@ const TEST_PROJECT_DIR = path.join(os.tmpdir(), 'bkit-test-project');
 
 /**
  * Create a temporary test project with specified fixtures
- * Standard v2.0.2 structure ensured by default.
+ * Standard v2.0.3 structure ensured by default.
  */
 function createTestProject(fixtures = {}) {
   if (fs.existsSync(TEST_PROJECT_DIR)) {
@@ -17,7 +17,7 @@ function createTestProject(fixtures = {}) {
   }
   fs.mkdirSync(TEST_PROJECT_DIR, { recursive: true });
 
-  // Standard v2.0.2 structure
+  // Standard v2.0.3 structure
   const dirs = [
     'src', '.bkit/state', '.gemini/policies',
     'docs/01-plan/features', 'docs/02-design/features',
@@ -111,6 +111,8 @@ function executeHook(scriptName, stdinInput = {}, env = {}) {
   const scriptPath = path.join(PLUGIN_ROOT, 'hooks', 'scripts', scriptName);
   const fullEnv = {
     ...process.env,
+    GEMINI_PROJECT_DIR: TEST_PROJECT_DIR,
+    GEMINI_EXTENSION_PATH: PLUGIN_ROOT,
     BKIT_PROJECT_DIR: TEST_PROJECT_DIR,
     BKIT_PLUGIN_ROOT: PLUGIN_ROOT,
     ...env
@@ -286,11 +288,21 @@ function readPdcaStatus(projectDir = TEST_PROJECT_DIR) {
   const rootPath = path.join(projectDir, '.pdca-status.json');
   const legacyPath = path.join(projectDir, 'docs', '.pdca-status.json');
   
-  if (fs.existsSync(bkitPath)) return JSON.parse(fs.readFileSync(bkitPath, 'utf8'));
-  if (fs.existsSync(rootPath)) return JSON.parse(fs.readFileSync(rootPath, 'utf8'));
-  if (fs.existsSync(legacyPath)) return JSON.parse(fs.readFileSync(legacyPath, 'utf8'));
+  let status;
+  if (fs.existsSync(bkitPath)) status = JSON.parse(fs.readFileSync(bkitPath, 'utf8'));
+  else if (fs.existsSync(rootPath)) status = JSON.parse(fs.readFileSync(rootPath, 'utf8'));
+  else if (fs.existsSync(legacyPath)) status = JSON.parse(fs.readFileSync(legacyPath, 'utf8'));
   
-  throw new Error(`PDCA status file not found in ${projectDir} (Checked .bkit/state, root, and docs/)`);
+  if (!status) {
+    throw new Error(`PDCA status file not found in ${projectDir} (Checked .bkit/state, root, and docs/)`);
+  }
+
+  // Backward compatibility: map activeFeatures to features
+  if (status.activeFeatures && !status.features) {
+    status.features = status.activeFeatures;
+  }
+  
+  return status;
 }
 
 /**

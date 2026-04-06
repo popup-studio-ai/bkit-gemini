@@ -4,7 +4,7 @@
  * Ensures all version strings across the project match bkit.config.json
  *
  * Usage: node scripts/sync-version.js [--check-only]
- * @version 2.0.0
+ * @version 2.0.3
  */
 
 const fs = require('fs');

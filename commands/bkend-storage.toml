@@ -1,0 +1,5 @@
+description = "bkit bkend-storage"
+prompt = """
+Use the bkend-storage skill for bkit enhancement.
+"""
+skill_name = "storage"

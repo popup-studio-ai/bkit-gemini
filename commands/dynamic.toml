@@ -1,0 +1,5 @@
+description = "bkit dynamic"
+prompt = """
+Use the dynamic skill for bkit enhancement.
+"""
+skill_name = "dynamic"

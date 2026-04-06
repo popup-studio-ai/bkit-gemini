@@ -1,0 +1,5 @@
+description = "bkit development-pipeline"
+prompt = """
+Use the development-pipeline skill for bkit enhancement.
+"""
+skill_name = "development-pipeline"

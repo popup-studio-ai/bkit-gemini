@@ -1,0 +1,5 @@
+description = "bkit enterprise"
+prompt = """
+Use the enterprise skill for bkit enhancement.
+"""
+skill_name = "enterprise"

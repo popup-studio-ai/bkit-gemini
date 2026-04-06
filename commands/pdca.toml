@@ -1,0 +1,5 @@
+description = "Manage the PDCA cycle"
+prompt = """
+Use the pdca skill for bkit enhancement.
+"""
+skill_name = "pdca"

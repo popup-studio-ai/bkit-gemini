@@ -89,9 +89,9 @@ function processPostWrite(toolInput, projectDir) {
     const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
     const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
     const primaryFeature = pdcaStatus.primaryFeature;
-    if (!primaryFeature || !pdcaStatus.features[primaryFeature]) return { status: 'allow' };
+    if (!primaryFeature || !pdcaStatus.activeFeatures[primaryFeature]) return { status: 'allow' };
 
-    const featureStatus = pdcaStatus.features[primaryFeature];
+    const featureStatus = pdcaStatus.activeFeatures[primaryFeature];
     if (featureStatus.phase === 'design' && (normalizedPath.includes('src/') || normalizedPath.includes('lib/'))) {
       const oldPhase = featureStatus.phase;
       featureStatus.phase = 'do';
@@ -115,8 +115,9 @@ function processPostSkill(toolInput, projectDir) {
   try {
     const normalized = normalizeSkillName(skillName);
     if (normalized === 'pdca' || normalized.startsWith('pdca')) {
-      const action = args.split(' ')[0];
-      const feature = args.split(' ').slice(1).join(' ');
+      const parts = args.split(' ');
+      const action = parts[0];
+      const feature = parts.slice(1).join(' ');
 
       if (feature) {
         const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
@@ -124,18 +125,17 @@ function processPostSkill(toolInput, projectDir) {
 
         if (action === 'plan') {
           pdcaStatus.primaryFeature = feature;
-          if (!pdcaStatus.activeFeatures.includes(feature)) pdcaStatus.activeFeatures.push(feature);
-          if (!pdcaStatus.features[feature]) {
-            pdcaStatus.features[feature] = { phase: 'plan', createdAt: new Date().toISOString() };
+          if (!pdcaStatus.activeFeatures[feature]) {
+            pdcaStatus.activeFeatures[feature] = { phase: 'plan', createdAt: new Date().toISOString() };
           } else {
-            pdcaStatus.features[feature].phase = 'plan';
+            pdcaStatus.activeFeatures[feature].phase = 'plan';
           }
           pdcaStatusModule.savePdcaStatus(pdcaStatus, projectDir);
           contexts.push(`**PDCA Progress**: Plan created for "${feature}". Next: \`/pdca design ${feature}\``);
         } else if (action === 'design') {
-          if (pdcaStatus.features[feature]) {
-            pdcaStatus.features[feature].phase = 'design';
-            pdcaStatus.features[feature].updatedAt = new Date().toISOString();
+          if (pdcaStatus.activeFeatures[feature]) {
+            pdcaStatus.activeFeatures[feature].phase = 'design';
+            pdcaStatus.activeFeatures[feature].updatedAt = new Date().toISOString();
             pdcaStatusModule.savePdcaStatus(pdcaStatus, projectDir);
           }
           contexts.push(`**PDCA Progress**: Design created for "${feature}". Next: Start implementation, then \`/pdca analyze ${feature}\``);

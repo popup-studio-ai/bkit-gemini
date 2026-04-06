@@ -1,0 +1,5 @@
+description = "bkit output-style"
+prompt = """
+Use the output-style skill for bkit enhancement.
+"""
+skill_name = "output-style"

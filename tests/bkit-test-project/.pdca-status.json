@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-02-10T22:54:27.263Z",
+  "lastUpdated": "2026-04-06T05:54:49.171Z",
   "activeFeatures": [],
   "primaryFeature": null,
   "features": {},
@@ -10,9 +10,9 @@
     "phaseHistory": []
   },
   "session": {
-    "startedAt": "2026-02-10T22:54:27.264Z",
+    "startedAt": "2026-04-06T05:54:49.171Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-02-10T22:54:27.264Z"
+    "lastActivity": "2026-04-06T05:54:49.171Z"
   },
   "history": []
 }

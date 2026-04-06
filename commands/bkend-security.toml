@@ -1,0 +1,5 @@
+description = "bkit bkend-security"
+prompt = """
+Use the bkend-security skill for bkit enhancement.
+"""
+skill_name = "security"

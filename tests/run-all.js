@@ -1,4 +1,4 @@
-// tests/run-all.js - Main test runner for bkit-gemini v2.0.2
+// tests/run-all.js - Main test runner for bkit-gemini v2.0.3
 const { runSuite } = require('./test-utils');
 
 function parseArgs() {
@@ -27,7 +27,7 @@ async function main() {
   const fs = require('fs');
   const path = require('path');
   
-  let currentVersion = '2.0.2';
+  let currentVersion = '2.0.3';
   try {
     const config = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../bkit.config.json'), 'utf-8'));
     currentVersion = config.version || currentVersion;

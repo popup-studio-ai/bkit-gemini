@@ -1,0 +1,5 @@
+description = "bkit loop"
+prompt = """
+Use the loop skill for bkit enhancement.
+"""
+skill_name = "loop"

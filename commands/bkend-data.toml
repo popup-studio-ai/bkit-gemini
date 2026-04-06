@@ -1,0 +1,5 @@
+description = "bkit bkend-data"
+prompt = """
+Use the bkend-data skill for bkit enhancement.
+"""
+skill_name = "data"

@@ -57,10 +57,10 @@ function main() {
     const memoryCount = memoryManager.startSession();
     const memory = {
       sessionCount: memoryCount,
-      platform: memoryManager.get('session.platform', 'gemini'),
+      platform: memoryManager.getMetadata().platform || 'gemini',
       level: level,
       lastSessionStarted: memoryManager.get('session.lastSessionStarted'),
-      outputStyle: memoryManager.get('data.pdca.outputStyle')
+      outputStyle: memoryManager.get('pdca.outputStyle')
     };
 
     // 5. Load output style
@@ -73,8 +73,9 @@ function main() {
     let trackerContext = '';
     try {
       const { getTrackerContextInjection } = require(path.join(libPath, 'gemini', 'tracker'));
-      if (pdcaStatus.primaryFeature) {
-        const phase = pdcaStatus.features[pdcaStatus.primaryFeature]?.phase || 'plan';
+      if (pdcaStatus && pdcaStatus.primaryFeature) {
+        const active = pdcaStatus.activeFeatures || {};
+        const phase = active[pdcaStatus.primaryFeature]?.phase || 'plan';
         trackerContext = getTrackerContextInjection(pdcaStatus.primaryFeature, phase);
       }
     } catch (e) { /* tracker bridge not available */ }
@@ -88,12 +89,12 @@ function main() {
       context: dynamicContext,
       hookEvent: 'SessionStart',
       metadata: {
-        version: '2.0.2',
+        version: '2.0.3',
         platform: 'gemini',
         level: level,
         primaryFeature: pdcaStatus.primaryFeature,
         currentPhase: pdcaStatus.primaryFeature ?
-          pdcaStatus.features[pdcaStatus.primaryFeature]?.phase : null,
+          (pdcaStatus.activeFeatures || {})[pdcaStatus.primaryFeature]?.phase : null,
         outputStyle: outputStyle?.name || 'default',
         isReturningUser: returningInfo.isReturning,
         sessionCount: memory.sessionCount || 1,
@@ -111,7 +112,7 @@ function main() {
     }
     console.log(JSON.stringify({
       status: 'allow',
-      context: 'bkit Vibecoding Kit v2.0.2 activated (Gemini CLI)',
+      context: 'bkit Vibecoding Kit v2.0.3 activated (Gemini CLI)',
       hookEvent: 'SessionStart'
     }));
     process.exit(0);
@@ -224,8 +225,9 @@ function getDefaultStyleForLevel(level) {
 
 function detectReturningUser(pdcaStatus, memory) {
   const isReturning = (memory.sessionCount || 1) > 1;
-  const lastFeature = pdcaStatus.primaryFeature || null;
-  const featureData = lastFeature ? pdcaStatus.activeFeatures[lastFeature] : null;
+  const lastFeature = pdcaStatus?.primaryFeature || null;
+  const active = pdcaStatus?.activeFeatures || {};
+  const featureData = lastFeature ? active[lastFeature] : null;
   const lastPhase = featureData ? featureData.phase : null;
   const matchRate = featureData ? featureData.matchRate : null;
 
@@ -326,7 +328,7 @@ function generateDynamicContext(pdcaStatus, level, memory, returningInfo, output
   const sections = [];
 
   // Header - Legacy compatible format for HOOK-01~08 tests
-  sections.push(`bkit Vibecoding Kit v2.0.2 activated (Gemini CLI) - Level: ${level}`);
+  sections.push(`bkit Vibecoding Kit v2.0.3 activated (Gemini CLI) - Level: ${level}`);
   sections.push('');
   sections.push('# bkit Session Start');
   sections.push('');
@@ -358,7 +360,8 @@ function generateDynamicContext(pdcaStatus, level, memory, returningInfo, output
   // GEMINI.md already imports commands.md and core-rules.md, so Phase-Aware injection
   // skips those files to prevent duplicate context tokens.
   const primary = pdcaStatus.primaryFeature;
-  const currentPhase = primary ? (pdcaStatus.activeFeatures[primary]?.phase) : null;
+  const active = pdcaStatus.activeFeatures || {};
+  const currentPhase = primary ? (active[primary]?.phase) : null;
   const phaseContext = loadPhaseAwareContext(pluginRoot, currentPhase);
   if (phaseContext) {
     sections.push(phaseContext);

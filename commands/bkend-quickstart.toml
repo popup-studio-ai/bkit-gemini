@@ -1,0 +1,5 @@
+description = "bkit bkend-quickstart"
+prompt = """
+Use the bkend-quickstart skill for bkit enhancement.
+"""
+skill_name = "quickstart"

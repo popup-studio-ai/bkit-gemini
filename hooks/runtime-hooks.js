@@ -12,7 +12,7 @@
  *
  * v0.35.0 compat: AfterAgent promoted to SDK dual-mode (#20439 stability fix)
  *
- * @version 2.0.0
+ * @version 2.0.3
  */
 const path = require('path');
 

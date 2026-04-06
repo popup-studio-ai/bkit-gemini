@@ -27,8 +27,8 @@ const tests = [
   // SECTION 1: bkit.config.json Core Fields (15 tests)
   // ═══════════════════════════════════════════════════════════════
 
-  { name: 'TC94-01: bkit.config.json version is 2.0.2', fn: () => {
-    assertEqual(config.version, '2.0.2', 'config version');
+  { name: 'TC94-01: bkit.config.json version is 2.0.3', fn: () => {
+    assertEqual(config.version, '2.0.3', 'config version');
   }},
   { name: 'TC94-02: bkit.config.json platform is gemini', fn: () => {
     assertEqual(config.platform, 'gemini', 'config platform');
@@ -152,8 +152,8 @@ const tests = [
   // SECTION 4: gemini-extension.json (10 tests)
   // ═══════════════════════════════════════════════════════════════
 
-  { name: 'TC94-36: gemini-extension.json version is 2.0.2', fn: () => {
-    assertEqual(extension.version, '2.0.2', 'extension version');
+  { name: 'TC94-36: gemini-extension.json version is 2.0.3', fn: () => {
+    assertEqual(extension.version, '2.0.3', 'extension version');
   }},
   { name: 'TC94-37: gemini-extension.json contextFileName is an array', fn: () => {
     assert(Array.isArray(extension.contextFileName), 'contextFileName should be an array');
@@ -170,8 +170,8 @@ const tests = [
   { name: 'TC94-41: gemini-extension.json has plan.directory', fn: () => {
     assert(extension.plan && extension.plan.directory, 'should have plan.directory');
   }},
-  { name: 'TC94-42: gemini-extension.json description mentions v2.0.0', fn: () => {
-    assertContains(extension.description, 'v2.0.0', 'description should mention v2.0.0');
+  { name: 'TC94-42: gemini-extension.json description mentions v2.0.3', fn: () => {
+    assertContains(extension.description, 'v2.0.3', 'description should mention v2.0.3');
   }},
   { name: 'TC94-43: gemini-extension.json description mentions Gemini CLI', fn: () => {
     assertContains(extension.description, 'Gemini CLI', 'description should mention Gemini CLI');
@@ -317,8 +317,8 @@ const tests = [
   { name: 'TC94-72: GEMINI.md mentions Phase-Aware Context', fn: () => {
     assertContains(geminiMd, 'Phase-Aware', 'should mention Phase-Aware');
   }},
-  { name: 'TC94-73: GEMINI.md mentions bkit v2.0.0', fn: () => {
-    assertContains(geminiMd, 'v2.0.0', 'should mention v2.0.0');
+  { name: 'TC94-73: GEMINI.md mentions bkit v2.0.3', fn: () => {
+    assertContains(geminiMd, 'v2.0.3', 'should mention v2.0.3');
   }},
   { name: 'TC94-74: GEMINI.md mentions PDCA order', fn: () => {
     assertContains(geminiMd, 'Plan', 'should mention Plan');
