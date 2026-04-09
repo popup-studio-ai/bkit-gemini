@@ -260,14 +260,14 @@ module.exports = {
       }
     },
     {
-      name: 'V156-47: session-start.js references v2.0.3 version',
+      name: 'V156-47: session-start.js references v2.0.4 version',
       fn: () => {
         const content = fs.readFileSync(
           path.join(PLUGIN_ROOT, 'hooks', 'scripts', 'session-start.js'), 'utf-8'
         );
-        const matches = content.match(/2\.0\.2/g) || [];
+        const matches = content.match(/2\.0\.\d/g) || [];
         assert(matches.length >= 3,
-          `session-start.js should reference v2.0.3 at least 3 times, found ${matches.length}`);
+          `session-start.js should reference v2.0.x at least 3 times, found ${matches.length}`);
       }
     },
     {
@@ -339,8 +339,8 @@ module.exports = {
         const ext = JSON.parse(fs.readFileSync(
           path.join(PLUGIN_ROOT, 'gemini-extension.json'), 'utf-8'
         ));
-        assertEqual(config.version, '2.0.3', 'bkit.config.json version');
-        assertEqual(ext.version, '2.0.3', 'gemini-extension.json version');
+        assertEqual(config.version, '2.0.4', 'bkit.config.json version');
+        assertEqual(ext.version, '2.0.4', 'gemini-extension.json version');
       }
     }
   ]

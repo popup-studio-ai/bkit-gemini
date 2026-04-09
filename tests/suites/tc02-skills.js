@@ -15,91 +15,66 @@ const ALL_SKILLS = [
 ];
 
 const tests = [
+  // SKILL-01~22: skill-orchestrator.js removed in v2.0.4 (Gemini CLI native skill system)
+  // Skills are now loaded natively by Gemini CLI via skills/*/SKILL.md
   {
-    name: 'SKILL-01: 29 SKILL.md files parse without error',
+    name: 'SKILL-01: All SKILL.md files exist and have frontmatter (v2.0.4)',
     fn: () => {
-      const { parseSkillFrontmatter } = require(path.join(PLUGIN_ROOT, 'lib', 'skill-orchestrator'));
       for (const skill of ALL_SKILLS) {
         const skillPath = path.join(PLUGIN_ROOT, 'skills', skill, 'SKILL.md');
         assertExists(skillPath, `${skill}/SKILL.md should exist`);
-        const metadata = parseSkillFrontmatter(skillPath);
-        assert(metadata.name, `${skill} should have a name`);
+        const content = fs.readFileSync(skillPath, 'utf-8');
+        assert(content.includes('---'), `${skill} should have YAML frontmatter`);
       }
     }
   },
   {
-    name: 'SKILL-02: pdca skill metadata extraction',
+    name: 'SKILL-02: pdca skill has agent bindings in frontmatter',
     fn: () => {
-      const { parseSkillFrontmatter } = require(path.join(PLUGIN_ROOT, 'lib', 'skill-orchestrator'));
-      const metadata = parseSkillFrontmatter(path.join(PLUGIN_ROOT, 'skills', 'pdca', 'SKILL.md'));
-      assertEqual(metadata['user-invocable'], true, 'pdca should be user-invocable');
-      assert(Object.keys(metadata.agents).length > 0, 'pdca should have agent bindings');
-      assertEqual(metadata.agents.analyze, 'gap-detector', 'analyze → gap-detector');
+      const content = fs.readFileSync(path.join(PLUGIN_ROOT, 'skills', 'pdca', 'SKILL.md'), 'utf-8');
+      assertContains(content, 'gap-detector', 'pdca should reference gap-detector');
     }
   },
   {
-    name: 'SKILL-11: parseSimpleYaml scalar',
+    name: 'SKILL-11: parseSimpleYaml scalar (v2.0.4: skip - skill-orchestrator removed)',
+    skip: true,
+    fn: () => {}
+  },
+  {
+    name: 'SKILL-15: loadSkill returns metadata (v2.0.4: skip - skill-orchestrator removed)',
+    skip: true,
+    fn: () => {}
+  },
+  {
+    name: 'SKILL-17: activateSkill delegation (v2.0.4: skip - skill-orchestrator removed)',
+    skip: true,
+    fn: () => {}
+  },
+  {
+    name: 'SKILL-20: listSkills count (v2.0.4: verify via filesystem)',
     fn: () => {
-      const { parseSimpleYaml } = require(path.join(PLUGIN_ROOT, 'lib', 'skill-orchestrator'));
-      const result = parseSimpleYaml('name: pdca\ndescription: PDCA skill');
-      assertEqual(result.name, 'pdca', 'Should parse scalar');
-      assertEqual(result.description, 'PDCA skill', 'Should parse description');
+      const skillDirs = fs.readdirSync(path.join(PLUGIN_ROOT, 'skills'), { withFileTypes: true })
+        .filter(d => d.isDirectory())
+        .map(d => d.name);
+      assert(skillDirs.length >= 29, `Should have at least 29 skills but found ${skillDirs.length}`);
     }
   },
   {
-    name: 'SKILL-15: loadSkill returns metadata+body+templates',
+    name: 'SKILL-21: bkend-quickstart skill has correct content',
     fn: () => {
-      process.env.BKIT_PLUGIN_ROOT = PLUGIN_ROOT;
-      const { loadSkill, clearCache } = require(path.join(PLUGIN_ROOT, 'lib', 'skill-orchestrator'));
-      clearCache();
-      const result = loadSkill('pdca');
-      assert(result !== null, 'Should load pdca skill');
-      assert(result.metadata, 'Should have metadata');
-      assert(typeof result.body === 'string', 'Should have body');
+      const content = fs.readFileSync(path.join(PLUGIN_ROOT, 'skills', 'bkend-quickstart', 'SKILL.md'), 'utf-8');
+      assertContains(content, 'bkend-quickstart', 'Should contain skill name');
+      assertContains(content, 'bkend-expert', 'Should reference bkend-expert agent');
     }
   },
   {
-    name: 'SKILL-17: activateSkill with analyze → gap-detector delegation',
+    name: 'SKILL-22: All 8 bkend-* skills have consistent content',
     fn: () => {
-      process.env.BKIT_PLUGIN_ROOT = PLUGIN_ROOT;
-      const { activateSkill, clearCache } = require(path.join(PLUGIN_ROOT, 'lib', 'skill-orchestrator'));
-      clearCache();
-      const result = activateSkill('pdca', 'analyze', 'login-form');
-      assert(result && result.success, 'Should activate successfully');
-      assertEqual(result.agent, 'gap-detector', 'Should delegate to gap-detector');
-    }
-  },
-  {
-    name: 'SKILL-20: listSkills returns 35 skills',
-    fn: () => {
-      process.env.BKIT_PLUGIN_ROOT = PLUGIN_ROOT;
-      const { listSkills, clearCache } = require(path.join(PLUGIN_ROOT, 'lib', 'skill-orchestrator'));
-      clearCache();
-      const skills = listSkills();
-      assert(skills.length >= 29, `Should list at least 29 skills but found ${skills.length}`);
-    }
-  },
-  {
-    name: 'SKILL-21: bkend-quickstart skill has correct frontmatter',
-    fn: () => {
-      const { parseSkillFrontmatter } = require(path.join(PLUGIN_ROOT, 'lib', 'skill-orchestrator'));
-      const metadata = parseSkillFrontmatter(path.join(PLUGIN_ROOT, 'skills', 'bkend-quickstart', 'SKILL.md'));
-      assertEqual(metadata.name, 'bkend-quickstart', 'Should have correct name');
-      assertEqual(metadata['user-invocable'], true, 'Should be user-invocable');
-      assertEqual(metadata.agents.backend, 'bkend-expert', 'Should delegate to bkend-expert');
-    }
-  },
-  {
-    name: 'SKILL-22: All 8 bkend-* skills have consistent frontmatter',
-    fn: () => {
-      const { parseSkillFrontmatter } = require(path.join(PLUGIN_ROOT, 'lib', 'skill-orchestrator'));
       const bkendSkills = ALL_SKILLS.filter(s => s.startsWith('bkend-'));
       assertEqual(bkendSkills.length, 8, 'Should have exactly 8 bkend-* skills');
       for (const skill of bkendSkills) {
-        const metadata = parseSkillFrontmatter(path.join(PLUGIN_ROOT, 'skills', skill, 'SKILL.md'));
-        assertEqual(metadata['user-invocable'], true, `${skill} should be user-invocable`);
-        assertEqual(metadata.agents.backend, 'bkend-expert', `${skill} should delegate to bkend-expert`);
-        assertEqual(metadata.memory, 'project', `${skill} should use project memory`);
+        const content = fs.readFileSync(path.join(PLUGIN_ROOT, 'skills', skill, 'SKILL.md'), 'utf-8');
+        assertContains(content, 'bkend-expert', `${skill} should reference bkend-expert`);
       }
     }
   },

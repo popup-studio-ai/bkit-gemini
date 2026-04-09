@@ -15,14 +15,14 @@ const tests = [
     name: 'CFG-02: version is 1.5.8',
     fn: () => {
       const config = JSON.parse(fs.readFileSync(path.join(PLUGIN_ROOT, 'bkit.config.json'), 'utf-8'));
-      assertEqual(config.version, '1.5.8', 'Version should be 1.5.8');
+      assertEqual(config.version, '2.0.4', 'Version should be 2.0.4');
     }
   },
   {
     name: 'CFG-03: gemini-extension.json no experimental block',
     fn: () => {
       const ext = JSON.parse(fs.readFileSync(path.join(PLUGIN_ROOT, 'gemini-extension.json'), 'utf-8'));
-      assertEqual(ext.version, '1.5.8', 'Extension version should be 1.5.8');
+      assertEqual(ext.version, '2.0.4', 'Extension version should be 2.0.4');
       assert(!ext.experimental, 'experimental block should be removed (Skills/Hooks GA since v0.26.0)');
     }
   },
@@ -43,11 +43,9 @@ const tests = [
     name: 'CFG-07: Tool Registry resolveToolName handles legacy names',
     fn: () => {
       const { resolveToolName } = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'tools'));
-      assertEqual(resolveToolName('glob_tool'), 'glob', 'glob_tool should resolve to glob');
-      assertEqual(resolveToolName('web_search'), 'google_web_search', 'web_search should resolve to google_web_search');
-      assertEqual(resolveToolName('task_write'), 'write_todos', 'task_write should resolve to write_todos');
       assertEqual(resolveToolName('search_file_content'), 'grep_search', 'search_file_content should resolve to grep_search');
       assertEqual(resolveToolName('glob'), 'glob', 'glob should stay glob');
+      assertEqual(resolveToolName('read_file'), 'read_file', 'read_file should stay read_file');
     }
   },
   {

@@ -11,7 +11,7 @@ const tests = [
   { name: 'TC51-04: Dynamic bkit-pdca-guide 스타일', fn: () => { assertExists(path.join(PLUGIN_ROOT, 'output-styles/bkit-pdca-guide.md'), 'pdca-guide style'); } },
   { name: 'TC51-05: Dynamic 스킬 존재', fn: () => { assertExists(path.join(PLUGIN_ROOT, 'skills/dynamic/SKILL.md'), 'dynamic skill'); } },
   { name: 'TC51-06: bkend-expert 에이전트 존재', fn: () => { assertExists(path.join(PLUGIN_ROOT, 'agents/bkend-expert.md'), 'bkend-expert'); } },
-  { name: 'TC51-07: Dynamic Team 3 에이전트', fn: () => { const TeamStrategy = require(path.join(PLUGIN_ROOT, 'lib/team/strategy')); const s = new TeamStrategy(); const strategy = s.getStrategy ? s.getStrategy('Dynamic') : s.selectStrategy('Dynamic'); assert(strategy !== undefined, 'Should have Dynamic strategy'); } },
+  { name: 'TC51-07: Dynamic Team 3 에이전트 (v2.0.4: skip - lib/team removed)', skip: true, fn: () => {} },
   { name: 'TC51-08: Dynamic PDCA 전체 사이클 시뮬', setup: () => createTestProject({}), fn: () => {
     const { loadPdcaStatus, savePdcaStatus } = require(path.join(PLUGIN_ROOT, 'lib/pdca/status'));
     const s = loadPdcaStatus(TEST_PROJECT_DIR);

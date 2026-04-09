@@ -28,7 +28,7 @@ const tests = [
   {
     name: 'TC-24-03: HOT_PATH_HOOKS has exactly 6 events',
     fn: async () => {
-      assertEqual(hookAdapter.HOT_PATH_HOOKS.length, 6, 'Should have 6 hot path hooks');
+      assertEqual(hookAdapter.HOT_PATH_HOOKS.length, 7, 'Should have 7 hot path hooks');
       assert(hookAdapter.HOT_PATH_HOOKS.includes('before_tool'), 'Should include before_tool');
       assert(hookAdapter.HOT_PATH_HOOKS.includes('after_tool'), 'Should include after_tool');
     }

@@ -5,66 +5,41 @@ const os = require('os');
 const fs = require('fs');
 
 const tests = [
+  // LIB-01~10: ContextHierarchy tests removed in v2.0.4 (lib/context-hierarchy.js deleted)
+  // Replaced by flat module architecture in lib/core/ + lib/gemini/
   {
-    name: 'LIB-01: Plugin config loading',
+    name: 'LIB-01: Plugin config loading (v2.0.4: via bkit.config.json)',
     fn: () => {
-      const { ContextHierarchy } = require(path.join(PLUGIN_ROOT, 'lib', 'context-hierarchy'));
-      const hierarchy = new ContextHierarchy(PLUGIN_ROOT, TEST_PROJECT_DIR);
-      const version = hierarchy.get('version');
-      assertEqual(version, '2.0.3', 'Should load plugin version');
+      const configPath = path.join(PLUGIN_ROOT, 'bkit.config.json');
+      assert(fs.existsSync(configPath), 'bkit.config.json should exist');
+      const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+      assert(config.version, 'Should have version field');
     }
   },
   {
-    name: 'LIB-04: Session override has highest priority',
-    fn: () => {
-      const { ContextHierarchy } = require(path.join(PLUGIN_ROOT, 'lib', 'context-hierarchy'));
-      const hierarchy = new ContextHierarchy(PLUGIN_ROOT, TEST_PROJECT_DIR);
-      hierarchy.setSession('version', '9.9.9');
-      assertEqual(hierarchy.get('version'), '9.9.9', 'Session should override plugin');
-      hierarchy.clearSession();
-    }
+    name: 'LIB-04: Session override has highest priority (v2.0.4: skip - ContextHierarchy removed)',
+    skip: true,
+    fn: () => {}
   },
   {
-    name: 'LIB-05: Dot-notation access',
-    fn: () => {
-      const { ContextHierarchy } = require(path.join(PLUGIN_ROOT, 'lib', 'context-hierarchy'));
-      const hierarchy = new ContextHierarchy(PLUGIN_ROOT, TEST_PROJECT_DIR);
-      assertEqual(hierarchy.get('pdca.matchRateThreshold'), 90, 'Should access nested value');
-    }
+    name: 'LIB-05: Dot-notation access (v2.0.4: skip - ContextHierarchy removed)',
+    skip: true,
+    fn: () => {}
   },
   {
-    name: 'LIB-06: 5s TTL cache expiration',
-    fn: async () => {
-      const { ContextHierarchy } = require(path.join(PLUGIN_ROOT, 'lib', 'context-hierarchy'));
-      const hierarchy = new ContextHierarchy(PLUGIN_ROOT, TEST_PROJECT_DIR);
-      hierarchy.get(); // prime cache
-      const ts1 = hierarchy.cacheTimestamp;
-      hierarchy.get(); // should use cache
-      assertEqual(hierarchy.cacheTimestamp, ts1, 'Should use cached value');
-      hierarchy.invalidate();
-      hierarchy.get(); // should reload
-      assert(hierarchy.cacheTimestamp >= ts1, 'Should reload after invalidate');
-    }
+    name: 'LIB-06: 5s TTL cache expiration (v2.0.4: skip - ContextHierarchy removed)',
+    skip: true,
+    fn: () => {}
   },
   {
-    name: 'LIB-09: _deepMerge objects',
-    fn: () => {
-      const { ContextHierarchy } = require(path.join(PLUGIN_ROOT, 'lib', 'context-hierarchy'));
-      const h = new ContextHierarchy(PLUGIN_ROOT, TEST_PROJECT_DIR);
-      const result = h._deepMerge({ a: { b: 1 } }, { a: { c: 2 } });
-      assertEqual(result.a.b, 1, 'Should preserve original');
-      assertEqual(result.a.c, 2, 'Should add new');
-    }
+    name: 'LIB-09: _deepMerge objects (v2.0.4: skip - ContextHierarchy removed)',
+    skip: true,
+    fn: () => {}
   },
   {
-    name: 'LIB-10: _deepMerge arrays replace',
-    fn: () => {
-      const { ContextHierarchy } = require(path.join(PLUGIN_ROOT, 'lib', 'context-hierarchy'));
-      const h = new ContextHierarchy(PLUGIN_ROOT, TEST_PROJECT_DIR);
-      const result = h._deepMerge({ arr: [1] }, { arr: [2] });
-      assertEqual(result.arr[0], 2, 'Arrays should be replaced, not merged');
-      assertEqual(result.arr.length, 1, 'Should have only 1 element');
-    }
+    name: 'LIB-10: _deepMerge arrays replace (v2.0.4: skip - ContextHierarchy removed)',
+    skip: true,
+    fn: () => {}
   },
   {
     name: 'LIB-14: Project scope path',

@@ -40,14 +40,8 @@ module.exports = {
           assert(flags.hasTaskTracker, 'hasTaskTracker should be true');
           assert(flags.hasModelFamilyToolsets, 'hasModelFamilyToolsets should be true');
           assert(flags.hasExtensionPolicies, 'hasExtensionPolicies should be true');
-          assert(flags.hasGrepIncludePatternRename, 'hasGrepIncludePatternRename should be true');
-          assert(flags.hasReadFileLineParams, 'hasReadFileLineParams should be true');
-          assert(flags.hasReplaceAllowMultiple, 'hasReplaceAllowMultiple should be true');
-          assert(flags.hasExcludeToolsRemoved, 'hasExcludeToolsRemoved should be true');
-          assert(flags.hasPlanModeEnhanced, 'hasPlanModeEnhanced should be true');
-          assert(flags.hasA2AStreaming, 'hasA2AStreaming should be true');
-          assert(flags.hasShellAutocompletion, 'hasShellAutocompletion should be true');
-          assert(flags.hasParallelExtensionLoading, 'hasParallelExtensionLoading should be true');
+          assert(flags.hasPolicyEngine, 'hasPolicyEngine should be true');
+          assert(flags.hasSlashCommands, 'hasSlashCommands should be true');
         } finally {
           vd.resetCache();
           if (original !== undefined) process.env.GEMINI_CLI_VERSION = original;

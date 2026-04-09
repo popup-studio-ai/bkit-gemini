@@ -12,7 +12,7 @@ const tests = [
     fn: () => {
       const result = executeHook('session-start.js');
       assert(result.success, 'Hook should exit 0');
-      assertEqual(result.output.status, 'allow', 'Status should be allow');
+      assertEqual(result.output.decision, 'allow', 'Status should be allow');
     },
     teardown: cleanupTestProject
   },
@@ -68,7 +68,7 @@ const tests = [
     setup: () => createTestProject({ 'docs/.bkit-memory.json': BKIT_MEMORY_RETURNING, 'docs/.pdca-status.json': PDCA_STATUS_FIXTURE }),
     fn: () => {
       const result = executeHook('session-start.js');
-      assertContains(result.output.context, 'Previous Work', 'Should show previous work');
+      assertContains(result.output.systemMessage || result.output.context, 'Previous Work', 'Should show previous work');
     },
     teardown: cleanupTestProject
   },
@@ -77,7 +77,7 @@ const tests = [
     setup: () => createTestProject({}),
     fn: () => {
       const result = executeHook('session-start.js');
-      assertContains(result.output.context, 'Welcome', 'Should show welcome');
+      assertContains(result.output.systemMessage || result.output.context, 'Welcome', 'Should show welcome');
     },
     teardown: cleanupTestProject
   },
@@ -158,7 +158,7 @@ const tests = [
     setup: () => createTestProject({}),
     fn: () => {
       const result = executeHook('before-tool.js', { tool_name: 'run_shell_command', tool_input: { command: 'rm -rf /' } });
-      assertEqual(result.output.status, 'block', 'Should block dangerous command');
+      assertEqual(result.output.decision, 'deny', 'Should block dangerous command');
     },
     teardown: cleanupTestProject
   },

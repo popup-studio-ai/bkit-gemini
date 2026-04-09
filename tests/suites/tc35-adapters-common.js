@@ -37,12 +37,12 @@ const tests = [
     fn: () => { assertType(ir.clearCache, 'function', 'Should export clearCache'); }
   },
   {
-    name: 'TC35-07: gemini adapter index 존재',
-    fn: () => { assertExists(path.join(PLUGIN_ROOT, 'lib/gemini/platform/index.js'), 'gemini index'); }
+    name: 'TC35-07: gemini adapter platform.js 존재',
+    fn: () => { assertExists(path.join(PLUGIN_ROOT, 'lib/gemini/platform.js'), 'gemini platform'); }
   },
   {
-    name: 'TC35-08: platform index 존재',
-    fn: () => { assertExists(path.join(PLUGIN_ROOT, 'lib/gemini/platform/index.js'), 'platform index'); }
+    name: 'TC35-08: platform module 존재',
+    fn: () => { assertExists(path.join(PLUGIN_ROOT, 'lib/gemini/platform.js'), 'platform module'); }
   },
   {
     name: 'TC35-09: adapter getPluginRoot 실제 경로',

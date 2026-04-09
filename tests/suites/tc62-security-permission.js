@@ -38,7 +38,11 @@ const tests = [
     fn: () => {
       const r = checkPermission('run_shell_command', { command: 'git push --force' }, PLUGIN_ROOT);
       // With Policy Engine active, defers to engine
-      assert(r.level === 'deny' || r.level === 'warn' || r.reason === 'Deferred to Policy Engine', 'Should handle git push');
+      // v2.0.4: git push deferred to Policy Engine (not blocked at bkit level)
+      assert(r.level === 'deny' || r.level === 'ask' || r.level === 'allow', 'Should handle git push');
+      if (r.level === 'allow') {
+        assert(r.reason && r.reason.includes('Policy Engine'), 'Should mention Policy Engine deferral');
+      }
     }
   },
   { name: 'TC62-09: unknown tool → allow (기본)',
@@ -50,8 +54,11 @@ const tests = [
   { name: 'TC62-10: run_shell_command chmod 777 → policy deferred',
     fn: () => {
       const r = checkPermission('run_shell_command', { command: 'chmod 777 /etc/shadow' }, PLUGIN_ROOT);
-      // With Policy Engine active in PLUGIN_ROOT, defers to engine
-      assert(r.level === 'deny' || r.level === 'warn' || r.reason === 'Deferred to Policy Engine', 'Should handle chmod');
+      // v2.0.4: chmod deferred to Policy Engine (not blocked at bkit level)
+      assert(r.level === 'deny' || r.level === 'ask' || r.level === 'allow', 'Should handle chmod');
+      if (r.level === 'allow') {
+        assert(r.reason && r.reason.includes('Policy Engine'), 'Should mention Policy Engine deferral');
+      }
     }
   }
 ];

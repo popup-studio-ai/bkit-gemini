@@ -10,7 +10,7 @@ const tests = [
   }},
   { name: 'TC58-02: bkit Feature Usage 필수 출력', fn: () => {
     const content = fs.readFileSync(path.join(PLUGIN_ROOT, 'hooks/scripts/session-start.js'), 'utf-8');
-    assertContains(content, 'Used:', 'Should have Used section');
+    assertContains(content, 'Feature Usage Report', 'Should have Feature Usage Report rule');
   }},
   { name: 'TC58-03: Executive Summary 출력 규칙', fn: () => {
     const content = fs.readFileSync(path.join(PLUGIN_ROOT, 'hooks/scripts/session-start.js'), 'utf-8');

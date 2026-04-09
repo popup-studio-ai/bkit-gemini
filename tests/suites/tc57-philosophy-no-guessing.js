@@ -42,12 +42,7 @@ const tests = [
     const { validatePdcaTransition } = require(path.join(PLUGIN_ROOT, 'lib/pdca/phase'));
     assertType(validatePdcaTransition, 'function', 'Should validate transitions');
   }},
-  { name: 'TC57-10: 컨텍스트 기반 판단 (ContextHierarchy)', fn: () => {
-    const { ContextHierarchy } = require(path.join(PLUGIN_ROOT, 'lib/context-hierarchy'));
-    const h = new ContextHierarchy(PLUGIN_ROOT, PLUGIN_ROOT);
-    const config = h.get();
-    assert(config !== undefined, 'Should base decisions on context, not guessing');
-  }}
+  { name: 'TC57-10: 컨텍스트 기반 판단 (v2.0.4: skip - ContextHierarchy removed)', skip: true, fn: () => {} }
 ];
 
 module.exports = { tests };

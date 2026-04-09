@@ -23,7 +23,7 @@ module.exports = {
     },
     {
       name: 'UT-62: status.js loadPdcaStatus() returns primaryFeature',
-      setup: () => createTestProject({ 'docs/.pdca-status.json': { version: '2.0', primaryFeature: 'test-feat', features: {} } }),
+      setup: () => createTestProject({ '.bkit/state/pdca-status.json': { version: '2.0', primaryFeature: 'test-feat', activeFeatures: {}, history: [] } }),
       fn: () => {
         const { loadPdcaStatus } = require(path.join(PLUGIN_ROOT, 'lib/pdca/status'));
         const status = loadPdcaStatus(TEST_PROJECT_DIR);
@@ -49,15 +49,11 @@ module.exports = {
       }
     },
 
-    // 4.3 GAP-03: lib/task/
+    // 4.3 GAP-03: lib/task/ removed in v2.0.4
     {
-      name: 'UT-68: classification.js classifyTask() minor change',
-      fn: () => {
-        const { classifyTask } = require(path.join(PLUGIN_ROOT, 'lib/task/classification'));
-        // minorChange: 2500 <= charCount < 10000
-        const content = 'a'.repeat(3000);
-        assertEqual(classifyTask(content), 'minorChange');
-      }
+      name: 'UT-68: classification.js classifyTask() minor change (v2.0.4: skip - lib/task removed)',
+      skip: true,
+      fn: () => {}
     },
 
     // 4.4 GAP-04: lib/core/
@@ -85,15 +81,11 @@ module.exports = {
       }
     },
 
-    // 4.7 GAP-12: context-hierarchy.js
+    // 4.7 GAP-12: context-hierarchy.js removed in v2.0.4
     {
-      name: 'UT-88: getHierarchy() singleton',
-      fn: () => {
-        const { getHierarchy } = require(path.join(PLUGIN_ROOT, 'lib/context-hierarchy'));
-        const h1 = getHierarchy();
-        const h2 = getHierarchy();
-        assert(h1 === h2, 'Should be same instance');
-      }
+      name: 'UT-88: getHierarchy() singleton (v2.0.4: skip - context-hierarchy removed)',
+      skip: true,
+      fn: () => {}
     }
   ]
 };

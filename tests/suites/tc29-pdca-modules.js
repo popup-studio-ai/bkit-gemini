@@ -55,7 +55,7 @@ const tests = [
     fn: () => {
       const p = status.getPdcaStatusPath('/tmp/test-project');
       assertType(p, 'string', 'Should return string');
-      assert(p.includes('.pdca-status.json'), 'Should include status filename');
+      assert(p.includes('pdca-status.json'), 'Should include status filename');
     }
   },
   {
