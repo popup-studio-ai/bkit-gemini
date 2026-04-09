@@ -85,9 +85,8 @@ function main() {
 
     // 8. Output result
     const output = {
-      status: 'allow',
-      context: dynamicContext,
-      hookEvent: 'SessionStart',
+      decision: 'allow',
+      systemMessage: dynamicContext,
       metadata: {
         version: '2.0.3',
         platform: 'gemini',
@@ -111,9 +110,8 @@ function main() {
       console.error('SessionStart hook error:', error);
     }
     console.log(JSON.stringify({
-      status: 'allow',
-      context: 'bkit Vibecoding Kit v2.0.4 activated (Gemini CLI)',
-      hookEvent: 'SessionStart'
+      decision: 'allow',
+      systemMessage: 'bkit Vibecoding Kit v2.0.4 activated (Gemini CLI)'
     }));
     process.exit(0);
   }

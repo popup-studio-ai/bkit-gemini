@@ -55,7 +55,7 @@ function processHook(input) {
     const permResult = checkPermissionManager(toolName, toolInput, projectDir);
     if (permResult.level === 'deny') {
       writeSecurityAuditLog(projectDir, 'DENY', toolName, toolInput, permResult.reason);
-      return { status: 'block', message: `Permission denied: ${permResult.reason || 'Blocked by permission policy'}` };
+      return { decision: 'deny', reason: `Permission denied: ${permResult.reason || 'Blocked by permission policy'}` };
     }
 
     const contexts = [];
@@ -65,7 +65,7 @@ function processHook(input) {
         const { getFeatureFlags } = require(path.join(libPath, 'gemini', 'version'));
         if (getFeatureFlags().hasBeforeToolAsk) {
           writeSecurityAuditLog(projectDir, 'ASK', toolName, toolInput, permResult.reason);
-          return { status: 'ask', message: permResult.reason || 'This action requires user confirmation.' };
+          return { decision: 'ask', systemMessage: permResult.reason || 'This action requires user confirmation.' };
         }
       } catch (e) { /* version detection failure, fall through to legacy */ }
 
@@ -83,17 +83,17 @@ function processHook(input) {
       const bashResult = handleBash(toolInput);
       if (bashResult.block) {
         writeSecurityAuditLog(projectDir, 'BLOCK', toolName, toolInput, bashResult.message || 'Blocked by pattern');
-        return { status: 'block', message: bashResult.message };
+        return { decision: 'deny', reason: bashResult.message };
       }
       contexts.push(...bashResult.warnings);
     }
 
     if (contexts.length > 0) {
-      return { status: 'allow', message: contexts.join('\n'), hookEvent: 'BeforeTool' };
+      return { decision: 'allow', systemMessage: contexts.join('\n') };
     }
-    return { status: 'allow' };
+    return { decision: 'allow' };
   } catch (error) {
-    return { status: 'allow' };
+    return { decision: 'allow' };
   }
 }
 
@@ -111,10 +111,10 @@ function main() {
     input.projectDir = adapter.getProjectDir();
     const result = processHook(input);
 
-    if (result.status === 'block') {
-      adapter.outputBlock(result.message);
-    } else if (result.message) {
-      adapter.outputAllow(result.message, result.hookEvent || 'BeforeTool');
+    if (result.decision === 'deny') {
+      adapter.outputBlock(result.reason);
+    } else if (result.systemMessage) {
+      adapter.outputAllow(result.systemMessage, 'BeforeTool');
     } else {
       adapter.outputEmpty();
     }

@@ -15,7 +15,7 @@ function processHook(input) {
   try {
     const tools = input.tools || [];
     if (!tools || tools.length === 0) {
-      return { status: 'allow' };
+      return { decision: 'allow' };
     }
 
     const projectDir = input.projectDir || process.cwd();
@@ -37,19 +37,18 @@ function processHook(input) {
 
     if (allowedTools && allowedTools.length > 0) {
       return {
-        status: 'allow',
+        decision: 'allow',
         toolConfig: {
           functionCallingConfig: {
             mode: 'AUTO',
             allowedFunctionNames: allowedTools
           }
-        },
-        hookEvent: 'BeforeToolSelection'
+        }
       };
     }
-    return { status: 'allow' };
+    return { decision: 'allow' };
   } catch (error) {
-    return { status: 'allow' };
+    return { decision: 'allow' };
   }
 }
 

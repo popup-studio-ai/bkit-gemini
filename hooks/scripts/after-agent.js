@@ -58,7 +58,7 @@ function normalizeInput(input) {
 
 // --- Helper to build allow result ---
 function _allowMsg(message) {
-  return { status: 'allow', message, hookEvent: 'AfterAgent' };
+  return { decision: 'allow', systemMessage: message };
 }
 
 function _getProjectDir() {
@@ -78,36 +78,36 @@ function processHook(normalized) {
 
   if (activeAgent && AGENT_HANDLERS[activeAgent]) {
     try {
-      return AGENT_HANDLERS[activeAgent](normalized) || { status: 'allow' };
+      return AGENT_HANDLERS[activeAgent](normalized) || { decision: 'allow' };
     } catch (e) {
-      return { status: 'allow' };
+      return { decision: 'allow' };
     }
   }
 
   const normalizedSkill = normalizeSkillName(activeSkill);
   if (normalizedSkill && SKILL_HANDLERS[normalizedSkill]) {
     try {
-      return SKILL_HANDLERS[normalizedSkill](normalized) || { status: 'allow' };
+      return SKILL_HANDLERS[normalizedSkill](normalized) || { decision: 'allow' };
     } catch (e) {
-      return { status: 'allow' };
+      return { decision: 'allow' };
     }
   }
 
-  return { status: 'allow' };
+  return { decision: 'allow' };
 }
 
 // --- RuntimeHook function export (v0.31.0+ SDK) ---
 async function handler(event) {
   // SDK-mode loop guard
   if (_sdkCallDepth >= MAX_REENTRY) {
-    return { status: 'allow' };
+    return { decision: 'allow' };
   }
   _sdkCallDepth++;
 
   try {
     return processHook(normalizeInput(event));
   } catch (e) {
-    return { status: 'allow' };
+    return { decision: 'allow' };
   } finally {
     _sdkCallDepth = Math.max(0, _sdkCallDepth - 1);
   }
@@ -136,8 +136,8 @@ function main() {
     const normalized = normalizeInput(input);
     const result = processHook(normalized);
 
-    if (result.message) {
-      adapter.outputAllow(result.message, result.hookEvent || 'AfterAgent');
+    if (result.systemMessage) {
+      adapter.outputAllow(result.systemMessage, 'AfterAgent');
     } else {
       adapter.outputEmpty();
     }
@@ -157,12 +157,12 @@ function handleGapDetectorComplete(normalized) {
   try {
     const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
     const pdcaStatusPath = pdcaStatusModule.getPdcaStatusPath(projectDir);
-    if (!fs.existsSync(pdcaStatusPath)) return { status: 'allow' };
+    if (!fs.existsSync(pdcaStatusPath)) return { decision: 'allow' };
 
     const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
     const primaryFeature = pdcaStatus.primaryFeature;
     const active = pdcaStatus.activeFeatures || {};
-    if (!primaryFeature || !active[primaryFeature]) return { status: 'allow' };
+    if (!primaryFeature || !active[primaryFeature]) return { decision: 'allow' };
 
     // Try to extract match rate from context
     const context = normalized.context || '';
@@ -194,7 +194,7 @@ function handleGapDetectorComplete(normalized) {
     // Ignore errors
   }
 
-  return { status: 'allow' };
+  return { decision: 'allow' };
 }
 
 function handleIteratorComplete(normalized) {
@@ -203,12 +203,12 @@ function handleIteratorComplete(normalized) {
   try {
     const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
     const pdcaStatusPath = pdcaStatusModule.getPdcaStatusPath(projectDir);
-    if (!fs.existsSync(pdcaStatusPath)) return { status: 'allow' };
+    if (!fs.existsSync(pdcaStatusPath)) return { decision: 'allow' };
 
     const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
     const primaryFeature = pdcaStatus.primaryFeature;
     const active = pdcaStatus.activeFeatures || {};
-    if (!primaryFeature || !active[primaryFeature]) return { status: 'allow' };
+    if (!primaryFeature || !active[primaryFeature]) return { decision: 'allow' };
 
     const featureStatus = active[primaryFeature];
     featureStatus.iterationCount = (featureStatus.iterationCount || 0) + 1;
@@ -231,7 +231,7 @@ function handleIteratorComplete(normalized) {
       return _allowMsg(`**Iteration ${featureStatus.iterationCount} Complete**: Run \`/pdca analyze ${primaryFeature}\` to verify improvements.`);
     }
   } catch (e) {
-    return { status: 'allow' };
+    return { decision: 'allow' };
   }
 }
 

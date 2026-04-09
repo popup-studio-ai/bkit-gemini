@@ -13,7 +13,7 @@ const libPath = path.resolve(__dirname, '..', '..', 'lib');
 function processHook(input) {
   try {
     const response = input.response || input.text || '';
-    if (!response) return { status: 'allow' };
+    if (!response) return { decision: 'allow' };
 
     const projectDir = input.projectDir || process.cwd();
     trackUsage(projectDir, {
@@ -22,9 +22,9 @@ function processHook(input) {
       hasFeatureReport: response.includes('bkit Feature Usage')
     });
 
-    return { status: 'allow' };
+    return { decision: 'allow' };
   } catch (error) {
-    return { status: 'allow' };
+    return { decision: 'allow' };
   }
 }
 
@@ -44,7 +44,7 @@ function main() {
     console.log(JSON.stringify(result));
     process.exit(0);
   } catch (error) {
-    console.log(JSON.stringify({ status: 'allow' }));
+    console.log(JSON.stringify({ decision: 'allow' }));
     process.exit(0);
   }
 }

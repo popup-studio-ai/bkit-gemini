@@ -11,6 +11,14 @@
 
   "plan": { "directory": "docs/01-plan" },
 
+  "mcpServers": {
+    "bkit": {
+      "command": "/bin/bash",
+      "args": ["${extensionPath}/mcp/start-server.sh"],
+      "cwd": "${extensionPath}"
+    }
+  },
+
   "settings": [
     {
       "name": "Output Style",

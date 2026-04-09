@@ -82,7 +82,7 @@ function processHook(input) {
   try {
     const prompt = input.prompt || input.user_message || '';
     if (!prompt || prompt.length < 3) {
-      return { status: 'allow' };
+      return { decision: 'allow' };
     }
 
     const projectDir = input.projectDir || process.cwd();
@@ -109,11 +109,11 @@ function processHook(input) {
     }
 
     if (contexts.length > 0) {
-      return { status: 'allow', additionalContext: contexts.join('\n\n'), hookEvent: 'BeforeModel' };
+      return { decision: 'allow', additionalContext: contexts.join('\n\n') };
     }
-    return { status: 'allow' };
+    return { decision: 'allow' };
   } catch (error) {
-    return { status: 'allow' };
+    return { decision: 'allow' };
   }
 }
 

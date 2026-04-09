@@ -19,7 +19,7 @@ function processHook(input) {
                    input.prompt || input.user_message || input.message || '';
 
     if (!prompt || prompt.length < 3) {
-      return { status: 'allow' };
+      return { decision: 'allow' };
     }
 
     const contexts = [];
@@ -45,11 +45,11 @@ function processHook(input) {
     }
 
     if (contexts.length > 0) {
-      return { status: 'allow', message: contexts.join('\n'), hookEvent: 'BeforeAgent' };
+      return { decision: 'allow', systemMessage: contexts.join('\n') };
     }
-    return { status: 'allow' };
+    return { decision: 'allow' };
   } catch (error) {
-    return { status: 'allow' };
+    return { decision: 'allow' };
   }
 }
 
@@ -66,8 +66,8 @@ function main() {
     const input = adapter.readHookInput();
     const result = processHook(input);
 
-    if (result.message) {
-      adapter.outputAllow(result.message, result.hookEvent || 'BeforeAgent');
+    if (result.systemMessage) {
+      adapter.outputAllow(result.systemMessage, 'BeforeAgent');
     } else {
       adapter.outputEmpty();
     }
