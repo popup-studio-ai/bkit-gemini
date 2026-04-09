@@ -30,7 +30,7 @@ const tests = [
   {
     name: 'AGENT-13: MCP server registers all 16 agents',
     fn: () => {
-      const serverCode = fs.readFileSync(path.join(PLUGIN_ROOT, 'mcp', 'spawn-agent-server.js'), 'utf-8');
+      const serverCode = fs.readFileSync(path.join(PLUGIN_ROOT, 'mcp', 'bkit-server.js'), 'utf-8');
       for (const agent of ALL_AGENTS) {
         assertContains(serverCode, `'${agent}'`, `MCP server should register ${agent}`);
       }

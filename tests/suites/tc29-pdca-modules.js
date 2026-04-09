@@ -6,7 +6,6 @@ const fs = require('fs');
 const status = require(path.join(PLUGIN_ROOT, 'lib/pdca/status'));
 const phase = require(path.join(PLUGIN_ROOT, 'lib/pdca/phase'));
 const level = require(path.join(PLUGIN_ROOT, 'lib/pdca/level'));
-const automation = require(path.join(PLUGIN_ROOT, 'lib/pdca/automation'));
 const tier = require(path.join(PLUGIN_ROOT, 'lib/pdca/tier'));
 
 const tests = [
@@ -135,18 +134,7 @@ const tests = [
     name: 'TC29-18: getRequiredPhases 존재',
     fn: () => { assertType(level.getRequiredPhases, 'function', 'Should export'); }
   },
-  {
-    name: 'TC29-19: getAutomationLevel 존재',
-    fn: () => { assertType(automation.getAutomationLevel, 'function', 'Should export'); }
-  },
-  {
-    name: 'TC29-20: shouldAutoAdvance 존재',
-    fn: () => { assertType(automation.shouldAutoAdvance, 'function', 'Should export'); }
-  },
-  {
-    name: 'TC29-21: shouldAutoStartPdca 존재',
-    fn: () => { assertType(automation.shouldAutoStartPdca, 'function', 'Should export'); }
-  },
+  // TC29-19~21: automation module removed in v2.0.4 (dead code cleanup)
   {
     name: 'TC29-22: getLanguageTier 존재',
     fn: () => { assertType(tier.getLanguageTier, 'function', 'Should export'); }

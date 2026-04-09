@@ -88,15 +88,15 @@ const tests = [
   // ─── Perspective 4: Agent Safety Tiers (Full Inventory) ───
 
   {
-    name: 'COMP-05: All 21 agents have assigned safety tiers in spawn-agent-server',
+    name: 'COMP-05: All 21 agents have assigned safety tiers in bkit-server',
     fn: () => {
-      const spawnAgentSrc = fs.readFileSync(path.join(PLUGIN_ROOT, 'mcp', 'spawn-agent-server.js'), 'utf-8');
+      const spawnAgentSrc = fs.readFileSync(path.join(PLUGIN_ROOT, 'mcp', 'bkit-server.js'), 'utf-8');
       const agentFiles = fs.readdirSync(path.join(PLUGIN_ROOT, 'agents')).filter(f => f.endsWith('.md'));
 
       for (const file of agentFiles) {
         const agentName = path.basename(file, '.md');
-        // Check if agentName is in the AGENTS mapping in spawn-agent-server.js
-        assert(spawnAgentSrc.includes(`'${agentName}'`), `Agent ${agentName} should be registered in spawn-agent-server.js`);
+        // Check if agentName is in the AGENTS mapping in bkit-server.js
+        assert(spawnAgentSrc.includes(`'${agentName}'`), `Agent ${agentName} should be registered in bkit-server.js`);
       }
     }
   },

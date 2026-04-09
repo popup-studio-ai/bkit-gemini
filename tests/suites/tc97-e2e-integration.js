@@ -363,18 +363,18 @@ const tests = [
   // ─── MCP server + version path (5 tests) ───
 
   { name: 'TC97-36: MCP server source references version require path', fn: () => {
-    const content = fs.readFileSync(path.join(PLUGIN_ROOT, 'mcp/spawn-agent-server.js'), 'utf-8');
+    const content = fs.readFileSync(path.join(PLUGIN_ROOT, 'mcp/bkit-server.js'), 'utf-8');
     assertContains(content, 'lib', 'should reference lib path');
     assertContains(content, 'version', 'should reference version module');
   }},
 
   { name: 'TC97-37: MCP server has getFeatureFlags require', fn: () => {
-    const content = fs.readFileSync(path.join(PLUGIN_ROOT, 'mcp/spawn-agent-server.js'), 'utf-8');
+    const content = fs.readFileSync(path.join(PLUGIN_ROOT, 'mcp/bkit-server.js'), 'utf-8');
     assertContains(content, 'getFeatureFlags', 'should require getFeatureFlags');
   }},
 
   { name: 'TC97-38: MCP server version path resolves to correct module', fn: () => {
-    // The path used in spawn-agent-server.js: path.join(__dirname, '..', 'lib', 'gemini', 'version')
+    // The path used in bkit-server.js: path.join(__dirname, '..', 'lib', 'gemini', 'version')
     const resolvedPath = path.join(PLUGIN_ROOT, 'mcp', '..', 'lib', 'gemini', 'version');
     const normalizedPath = path.resolve(resolvedPath);
     const expectedPath = path.resolve(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'version'));

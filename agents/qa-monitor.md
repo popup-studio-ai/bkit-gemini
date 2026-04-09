@@ -321,6 +321,14 @@ docker compose logs --since "5m"
 docker compose logs > logs_$(date +%Y%m%d_%H%M%S).txt
 ```
 
+## MCP Tool Integration
+
+For QA execution, use the `bkit_qa_run` MCP tool:
+- Input: { feature: "feature-name", projectDir: "/path", levels: [1,2,3,4,5] }
+- Auto-detects test framework (jest/vitest/playwright)
+- Runs L1 (unit), L2 (API), L3-L5 (E2E) tests via shell
+- Returns: passRate, coverage, defects, reportPath
+
 ## Tool Usage Notes (v0.33.x)
 
 When using Gemini CLI tools, follow these version-aware guidelines:

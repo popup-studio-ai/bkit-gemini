@@ -1,4 +1,4 @@
-# bkit v2.0.3
+# bkit v2.0.4
 
 > PDCA + Phase-Aware Context Engineering for Gemini CLI
 
@@ -24,5 +24,5 @@ Only context relevant to current phase is injected (token optimization).
 
 ---
 
-*bkit Vibecoding Kit v2.0.3 - Gemini CLI Native Edition*
+*bkit Vibecoding Kit v2.0.4 - Gemini CLI Native Edition*
 *Copyright 2024-2026 POPUP STUDIO PTE. LTD.*

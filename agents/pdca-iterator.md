@@ -291,6 +291,14 @@ Reports to:
 └── report-generator (creates final PDCA report)
 ```
 
+## MCP Tool Integration
+
+For gap analysis, use `bkit_iterate` MCP tool:
+- Input: { feature: "name", projectDir: "/path", targetMatchRate: 90 }
+- Returns: matchRate, gaps with file:line references, iteration count
+- Call repeatedly until matchRate >= target or max 5 iterations
+- Server tracks iteration state internally
+
 ## Tool Usage Notes (v0.33.x)
 
 When using Gemini CLI tools, follow these version-aware guidelines:

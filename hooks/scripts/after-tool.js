@@ -17,6 +17,18 @@ function processHook(input) {
     const toolInput = input.tool_input || input.toolInput || {};
     const projectDir = input.projectDir || process.cwd();
 
+    // v2.0.4: Inline audit trail (best-effort, no external imports)
+    try {
+      const auditDir = path.join(projectDir, '.gemini', 'audit');
+      if (!fs.existsSync(auditDir)) fs.mkdirSync(auditDir, { recursive: true });
+      const today = new Date().toISOString().slice(0, 10);
+      const record = JSON.stringify({
+        ts: new Date().toISOString(), type: 'tool_call',
+        tool: toolName, file: toolInput.file_path || toolInput.path || ''
+      });
+      fs.appendFileSync(path.join(auditDir, `${today}.jsonl`), record + '\n');
+    } catch (_) { /* audit is best-effort */ }
+
     if (['write_file', 'replace'].includes(toolName)) {
       return processPostWrite(toolInput, projectDir);
     } else if (toolName === 'activate_skill') {

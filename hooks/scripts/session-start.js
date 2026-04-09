@@ -112,7 +112,7 @@ function main() {
     }
     console.log(JSON.stringify({
       status: 'allow',
-      context: 'bkit Vibecoding Kit v2.0.3 activated (Gemini CLI)',
+      context: 'bkit Vibecoding Kit v2.0.4 activated (Gemini CLI)',
       hookEvent: 'SessionStart'
     }));
     process.exit(0);
@@ -328,7 +328,7 @@ function generateDynamicContext(pdcaStatus, level, memory, returningInfo, output
   const sections = [];
 
   // Header - Legacy compatible format for HOOK-01~08 tests
-  sections.push(`bkit Vibecoding Kit v2.0.3 activated (Gemini CLI) - Level: ${level}`);
+  sections.push(`bkit Vibecoding Kit v2.0.4 activated (Gemini CLI) - Level: ${level}`);
   sections.push('');
   sections.push('# bkit Session Start');
   sections.push('');

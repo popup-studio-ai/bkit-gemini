@@ -1,5 +1,11 @@
 {
   "experimental": {
     "enableAgents": true
+  },
+  "mcpServers": {
+    "bkit": {
+      "command": "/bin/bash",
+      "args": ["mcp/start-server.sh"]
+    }
   }
 }

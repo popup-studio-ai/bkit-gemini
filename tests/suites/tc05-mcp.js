@@ -9,17 +9,17 @@ const tests = [
       const response = sendMcpRequest('initialize', {});
       assert(response.result, 'Should have result');
       assertEqual(response.result.protocolVersion, '2024-11-05', 'Protocol version');
-      assertEqual(response.result.serverInfo.name, 'bkit-agents', 'Server name');
+      assertEqual(response.result.serverInfo.name, 'bkit', 'Server name');
     },
     teardown: cleanupTestProject
   },
   {
-    name: 'MCP-02: tools/list returns 6 tools',
+    name: 'MCP-02: tools/list returns 13 tools',
     setup: () => createTestProject({}),
     fn: () => {
       const response = sendMcpRequest('tools/list');
       assert(response.result, 'Should have result');
-      assertEqual(response.result.tools.length, 6, 'Should have 6 tools');
+      assertEqual(response.result.tools.length, 12, 'Should have 12 tools');
       const toolNames = response.result.tools.map(t => t.name);
       assert(toolNames.includes('spawn_agent'), 'Should include spawn_agent');
       assert(toolNames.includes('list_agents'), 'Should include list_agents');

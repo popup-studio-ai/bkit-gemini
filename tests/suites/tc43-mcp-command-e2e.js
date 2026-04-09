@@ -12,8 +12,8 @@ const tests = [
     fn: () => { assertExists(MCP_DIR, 'mcp/ should exist'); }
   },
   {
-    name: 'TC43-02: spawn-agent-server.js 존재',
-    fn: () => { assertExists(path.join(MCP_DIR, 'spawn-agent-server.js'), 'spawn-agent-server.js'); }
+    name: 'TC43-02: bkit-server.js 존재',
+    fn: () => { assertExists(path.join(MCP_DIR, 'bkit-server.js'), 'bkit-server.js'); }
   },
   {
     name: 'TC43-03: commands/ 6개 TOML 파일',
