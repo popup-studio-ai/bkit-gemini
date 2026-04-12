@@ -1,4 +1,4 @@
-# Agent Memory Access Control Policy (v2.0.3)
+# Agent Memory Access Control Policy (v2.0.4)
 
 > Documents the intended access control for `.gemini/agent-memory/bkit/` files.
 > Gemini CLI does not enforce file-level isolation per agent; this serves as a design spec.

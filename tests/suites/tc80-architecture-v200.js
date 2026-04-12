@@ -109,7 +109,7 @@ test('ARC-08', 'Platform functions available directly from lib/gemini/platform.j
 });
 
 // All module directories load without errors
-const LIB_SUBDIRS = ['core', 'pdca', 'intent', 'task', 'team'];
+const LIB_SUBDIRS = ['core', 'pdca', 'intent'];
 
 LIB_SUBDIRS.forEach(dir => {
   test(`ARC-09-${dir}`, `lib/${dir}/ loads without errors (require index)`, () => {
@@ -122,12 +122,12 @@ LIB_SUBDIRS.forEach(dir => {
   });
 });
 
-test('ARC-10', 'lib/context-hierarchy.js exists', () => {
-  assert(fs.existsSync(path.join(LIB, 'context-hierarchy.js')), 'lib/context-hierarchy.js not found');
+test('ARC-10', 'lib/context-hierarchy.js removed (dead code cleanup v2.0.4)', () => {
+  assert(!fs.existsSync(path.join(LIB, 'context-hierarchy.js')), 'context-hierarchy.js should be deleted');
 });
 
-test('ARC-11', 'lib/skill-orchestrator.js exists', () => {
-  assert(fs.existsSync(path.join(LIB, 'skill-orchestrator.js')), 'lib/skill-orchestrator.js not found');
+test('ARC-11', 'lib/skill-orchestrator.js removed (dead code cleanup v2.0.4)', () => {
+  assert(!fs.existsSync(path.join(LIB, 'skill-orchestrator.js')), 'skill-orchestrator.js should be deleted');
 });
 
 // ═══════════════════════════════════════════════════════════════
@@ -174,11 +174,11 @@ HOOK_SCRIPTS.forEach(script => {
   });
 });
 
-test('REQ-05', 'mcp/spawn-agent-server.js requires lib/gemini/version (not lib/adapters)', () => {
-  const content = fs.readFileSync(path.join(MCP_DIR, 'spawn-agent-server.js'), 'utf-8');
-  assert(content.includes('lib/gemini/version') || content.includes("'gemini', 'version'"),
-    'spawn-agent-server.js does not reference lib/gemini/version');
-  assert(!content.includes('lib/adapters'), 'spawn-agent-server.js still references lib/adapters');
+test('REQ-05', 'mcp/bkit-server.js requires lib/gemini/model-resolver', () => {
+  const content = fs.readFileSync(path.join(MCP_DIR, 'bkit-server.js'), 'utf-8');
+  assert(content.includes('model-resolver'),
+    'bkit-server.js does not reference model-resolver');
+  assert(!content.includes('lib/adapters'), 'bkit-server.js still references lib/adapters');
 });
 
 test('REQ-06', 'lib/gemini/platform.js exports getAdapter function', () => {
@@ -344,20 +344,20 @@ test('CCR-20', 'core/platform.js detectPlatform() returns "gemini" only', () => 
 // ═══════════════════════════════════════════════════════════════
 console.log('\n=== Section 4: Version Consistency ===');
 
-test('VER-01', 'bkit.config.json version is 2.0.3', () => {
+test('VER-01', 'bkit.config.json version is 2.0.4', () => {
   const config = JSON.parse(fs.readFileSync(path.join(ROOT, 'bkit.config.json'), 'utf-8'));
-  assert(config.version === '2.0.3', `bkit.config.json version is "${config.version}"`);
+  assert(config.version === '2.0.4', `bkit.config.json version is "${config.version}"`);
 });
 
-test('VER-02', 'gemini-extension.json version is 2.0.3', () => {
+test('VER-02', 'gemini-extension.json version is 2.0.4', () => {
   const ext = JSON.parse(fs.readFileSync(path.join(ROOT, 'gemini-extension.json'), 'utf-8'));
-  assert(ext.version === '2.0.3', `gemini-extension.json version is "${ext.version}"`);
+  assert(ext.version === '2.0.4', `gemini-extension.json version is "${ext.version}"`);
 });
 
-test('VER-03', 'hooks/hooks.json description contains v2.0.3', () => {
+test('VER-03', 'hooks/hooks.json description contains v2.0.4', () => {
   const hooks = JSON.parse(fs.readFileSync(path.join(HOOKS_DIR, 'hooks.json'), 'utf-8'));
-  assert(hooks.description.includes('v2.0.3'),
-    `hooks.json description does not contain v2.0.3: "${hooks.description}"`);
+  assert(hooks.description.includes('v2.0.4'),
+    `hooks.json description does not contain v2.0.4: "${hooks.description}"`);
 });
 
 test('VER-04', 'No "v1.5.x" version strings in session-start.js', () => {
@@ -366,9 +366,9 @@ test('VER-04', 'No "v1.5.x" version strings in session-start.js', () => {
   assert(!match, `Found v1.5.x in session-start.js: ${match}`);
 });
 
-test('VER-05', 'session-start.js references v2.0.3 in context output', () => {
+test('VER-05', 'session-start.js references v2.0.4 in context output', () => {
   const content = fs.readFileSync(path.join(HOOKS_SCRIPTS, 'session-start.js'), 'utf-8');
-  assert(content.includes('v2.0.3'), 'session-start.js does not contain v2.0.3');
+  assert(content.includes('v2.0.4'), 'session-start.js does not contain v2.0.4');
 });
 
 test('VER-06', 'scripts/sync-version.js exists', () => {
@@ -718,13 +718,13 @@ test('LOG-07', 'CHANGELOG.md documents minimum CLI version change', () => {
     'CHANGELOG.md does not document v0.34.0 minimum');
 });
 
-test('LOG-08', 'CHANGELOG.md v2.0.3 entry is first (most recent)', () => {
+test('LOG-08', 'CHANGELOG.md v2.0.4 entry is first (most recent)', () => {
   const content = fs.readFileSync(path.join(ROOT, 'CHANGELOG.md'), 'utf-8');
   const firstH2 = content.indexOf('## ');
-  const v202Pos = content.indexOf('v2.0.3');
-  // v2.0.3 should appear at or very near the first ## heading
+  const v202Pos = content.indexOf('v2.0.4');
+  // v2.0.4 should appear at or very near the first ## heading
   assert(v202Pos < firstH2 + 100,
-    'v2.0.3 is not the most recent changelog entry');
+    'v2.0.4 is not the most recent changelog entry');
 });
 
 // ═══════════════════════════════════════════════════════════════
@@ -809,21 +809,21 @@ test('XAR-10', 'policy.js LEVEL_POLICY_TEMPLATES has Starter, Dynamic, Enterpris
 // ═══════════════════════════════════════════════════════════════
 console.log('\n=== Section 10: Security Architecture ===');
 
-test('SEC-01', 'mcp/spawn-agent-server.js has SAFETY_TIERS defined', () => {
-  const content = fs.readFileSync(path.join(MCP_DIR, 'spawn-agent-server.js'), 'utf-8');
+test('SEC-01', 'mcp/bkit-server.js has SAFETY_TIERS defined', () => {
+  const content = fs.readFileSync(path.join(MCP_DIR, 'bkit-server.js'), 'utf-8');
   assert(content.includes('SAFETY_TIERS'), 'SAFETY_TIERS not defined');
   assert(content.includes('READONLY'), 'READONLY tier not defined');
   assert(content.includes('DOCWRITE'), 'DOCWRITE tier not defined');
   assert(content.includes('FULL'), 'FULL tier not defined');
 });
 
-test('SEC-02', 'mcp/spawn-agent-server.js agents have safetyTier assigned', () => {
-  const content = fs.readFileSync(path.join(MCP_DIR, 'spawn-agent-server.js'), 'utf-8');
+test('SEC-02', 'mcp/bkit-server.js agents have safetyTier assigned', () => {
+  const content = fs.readFileSync(path.join(MCP_DIR, 'bkit-server.js'), 'utf-8');
   assert(content.includes('safetyTier'), 'safetyTier not found in AGENTS registry');
 });
 
-test('SEC-03', 'mcp/spawn-agent-server.js has sanitizeTeamName for path traversal prevention', () => {
-  const content = fs.readFileSync(path.join(MCP_DIR, 'spawn-agent-server.js'), 'utf-8');
+test('SEC-03', 'mcp/bkit-server.js has sanitizeTeamName for path traversal prevention', () => {
+  const content = fs.readFileSync(path.join(MCP_DIR, 'bkit-server.js'), 'utf-8');
   assert(content.includes('sanitizeTeamName'), 'sanitizeTeamName not found');
 });
 

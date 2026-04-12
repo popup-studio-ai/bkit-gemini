@@ -17,14 +17,26 @@ function processHook(input) {
     const toolInput = input.tool_input || input.toolInput || {};
     const projectDir = input.projectDir || process.cwd();
 
+    // v2.0.4: Inline audit trail (best-effort, no external imports)
+    try {
+      const auditDir = path.join(projectDir, '.gemini', 'audit');
+      if (!fs.existsSync(auditDir)) fs.mkdirSync(auditDir, { recursive: true });
+      const today = new Date().toISOString().slice(0, 10);
+      const record = JSON.stringify({
+        ts: new Date().toISOString(), type: 'tool_call',
+        tool: toolName, file: toolInput.file_path || toolInput.path || ''
+      });
+      fs.appendFileSync(path.join(auditDir, `${today}.jsonl`), record + '\n');
+    } catch (_) { /* audit is best-effort */ }
+
     if (['write_file', 'replace'].includes(toolName)) {
       return processPostWrite(toolInput, projectDir);
     } else if (toolName === 'activate_skill') {
       return processPostSkill(toolInput, projectDir);
     }
-    return { status: 'allow' };
+    return { decision: 'allow' };
   } catch (error) {
-    return { status: 'allow' };
+    return { decision: 'allow' };
   }
 }
 
@@ -74,22 +86,21 @@ function processPostWrite(toolInput, projectDir) {
     const validation = validatePdcaDocument(filePath, projectDir);
     if (!validation.valid && validation.missing.length > 0) {
       return {
-        status: 'allow',
-        message: `**Template Warning**: ${validation.docType} document may be missing sections: ${validation.missing.join(', ')}`,
-        hookEvent: 'AfterTool'
+        decision: 'allow',
+        systemMessage: `**Template Warning**: ${validation.docType} document may be missing sections: ${validation.missing.join(', ')}`
       };
     }
   }
 
   const ext = path.extname(filePath).toLowerCase();
   const sourceExts = ['.ts', '.tsx', '.js', '.jsx', '.py', '.go', '.rs', '.java'];
-  if (!sourceExts.includes(ext)) return { status: 'allow' };
+  if (!sourceExts.includes(ext)) return { decision: 'allow' };
 
   try {
     const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
     const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
     const primaryFeature = pdcaStatus.primaryFeature;
-    if (!primaryFeature || !pdcaStatus.activeFeatures[primaryFeature]) return { status: 'allow' };
+    if (!primaryFeature || !pdcaStatus.activeFeatures[primaryFeature]) return { decision: 'allow' };
 
     const featureStatus = pdcaStatus.activeFeatures[primaryFeature];
     if (featureStatus.phase === 'design' && (normalizedPath.includes('src/') || normalizedPath.includes('lib/'))) {
@@ -97,14 +108,14 @@ function processPostWrite(toolInput, projectDir) {
       featureStatus.phase = 'do';
       featureStatus.updatedAt = new Date().toISOString();
       pdcaStatusModule.savePdcaStatus(pdcaStatus, projectDir);
-      return { status: 'allow', message: `**PDCA Progress**: Feature "${primaryFeature}" moved to **do** phase. Implementation started.`, hookEvent: 'AfterTool' };
+      return { decision: 'allow', systemMessage: `**PDCA Progress**: Feature "${primaryFeature}" moved to **do** phase. Implementation started.` };
     }
 
     if (featureStatus.phase === 'do') {
-      return { status: 'allow', message: `**Reminder**: Feature "${primaryFeature}" is in implementation. Run \`/pdca analyze ${primaryFeature}\` when ready.`, hookEvent: 'AfterTool' };
+      return { decision: 'allow', systemMessage: `**Reminder**: Feature "${primaryFeature}" is in implementation. Run \`/pdca analyze ${primaryFeature}\` when ready.` };
     }
   } catch (e) { /* ignore */ }
-  return { status: 'allow' };
+  return { decision: 'allow' };
 }
 
 function processPostSkill(toolInput, projectDir) {
@@ -147,9 +158,9 @@ function processPostSkill(toolInput, projectDir) {
   } catch (e) { /* ignore */ }
 
   if (contexts.length > 0) {
-    return { status: 'allow', message: contexts.join('\n'), hookEvent: 'AfterTool' };
+    return { decision: 'allow', systemMessage: contexts.join('\n') };
   }
-  return { status: 'allow' };
+  return { decision: 'allow' };
 }
 
 // --- RuntimeHook function export (v0.31.0+ SDK) ---
@@ -166,8 +177,8 @@ function main() {
     input.projectDir = adapter.getProjectDir();
     const result = processHook(input);
 
-    if (result.message) {
-      adapter.outputAllow(result.message, result.hookEvent || 'AfterTool');
+    if (result.systemMessage) {
+      adapter.outputAllow(result.systemMessage, 'AfterTool');
     } else {
       adapter.outputEmpty();
     }

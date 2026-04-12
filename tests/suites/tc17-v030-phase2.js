@@ -142,7 +142,8 @@ const tests = [
     setup: () => {
       const status = getPdcaStatus();
       status.features['test-feature'].phase = 'design';
-      createTestProject({ 'docs/.pdca-status.json': status });
+      // v2.0.4: status path is .bkit/state/pdca-status.json
+      createTestProject({ '.bkit/state/pdca-status.json': status });
     },
     fn: () => {
       executeHook('after-tool.js', {
@@ -199,56 +200,27 @@ const tests = [
   // P2-13 through P2-14: Tool Registry Forward Aliases
   // Analysis: C-02 and R-03 - 5 FORWARD_ALIASES without validation
   // ─────────────────────────────────────────────────────────────────
+  // v2.0.4: FORWARD_ALIASES simplified to LEGACY_ALIASES with only actively used aliases
   {
-    name: 'P2-13: tool-registry resolveToolName handles all 5 FORWARD_ALIASES',
+    name: 'P2-13: tool-registry resolveToolName handles LEGACY_ALIASES',
     fn: () => {
       const { resolveToolName } = require(path.join(
         PLUGIN_ROOT, 'lib', 'gemini', 'tools'
       ));
-      // Analysis BC-04: proposed future tool renames that FORWARD_ALIASES must handle
-      // if v0.31.0 activates them
-      const aliases = [
-        { from: 'edit_file', to: 'replace' },
-        { from: 'find_files', to: 'glob' },
-        { from: 'find_in_file', to: 'grep_search' },
-        { from: 'web_search', to: 'google_web_search' },
-        { from: 'read_files', to: 'read_many_files' },
-      ];
-      aliases.forEach(({ from, to }) => {
-        const resolved = resolveToolName(from);
-        assertEqual(resolved, to, `FORWARD_ALIAS: ${from} must resolve to ${to}`);
-      });
+      // v2.0.4: only search_file_content alias remains
+      assertEqual(resolveToolName('search_file_content'), 'grep_search', 'search_file_content should resolve');
+      assertEqual(resolveToolName('glob'), 'glob', 'glob should stay glob');
     }
   },
 
   {
-    name: 'P2-14: tool-registry FORWARD_ALIASES has exactly 5 entries (per analysis R-03)',
+    name: 'P2-14: tool-registry LEGACY_ALIASES exists',
     fn: () => {
-      const toolRegistryPath = path.join(
-        PLUGIN_ROOT, 'lib', 'gemini', 'tools.js'
-      );
-      const content = fs.readFileSync(toolRegistryPath, 'utf-8');
-      // Count FORWARD_ALIASES entries by finding the object literal
-      const match = content.match(/FORWARD_ALIASES\s*=\s*\{([^}]+)\}/s);
-      if (match) {
-        const entries = match[1]
-          .split('\n')
-          .map(l => l.trim())
-          .filter(l => l.includes(':') && !l.startsWith('//'));
-        assertEqual(entries.length, 5,
-          'FORWARD_ALIASES must have exactly 5 entries per analysis R-03 and BC-04 mapping');
-      } else {
-        // If FORWARD_ALIASES is exported differently, verify via resolveToolName behavior
-        const { resolveToolName } = require(path.join(
-          PLUGIN_ROOT, 'lib', 'gemini', 'tools'
-        ));
-        // At minimum verify the 5 known aliases work
-        assert(resolveToolName('edit_file') === 'replace', 'edit_file alias must exist');
-        assert(resolveToolName('find_files') === 'glob', 'find_files alias must exist');
-        assert(resolveToolName('find_in_file') === 'grep_search', 'find_in_file alias must exist');
-        assert(resolveToolName('web_search') === 'google_web_search', 'web_search alias must exist');
-        assert(resolveToolName('read_files') === 'read_many_files', 'read_files alias must exist');
-      }
+      const { LEGACY_ALIASES } = require(path.join(
+        PLUGIN_ROOT, 'lib', 'gemini', 'tools'
+      ));
+      assert(LEGACY_ALIASES !== undefined, 'LEGACY_ALIASES should exist');
+      assert(Object.keys(LEGACY_ALIASES).length >= 1, 'Should have at least 1 alias');
     }
   }
 ];

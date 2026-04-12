@@ -17,7 +17,7 @@ const path = require('path');
 const fs = require('fs');
 
 // ─── Source file paths ──────────────────────────────────────
-const spawnAgentPath = path.join(PLUGIN_ROOT, 'mcp', 'spawn-agent-server.js');
+const spawnAgentPath = path.join(PLUGIN_ROOT, 'mcp', 'bkit-server.js');
 const policyPath = path.join(PLUGIN_ROOT, 'lib', 'gemini', 'policy.js');
 const permissionPath = path.join(PLUGIN_ROOT, 'lib', 'core', 'permission.js');
 const permsTomlPath = path.join(PLUGIN_ROOT, '.gemini', 'policies', 'bkit-permissions.toml');
@@ -27,7 +27,7 @@ const beforeToolPath = path.join(PLUGIN_ROOT, 'hooks', 'scripts', 'before-tool.j
 // ─── Helpers ────────────────────────────────────────────────
 
 /**
- * Parse SAFETY_TIERS and AGENTS from spawn-agent-server source
+ * Parse SAFETY_TIERS and AGENTS from bkit-server source
  * (Cannot require directly because file calls server.run() at module scope)
  */
 function loadSpawnAgentConstants() {
@@ -52,7 +52,7 @@ function loadSpawnAgentConstants() {
 }
 
 /**
- * Replicate sanitizeTeamName logic from spawn-agent-server for testing
+ * Replicate sanitizeTeamName logic from bkit-server for testing
  */
 function sanitizeTeamName(teamName) {
   if (!teamName || typeof teamName !== 'string') return null;
@@ -67,7 +67,7 @@ const tests = [
   // SEC-01: Agent Safety Tiers (17 TC)
   // ═══════════════════════════════════════════════════════════
 
-  { name: 'TC91-01: SEC-01 SAFETY_TIERS constant exists in spawn-agent-server source',
+  { name: 'TC91-01: SEC-01 SAFETY_TIERS constant exists in bkit-server source',
     fn: () => {
       const src = fs.readFileSync(spawnAgentPath, 'utf-8');
       assert(src.includes('const SAFETY_TIERS'), 'SAFETY_TIERS constant must exist in source');
@@ -192,8 +192,8 @@ const tests = [
         'Should check for FULL tier to decide approval mode');
       const yoloBlock = src.match(/if\s*\(safetyTier\s*===\s*SAFETY_TIERS\.FULL\)\s*\{[^}]*yolo/s);
       assert(yoloBlock, 'FULL tier block should set yolo approval mode');
-      assert(src.includes("'--approval-mode=auto'"),
-        'Non-FULL tiers should use auto approval mode');
+      assert(src.includes("'--approval-mode=default'"),
+        'Non-FULL tiers should use default approval mode');
     }
   },
 
@@ -319,7 +319,7 @@ const tests = [
   // SEC-03: Path Traversal Prevention (14 TC)
   // ═══════════════════════════════════════════════════════════
 
-  { name: 'TC91-30: SEC-03 sanitizeTeamName function exists in spawn-agent-server source',
+  { name: 'TC91-30: SEC-03 sanitizeTeamName function exists in bkit-server source',
     fn: () => {
       const src = fs.readFileSync(spawnAgentPath, 'utf-8');
       assert(src.includes('sanitizeTeamName'), 'sanitizeTeamName should exist in source');

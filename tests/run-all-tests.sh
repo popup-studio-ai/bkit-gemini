@@ -444,19 +444,19 @@ run_mcp_tests() {
     local BKIT_DIR
     BKIT_DIR=$(dirname "$(dirname "$0")")
 
-    # MCP-01: spawn-agent-server.js exists (optional check)
+    # MCP-01: bkit-server.js exists (optional check)
     ((TOTAL_TESTS++))
-    echo -e "\n${YELLOW}Testing:${NC} MCP-01 - spawn-agent-server.js exists"
-    if [ -f "$BKIT_DIR/mcp/spawn-agent-server.js" ]; then
-        log_pass "MCP-01: spawn-agent-server.js exists"
+    echo -e "\n${YELLOW}Testing:${NC} MCP-01 - bkit-server.js exists"
+    if [ -f "$BKIT_DIR/mcp/bkit-server.js" ]; then
+        log_pass "MCP-01: bkit-server.js exists"
     else
-        log_skip "MCP-01: spawn-agent-server.js not found (MCP disabled)"
+        log_skip "MCP-01: bkit-server.js not found (MCP disabled)"
     fi
 
     # MCP-02: Server has spawn_agent tool (optional check)
     ((TOTAL_TESTS++))
     echo -e "\n${YELLOW}Testing:${NC} MCP-02 - spawn_agent tool defined"
-    if [ -f "$BKIT_DIR/mcp/spawn-agent-server.js" ] && grep -q "spawn_agent" "$BKIT_DIR/mcp/spawn-agent-server.js" 2>/dev/null; then
+    if [ -f "$BKIT_DIR/mcp/bkit-server.js" ] && grep -q "spawn_agent" "$BKIT_DIR/mcp/bkit-server.js" 2>/dev/null; then
         log_pass "MCP-02: spawn_agent tool is defined"
     else
         log_skip "MCP-02: spawn_agent check skipped (MCP disabled)"

@@ -1,4 +1,4 @@
-// tests/run-all.js - Main test runner for bkit-gemini v2.0.3
+// tests/run-all.js - Main test runner for bkit-gemini v2.0.4
 const { runSuite } = require('./test-utils');
 
 function parseArgs() {

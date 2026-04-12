@@ -140,7 +140,7 @@ const tests = [
   },
   {
     name: 'TC39-10: 빈 상태에서 시작',
-    setup: () => createTestProject({}),
+    setup: () => createTestProject({ '.bkit/state/pdca-status.json': { version: '2.0', primaryFeature: null, activeFeatures: {}, history: [] } }),
     fn: () => {
       const s = loadPdcaStatus(TEST_PROJECT_DIR);
       assertEqual(s.primaryFeature, null, 'Should have null primary');

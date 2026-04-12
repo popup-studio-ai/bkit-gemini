@@ -1,7 +1,7 @@
 const { spawn } = require('child_process');
 const path = require('path');
 
-const SERVER_PATH = path.resolve(__dirname, '..', 'mcp/spawn-agent-server.js');
+const SERVER_PATH = path.resolve(__dirname, '..', 'mcp/bkit-server.js');
 
 function callTool(method, params) {
   return new Promise((resolve, reject) => {

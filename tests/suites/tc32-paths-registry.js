@@ -6,7 +6,7 @@ const { getPaths, ensureDirectories } = require(path.join(PLUGIN_ROOT, 'lib/core
 
 const tests = [
   { name: 'TC32-01: getPaths 반환 타입 object', fn: () => { assertType(getPaths('/tmp/test'), 'object', 'Should return object'); } },
-  { name: 'TC32-02: pdcaStatus 경로 포함', fn: () => { assertContains(getPaths('/tmp/t').pdcaStatus, '.pdca-status.json', 'Should include pdca status'); } },
+  { name: 'TC32-02: pdcaStatus 경로 포함', fn: () => { assertContains(getPaths('/tmp/t').pdcaStatus, 'pdca-status.json', 'Should include pdca status'); } },
   { name: 'TC32-03: stateDir .bkit/state', fn: () => { assertContains(getPaths('/tmp/t').stateDir, '.bkit', 'Should include .bkit'); } },
   { name: 'TC32-04: runtimeDir 존재', fn: () => { assert(getPaths('/tmp/t').runtimeDir !== undefined, 'Should have runtimeDir'); } },
   { name: 'TC32-05: snapshotsDir 존재', fn: () => { assert(getPaths('/tmp/t').snapshotsDir !== undefined, 'Should have snapshotsDir'); } },

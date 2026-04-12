@@ -293,8 +293,8 @@ const tests = [
     }
   }},
 
-  { name: 'TC96-38: mcp/spawn-agent-server.js exists', fn: () => {
-    const mcpPath = path.join(PLUGIN_ROOT, 'mcp', 'spawn-agent-server.js');
+  { name: 'TC96-38: mcp/bkit-server.js exists', fn: () => {
+    const mcpPath = path.join(PLUGIN_ROOT, 'mcp', 'bkit-server.js');
     assert(fs.existsSync(mcpPath), 'MCP server script should exist');
   }},
 

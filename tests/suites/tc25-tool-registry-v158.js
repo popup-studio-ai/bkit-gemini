@@ -49,10 +49,10 @@ const tests = [
     }
   },
   {
-    name: 'TC25-07: CLAUDE_TO_GEMINI_MAP 매핑 검증',
+    name: 'TC25-07: CLAUDE_TO_GEMINI_MAP removed in v2.0.4 (CC legacy)',
     fn: () => {
-      assert(tr.CLAUDE_TO_GEMINI_MAP !== undefined, 'Should export CLAUDE_TO_GEMINI_MAP');
-      assertType(tr.CLAUDE_TO_GEMINI_MAP, 'object', 'Should be object');
+      // v2.0.4: CLAUDE_TO_GEMINI_MAP removed (no CC code remains)
+      assertEqual(tr.CLAUDE_TO_GEMINI_MAP, undefined, 'Should not export CLAUDE_TO_GEMINI_MAP');
     }
   },
   {
@@ -62,9 +62,9 @@ const tests = [
     }
   },
   {
-    name: 'TC25-09: FORWARD_ALIASES 정방향 매핑',
+    name: 'TC25-09: FORWARD_ALIASES replaced by LEGACY_ALIASES in v2.0.4',
     fn: () => {
-      assert(tr.FORWARD_ALIASES !== undefined, 'Should export FORWARD_ALIASES');
+      assert(tr.LEGACY_ALIASES !== undefined, 'Should export LEGACY_ALIASES');
     }
   },
   {

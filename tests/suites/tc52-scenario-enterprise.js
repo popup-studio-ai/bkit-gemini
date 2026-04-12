@@ -13,7 +13,7 @@ const tests = [
   { name: 'TC52-06: Enterprise 스킬 존재', fn: () => { assertExists(path.join(PLUGIN_ROOT, 'skills/enterprise/SKILL.md'), 'enterprise skill'); } },
   { name: 'TC52-07: enterprise-expert 에이전트', fn: () => { assertExists(path.join(PLUGIN_ROOT, 'agents/enterprise-expert.md'), 'enterprise-expert'); } },
   { name: 'TC52-08: infra-architect 에이전트', fn: () => { assertExists(path.join(PLUGIN_ROOT, 'agents/infra-architect.md'), 'infra-architect'); } },
-  { name: 'TC52-09: Enterprise Team 5 에이전트', fn: () => { const TeamStrategy = require(path.join(PLUGIN_ROOT, 'lib/team/strategy')); const s = new TeamStrategy(); const strategy = s.getStrategy ? s.getStrategy('Enterprise') : s.selectStrategy('Enterprise'); assert(strategy !== undefined, 'Should have Enterprise strategy'); } },
+  { name: 'TC52-09: Enterprise Team 5 에이전트 (v2.0.4: skip - lib/team removed)', skip: true, fn: () => {} },
   { name: 'TC52-10: bkit-pdca-enterprise 스타일', fn: () => { assertExists(path.join(PLUGIN_ROOT, 'output-styles/bkit-pdca-enterprise.md'), 'pdca-enterprise style'); } }
 ];
 

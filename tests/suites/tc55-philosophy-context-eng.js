@@ -31,20 +31,14 @@ const tests = [
     const { resolveImports } = require(path.join(PLUGIN_ROOT, 'lib/gemini/import-resolver'));
     assert(typeof resolveImports === 'function', 'Should support context composition');
   }},
-  { name: 'TC55-10: ContextHierarchy 3레벨 우선순위', fn: () => {
-    const { ContextHierarchy } = require(path.join(PLUGIN_ROOT, 'lib/context-hierarchy'));
-    const h = new ContextHierarchy(PLUGIN_ROOT, PLUGIN_ROOT);
-    h.setSession('test', 'session');
-    assertEqual(h.get('test'), 'session', 'Session > project > plugin');
-    h.clearSession();
-  }},
+  { name: 'TC55-10: ContextHierarchy 3레벨 우선순위 (v2.0.4: skip - removed)', skip: true, fn: () => {} },
   { name: 'TC55-11: PDCA 규칙 session-start 주입', fn: () => {
     const content = fs.readFileSync(path.join(PLUGIN_ROOT, 'hooks/scripts/session-start.js'), 'utf-8');
     assertContains(content, 'buildCoreRules', 'Should inject PDCA core rules');
   }},
   { name: 'TC55-12: 에이전트 트리거 session-start 주입', fn: () => {
     const content = fs.readFileSync(path.join(PLUGIN_ROOT, 'hooks/scripts/session-start.js'), 'utf-8');
-    assertContains(content, 'buildAgentTriggersSection', 'Should inject agent triggers');
+    assertContains(content, 'Agent Auto-Triggers', 'Should inject agent triggers');
   }}
 ];
 

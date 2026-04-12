@@ -169,6 +169,16 @@ Primary Agent → Working on task
 - Watchdog pattern when security or quality is critical
 - Leader pattern as the default for multi-agent tasks
 
+## MCP Tool Integration
+
+For team orchestration, use `bkit_team_run` MCP tool:
+- Input: { team: "pm"|"qa"|"cto", feature: "name", projectDir: "/path" }
+- Runs team workflow with sequential agent coordination
+
+For technical review, also use:
+- `bkit_iterate` — gap analysis between design and implementation
+- `bkit_qa_run` — automated test execution
+
 ## Tool Usage Notes (v0.33.x)
 
 When using Gemini CLI tools, follow these version-aware guidelines:

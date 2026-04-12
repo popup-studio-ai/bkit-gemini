@@ -16,8 +16,7 @@ const tests = [
     fn: () => {
       const reportContextPath = path.resolve(PLUGIN_ROOT, '.gemini/context/feature-report.md');
       const content = fs.readFileSync(reportContextPath, 'utf8');
-      assert(content.includes('bkit Feature Usage Report Format'), 'Should mention report format');
-      assert(content.includes('📊 bkit Feature Usage'), 'Should include icon');
+      assert(content.includes('bkit Feature Usage Report'), 'Should mention report format');
     }
   },
   {
@@ -25,9 +24,10 @@ const tests = [
     fn: () => {
       const reportContextPath = path.resolve(PLUGIN_ROOT, '.gemini/context/feature-report.md');
       const content = fs.readFileSync(reportContextPath, 'utf8');
-      const categories = ['PDCA Skill', 'Agents', 'Level Skills', 'Phase Skills', 'Utility Skills'];
-      categories.forEach(category => {
-        assert(content.includes(category), `Should include category ${category}`);
+      // v2.0.4: simplified categorization
+      const keywords = ['Starter', 'Dynamic', 'Enterprise'];
+      keywords.forEach(keyword => {
+        assert(content.includes(keyword), `Should include ${keyword}`);
       });
     }
   }

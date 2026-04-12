@@ -36,7 +36,8 @@ const tests = [
       return count;
     };
     const libCount = countFiles(path.join(PLUGIN_ROOT, 'lib'));
-    assert(libCount >= 40, `Should have >=40 lib modules, found ${libCount}`);
+    // v2.0.4: dead code removed (context-hierarchy, skill-orchestrator, task/, team/)
+    assert(libCount >= 25, `Should have >=25 lib modules, found ${libCount}`);
   }}
 ];
 

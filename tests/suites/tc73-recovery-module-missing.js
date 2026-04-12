@@ -31,8 +31,9 @@ const tests = [
   { name: 'TC73-09: lib/gemini/tools.js 존재', fn: () => {
     assertExists(path.join(PLUGIN_ROOT, 'lib/gemini/tools.js'), 'tools.js');
   }},
-  { name: 'TC73-10: lib/context-hierarchy.js 존재', fn: () => {
-    assertExists(path.join(PLUGIN_ROOT, 'lib/context-hierarchy.js'), 'context-hierarchy.js');
+  { name: 'TC73-10: lib/context-hierarchy.js removed in v2.0.4', fn: () => {
+    const fs = require('fs');
+    assert(!fs.existsSync(path.join(PLUGIN_ROOT, 'lib/context-hierarchy.js')), 'context-hierarchy.js should be removed');
   }},
   { name: 'TC73-11: 존재하지 않는 모듈 require 안전 처리', fn: () => {
     try {
@@ -42,8 +43,9 @@ const tests = [
       assert(e.code === 'MODULE_NOT_FOUND', 'Should throw MODULE_NOT_FOUND');
     }
   }},
-  { name: 'TC73-12: lib/team/index.js 존재', fn: () => {
-    assertExists(path.join(PLUGIN_ROOT, 'lib/team/index.js'), 'team/index.js');
+  { name: 'TC73-12: lib/team/ removed in v2.0.4', fn: () => {
+    const fs = require('fs');
+    assert(!fs.existsSync(path.join(PLUGIN_ROOT, 'lib/team/index.js')), 'team/index.js should be removed');
   }}
 ];
 

@@ -8,11 +8,7 @@ const tests = [
     const { PDCA_PHASES } = require(path.join(PLUGIN_ROOT, 'lib/pdca/phase'));
     assert(Object.keys(PDCA_PHASES).length >= 5, 'Should have 5+ phases');
   }},
-  { name: 'TC56-02: matchRateThreshold 90% 기본값', fn: () => {
-    const { ContextHierarchy } = require(path.join(PLUGIN_ROOT, 'lib/context-hierarchy'));
-    const h = new ContextHierarchy(PLUGIN_ROOT, PLUGIN_ROOT);
-    assertEqual(h.get('pdca.matchRateThreshold'), 90, 'Threshold should be 90');
-  }},
+  { name: 'TC56-02: matchRateThreshold 90% 기본값 (v2.0.4: skip - ContextHierarchy removed)', skip: true, fn: () => {} },
   { name: 'TC56-03: Plan 문서 템플릿 존재', fn: () => { assertExists(path.join(PLUGIN_ROOT, 'templates/plan.template.md'), 'plan template'); } },
   { name: 'TC56-04: Design 문서 템플릿 존재', fn: () => { assertExists(path.join(PLUGIN_ROOT, 'templates/design.template.md'), 'design template'); } },
   { name: 'TC56-05: Analysis 문서 템플릿 존재', fn: () => { assertExists(path.join(PLUGIN_ROOT, 'templates/analysis.template.md'), 'analysis template'); } },
@@ -54,10 +50,7 @@ const tests = [
     const content = fs.readFileSync(path.join(PLUGIN_ROOT, 'skills/pdca/SKILL.md'), 'utf-8');
     assertContains(content, '5', 'Should reference 5 max iterations');
   }},
-  { name: 'TC56-15: PDCA 자동화 레벨', fn: () => {
-    const { getAutomationLevel } = require(path.join(PLUGIN_ROOT, 'lib/pdca/automation'));
-    assertType(getAutomationLevel, 'function', 'Should support automation levels');
-  }}
+  { name: 'TC56-15: PDCA 자동화 레벨 (v2.0.4: skip - pdca/automation removed)', skip: true, fn: () => {} }
 ];
 
 module.exports = { tests };

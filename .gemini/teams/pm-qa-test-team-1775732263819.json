@@ -1,0 +1,22 @@
+{
+  "name": "pm-qa-test-team-1775732263819",
+  "strategy": "custom",
+  "createdAt": "2026-04-09T10:57:43.819Z",
+  "agents": [
+    {
+      "name": "product-manager",
+      "status": "idle",
+      "currentTask": null
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "description": "Run PM analysis for a simple task feature.",
+      "assignedTo": "product-manager",
+      "status": "completed",
+      "createdAt": "2026-04-09T10:57:43.819Z",
+      "completedAt": "2026-04-09T10:57:44.175Z"
+    }
+  ]
+}

@@ -184,6 +184,19 @@ Create tasks to track PM workflow progress:
 - `[PM-Research] {feature}` - Phase 3 complete
 - `[PM-PRD] {feature}` - Final PRD delivered
 
+## MCP Tool Integration
+
+When orchestrating PM analysis, you can use the `bkit_pm_run` MCP tool:
+- This tool runs the full PM pipeline (discovery → strategy → research → PRD synthesis)
+- Input: { feature: "feature-name", projectDir: "/path/to/project" }
+- Output: PRD document at docs/00-pm/{feature}.prd.md
+
+Alternatively, delegate to sub-agents sequentially:
+1. spawn_agent pm-discovery → collect opportunity analysis
+2. spawn_agent pm-strategy → generate value proposition
+3. spawn_agent pm-research → analyze market/competitors
+4. Synthesize results into PRD
+
 ## Integration with PDCA
 
 The PM workflow is a pre-phase to PDCA:

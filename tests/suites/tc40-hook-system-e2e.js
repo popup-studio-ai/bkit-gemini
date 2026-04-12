@@ -152,7 +152,8 @@ const tests = [
     fn: () => {
       const result = executeHook('session-start.js');
       if (result.output) {
-        assertEqual(result.output.hookEvent, 'SessionStart', 'Should set hookEvent');
+        // v2.0.4: hookEvent removed, check decision field instead
+        assertEqual(result.output.decision, 'allow', 'Should set decision to allow');
       }
     },
     teardown: cleanupTestProject

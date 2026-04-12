@@ -12,7 +12,8 @@ const tests = [
       });
       const result = executeHook('session-start.js');
       assert(result.success, 'SessionStart should succeed');
-      assert(result.output.context.includes('test-feature'), 'Context should include feature from root status');
+      const outputText = result.output.systemMessage || result.output.context || JSON.stringify(result.output);
+      assert(outputText.includes('test-feature'), 'Output should include feature from root status');
     }
   },
   {
@@ -23,27 +24,39 @@ const tests = [
       });
       const result = executeHook('session-start.js');
       assert(result.success, 'SessionStart should succeed');
-      assert(result.output.context.includes('test-feature'), 'Context should include feature from legacy status');
+      const outputText = result.output.systemMessage || result.output.context || JSON.stringify(result.output);
+      assert(outputText.includes('test-feature'), 'Output should include feature from legacy status');
     }
   },
   {
     name: 'TC-22-03: after-tool.js updates correct status path',
     fn: async () => {
+      // Use proper v2.0 format with activeFeatures as object
+      const statusFixture = {
+        version: '2.0',
+        primaryFeature: 'test-feature',
+        activeFeatures: { 'test-feature': { phase: 'design', matchRate: null } },
+        history: []
+      };
       createTestProject({
-        '.pdca-status.json': PDCA_STATUS_V157
+        '.bkit/state/pdca-status.json': statusFixture
       });
-      // Simulate tool that would trigger phase transition (not strictly needed for just path check, but let's test it)
       const input = {
         tool_name: 'write_file',
         tool_input: { file_path: 'src/new-file.js', content: '// test' }
       };
       const result = executeHook('after-tool.js', input);
       assert(result.success, 'after-tool should succeed');
-      
-      const statusPath = path.join(TEST_PROJECT_DIR, '.pdca-status.json');
-      assertExists(statusPath, 'Root status file should exist');
+
+      // v2.0.4: status is at .bkit/state/pdca-status.json
+      const bkitPath = path.join(TEST_PROJECT_DIR, '.bkit', 'state', 'pdca-status.json');
+      const rootPath = path.join(TEST_PROJECT_DIR, '.pdca-status.json');
+      const statusPath = fs.existsSync(bkitPath) ? bkitPath : rootPath;
+      assertExists(statusPath, 'Status file should exist');
       const status = JSON.parse(fs.readFileSync(statusPath, 'utf8'));
-      assertEqual(status.features['test-feature'].phase, 'do', 'Phase should transition to do');
+      const features = status.activeFeatures || status.features || {};
+      const feature = features['test-feature'];
+      assertEqual(feature?.phase, 'do', 'Phase should transition to do');
     }
   },
   {

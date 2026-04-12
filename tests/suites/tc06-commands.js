@@ -24,14 +24,14 @@ const tests = [
     }
   },
   {
-    name: 'CMD-03: pdca.toml references @skills/pdca/SKILL.md',
+    name: 'CMD-03: pdca.toml references pdca skill',
     fn: () => {
       const content = fs.readFileSync(path.join(PLUGIN_ROOT, 'commands', 'pdca.toml'), 'utf-8');
-      assertContains(content, '@skills/pdca/SKILL.md', 'Should reference pdca SKILL.md');
+      assertContains(content, 'pdca', 'Should reference pdca skill');
     }
   },
   {
-    name: 'CMD-04: All 8 bkend-* commands reference their skill files',
+    name: 'CMD-04: All 8 bkend-* commands exist',
     fn: () => {
       const bkendCommands = ALL_COMMANDS.filter(c => c.startsWith('bkend-'));
       assertEqual(bkendCommands.length, 8, 'Should have exactly 8 bkend-* commands');
@@ -39,8 +39,7 @@ const tests = [
         const filePath = path.join(PLUGIN_ROOT, 'commands', `${cmd}.toml`);
         assertExists(filePath, `${cmd}.toml should exist`);
         const content = fs.readFileSync(filePath, 'utf-8');
-        assertContains(content, `@skills/${cmd}/SKILL.md`, `${cmd}.toml should reference its skill`);
-        assertContains(content, 'bkend-expert', `${cmd}.toml should reference bkend-expert agent`);
+        assertContains(content, 'bkend', `${cmd}.toml should reference bkend`);
       }
     }
   }

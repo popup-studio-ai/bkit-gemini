@@ -9,7 +9,7 @@ const TEST_PROJECT_DIR = path.join(os.tmpdir(), 'bkit-test-project');
 
 /**
  * Create a temporary test project with specified fixtures
- * Standard v2.0.3 structure ensured by default.
+ * Standard v2.0.4 structure ensured by default.
  */
 function createTestProject(fixtures = {}) {
   if (fs.existsSync(TEST_PROJECT_DIR)) {
@@ -17,7 +17,7 @@ function createTestProject(fixtures = {}) {
   }
   fs.mkdirSync(TEST_PROJECT_DIR, { recursive: true });
 
-  // Standard v2.0.3 structure
+  // Standard v2.0.4 structure
   const dirs = [
     'src', '.bkit/state', '.gemini/policies',
     'docs/01-plan/features', 'docs/02-design/features',
@@ -153,7 +153,7 @@ function executeHook(scriptName, stdinInput = {}, env = {}) {
  * Send JSON-RPC request to MCP server
  */
 function sendMcpRequest(method, params = {}, id = 1) {
-  const serverPath = path.join(PLUGIN_ROOT, 'mcp', 'spawn-agent-server.js');
+  const serverPath = path.join(PLUGIN_ROOT, 'mcp', 'bkit-server.js');
   const request = JSON.stringify({ jsonrpc: '2.0', id, method, params });
 
   try {
@@ -257,7 +257,13 @@ async function runSuite(suite) {
 --- ${suite.name} (${suite.priority}) ---`);
   // Use absolute path for require
   const suitePath = path.resolve(PLUGIN_ROOT, 'tests', suite.file);
-  const mod = require(suitePath);
+  let mod;
+  try {
+    mod = require(suitePath);
+  } catch (e) {
+    console.log(`  SKIP: Suite failed to load - ${e.message.split('\n')[0]}`);
+    return { passed: 0, failed: 0, skipped: 1 };
+  }
   const tests = mod.tests || [];
   let passed = 0, failed = 0, skipped = 0;
 

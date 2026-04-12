@@ -18,9 +18,9 @@ const fs = require('fs');
 
 // ─── Module imports ─────────────────────────────────────────
 
-// SEC-01, SEC-03, SEC-10: spawn-agent-server AGENTS + SAFETY_TIERS
+// SEC-01, SEC-03, SEC-10: bkit-server AGENTS + SAFETY_TIERS
 // These are module-level constants; we require the file and extract them.
-const spawnAgentPath = path.join(PLUGIN_ROOT, 'mcp', 'spawn-agent-server.js');
+const spawnAgentPath = path.join(PLUGIN_ROOT, 'mcp', 'bkit-server.js');
 
 // SEC-02: Policy module
 const policyPath = path.join(PLUGIN_ROOT, 'lib', 'gemini', 'policy.js');
@@ -28,7 +28,7 @@ const policyPath = path.join(PLUGIN_ROOT, 'lib', 'gemini', 'policy.js');
 // SEC-04, SEC-05: Permission module
 const permissionPath = path.join(PLUGIN_ROOT, 'lib', 'core', 'permission.js');
 
-// Helper: extract SAFETY_TIERS and AGENTS from spawn-agent-server source
+// Helper: extract SAFETY_TIERS and AGENTS from bkit-server source
 function loadSpawnAgentConstants() {
   const src = fs.readFileSync(spawnAgentPath, 'utf-8');
 
@@ -176,8 +176,8 @@ const tests = [
         'Should check for FULL tier specifically');
       assert(src.includes("'--approval-mode=yolo'"),
         'FULL tier should use yolo');
-      assert(src.includes("'--approval-mode=auto'"),
-        'Non-FULL tiers should use auto');
+      assert(src.includes("'--approval-mode=default'"),
+              'Non-FULL tiers should use default (not yolo)');
     }
   },
 

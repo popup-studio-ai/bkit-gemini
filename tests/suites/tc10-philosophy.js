@@ -9,7 +9,7 @@ const tests = [
     }),
     fn: () => {
       const result = executeHook('session-start.js');
-      assertContains(result.output.context, 'Welcome', 'Should recognize returning user');
+      assertContains(result.output.systemMessage || result.output.context, 'Welcome', 'Should recognize returning user');
     },
     teardown: cleanupTestProject
   },
@@ -18,7 +18,7 @@ const tests = [
     setup: () => createTestProject({ 'kubernetes/service.yaml': '...' }),
     fn: () => {
       const result = executeHook('session-start.js');
-      assertContains(result.output.context, 'Enterprise', 'Should detect Enterprise level');
+      assertContains(result.output.systemMessage || result.output.context || JSON.stringify(result.output.metadata), 'Enterprise', 'Should detect Enterprise level');
     },
     teardown: cleanupTestProject
   },
@@ -39,8 +39,8 @@ const tests = [
         tool_name: 'run_shell_command',
         tool_input: { command: 'rm -rf /' }
       });
-      const status = result.output ? result.output.status : null;
-      assertEqual(status, 'block', 'Should block dangerous command');
+      const decision = result.output ? result.output.decision : null;
+      assertEqual(decision, 'deny', 'Should block dangerous command');
     },
     teardown: cleanupTestProject
   }

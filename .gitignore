@@ -28,6 +28,10 @@ npm-debug.log*
 .claude/
 .bkit/
 
+# Runtime artifacts
+.gemini/audit/
+.gemini/teams/
+
 # PDCA artifacts
 docs/.pdca-snapshots/
 docs/archive/

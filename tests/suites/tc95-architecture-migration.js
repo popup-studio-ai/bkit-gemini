@@ -100,10 +100,10 @@ const EXPECTED_GEMINI_FILES = [
   'policy.js', 'tracker.js', 'context-fork.js', 'import-resolver.js'
 ];
 
-test('DS-02', 'lib/gemini/ has exactly 8 .js files', () => {
+test('DS-02', 'lib/gemini/ has exactly 9 .js files', () => {
   const files = fs.readdirSync(GEMINI_DIR).filter(f => f.endsWith('.js'));
-  assert(files.length === 8,
-    `Expected 8 files, found ${files.length}: ${files.join(', ')}`);
+  assert(files.length === 9,
+    `Expected 9 files, found ${files.length}: ${files.join(', ')}`);
 });
 
 test('DS-03', 'lib/gemini/ contains platform.js', () => {
@@ -260,9 +260,9 @@ test('RP-16', 'before-tool-selection.js has no adapters reference', () => {
   assert(!content.includes('adapters'), 'before-tool-selection.js still references adapters');
 });
 
-test('RP-17', 'mcp/spawn-agent-server.js has no adapters reference', () => {
-  const content = fs.readFileSync(path.join(MCP_DIR, 'spawn-agent-server.js'), 'utf-8');
-  assert(!content.includes('lib/adapters'), 'spawn-agent-server.js still references lib/adapters');
+test('RP-17', 'mcp/bkit-server.js has no adapters reference', () => {
+  const content = fs.readFileSync(path.join(MCP_DIR, 'bkit-server.js'), 'utf-8');
+  assert(!content.includes('lib/adapters'), 'bkit-server.js still references lib/adapters');
 });
 
 test('RP-18', 'lib/common.js does not exist (removed in v2.0.1)', () => {
@@ -418,20 +418,20 @@ test('CC-20', 'hooks.js does not reference "claude" (case-insensitive)', () => {
 // ================================================================
 console.log('\n=== Section 4: Version Consistency (15 tests) ===');
 
-test('VER-01', 'bkit.config.json version = "2.0.3"', () => {
+test('VER-01', 'bkit.config.json version = "2.0.4"', () => {
   const config = JSON.parse(fs.readFileSync(path.join(ROOT, 'bkit.config.json'), 'utf-8'));
-  assert(config.version === '2.0.3', `bkit.config.json version is "${config.version}"`);
+  assert(config.version === '2.0.4', `bkit.config.json version is "${config.version}"`);
 });
 
-test('VER-02', 'gemini-extension.json version = "2.0.3"', () => {
+test('VER-02', 'gemini-extension.json version = "2.0.4"', () => {
   const ext = JSON.parse(fs.readFileSync(path.join(ROOT, 'gemini-extension.json'), 'utf-8'));
-  assert(ext.version === '2.0.3', `gemini-extension.json version is "${ext.version}"`);
+  assert(ext.version === '2.0.4', `gemini-extension.json version is "${ext.version}"`);
 });
 
-test('VER-03', 'hooks.json description contains "v2.0.3"', () => {
+test('VER-03', 'hooks.json description contains "v2.0.4"', () => {
   const hooks = JSON.parse(fs.readFileSync(path.join(HOOKS_DIR, 'hooks.json'), 'utf-8'));
-  assert(hooks.description.includes('v2.0.3'),
-    `hooks.json description does not contain v2.0.3: "${hooks.description}"`);
+  assert(hooks.description.includes('v2.0.4'),
+    `hooks.json description does not contain v2.0.4: "${hooks.description}"`);
 });
 
 test('VER-04', 'bkit.config.json minGeminiCliVersion = "0.34.0"', () => {
@@ -440,12 +440,12 @@ test('VER-04', 'bkit.config.json minGeminiCliVersion = "0.34.0"', () => {
     `minGeminiCliVersion is "${config.compatibility.minGeminiCliVersion}"`);
 });
 
-test('VER-05', 'bkit.config.json testedVersions = ["0.34.0"]', () => {
+test('VER-05', 'bkit.config.json testedVersions includes "0.36.0"', () => {
   const config = JSON.parse(fs.readFileSync(path.join(ROOT, 'bkit.config.json'), 'utf-8'));
   const tv = config.compatibility.testedVersions;
   assert(Array.isArray(tv), 'testedVersions is not an array');
-  assert(tv.length === 1 && tv[0] === '0.34.0',
-    `testedVersions is ${JSON.stringify(tv)}, expected ["0.34.0"]`);
+  assert(tv.includes('0.36.0'),
+    `testedVersions ${JSON.stringify(tv)} does not include "0.36.0"`);
 });
 
 test('VER-06', 'gemini-extension.json contextFileName is array', () => {
@@ -460,9 +460,9 @@ test('VER-07', 'No "v1.5" in session-start.js', () => {
   assert(!match, `Found "v1.5" in session-start.js: ${match}`);
 });
 
-test('VER-08', 'session-start.js references v2.0.3', () => {
+test('VER-08', 'session-start.js references v2.0.4', () => {
   const content = fs.readFileSync(path.join(HOOKS_SCRIPTS, 'session-start.js'), 'utf-8');
-  assert(content.includes('v2.0.3'), 'session-start.js does not contain v2.0.3');
+  assert(content.includes('v2.0.4'), 'session-start.js does not contain v2.0.4');
 });
 
 test('VER-09', 'scripts/sync-version.js exists', () => {
