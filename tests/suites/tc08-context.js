@@ -19,10 +19,13 @@ const tests = [
     fn: () => {}
   },
   {
-    name: 'CTX-09: SessionStart injects dynamic context',
+    name: 'CTX-09: SessionStart injects dynamic context (verbose mode)',
     setup: () => createTestProject({ 'docs/.pdca-status.json': PDCA_STATUS_FIXTURE }),
     fn: () => {
-      const result = executeHook('session-start.js');
+      // Refactored 2026-04-24 (v2.0.5-finalization): default is slim. Agent
+      // Auto-Triggers section moved to GEMINI.md. Test verifies underlying
+      // verbose generation still works.
+      const result = executeHook('session-start.js', {}, { BKIT_SESSION_START_VERBOSE: 'true' });
       assertContains(result.output.systemMessage || result.output.context, 'Agent Auto-Triggers', 'Should inject agent triggers');
     },
     teardown: cleanupTestProject

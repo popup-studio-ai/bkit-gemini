@@ -331,16 +331,18 @@ module.exports = {
       teardown: cleanupTestProject
     },
     {
-      name: 'V156-51: All config files reference version 2.0.3',
+      name: 'V156-51: bkit.config.json and manifest version are mutually consistent',
       fn: () => {
+        // Refactored 2026-04-24: cross-reference instead of hardcoded version.
         const config = JSON.parse(fs.readFileSync(
           path.join(PLUGIN_ROOT, 'bkit.config.json'), 'utf-8'
         ));
         const ext = JSON.parse(fs.readFileSync(
           path.join(PLUGIN_ROOT, 'gemini-extension.json'), 'utf-8'
         ));
-        assertEqual(config.version, '2.0.4', 'bkit.config.json version');
-        assertEqual(ext.version, '2.0.4', 'gemini-extension.json version');
+        assertEqual(config.version, ext.version,
+          `bkit.config.json (${config.version}) and gemini-extension.json (${ext.version}) versions must match`);
+        assert(/^2\.\d+\.\d+/.test(config.version), 'must be 2.x.y semver');
       }
     }
   ]
