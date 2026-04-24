@@ -296,9 +296,13 @@ const tests = [
   { name: 'TC94-66: GEMINI.md exists', fn: () => {
     assertExists(GEMINI_MD_PATH, 'GEMINI.md file');
   }},
-  { name: 'TC94-67: GEMINI.md is under 30 lines', fn: () => {
+  { name: 'TC94-67: GEMINI.md is under 100 lines (v2.0.5+ slim-body absorbs SessionStart context)', fn: () => {
+    // Refactored 2026-04-24 (v2.0.5-finalization): SessionStart hook switched
+    // to slim default; the previously-output PDCA Core Rules / Auto-Triggers /
+    // Natural Language Handling sections moved into GEMINI.md (auto-loaded by
+    // CLI). Limit raised from 30 to 100 to accommodate the absorbed content.
     const lineCount = geminiMd.split('\n').length;
-    assert(lineCount <= 30, `GEMINI.md should be under 30 lines, got ${lineCount}`);
+    assert(lineCount <= 100, `GEMINI.md should be under 100 lines, got ${lineCount}`);
   }},
   { name: 'TC94-68: GEMINI.md has exactly 2 @imports', fn: () => {
     const imports = geminiMd.match(/^@/gm) || [];

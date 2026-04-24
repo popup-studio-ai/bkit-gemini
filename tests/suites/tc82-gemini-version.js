@@ -7,32 +7,72 @@ const { getFeatureFlags, getBkitFeatureFlags, parseVersion, isVersionBeyondPlaus
 const tests = [
   // 18 test cases for lib/gemini/version.js
   {
-    name: 'VER-01: getFeatureFlags returns exactly 19 keys',
+    name: 'VER-01: getFeatureFlags returns the v0.34.0+ baseline subset',
     fn: () => {
+      // Refactored 2026-04-23 (gemini-cli-v0.39.0-migration Wave 3 follow-up):
+      // Original assertion "exactly 19 keys" was a snapshot from a much earlier
+      // era. Subsequent v0.34/v0.35/v0.36/v0.39 additions inflated the total to
+      // 55+. We now assert the documented v0.34.0+ subset is present, which is
+      // the actual contract VER-01 was meant to enforce.
       withVersion('0.34.0', () => {
         const flags = getFeatureFlags();
-        const keys = Object.keys(flags);
-        assertEqual(keys.length, 19, 'getFeatureFlags should return 19 keys');
+        const v034Baseline = [
+          'hasNativeSkillSystem', 'hasACP', 'hasExtensionRegistryClient',
+          'hasExtensionValidation', 'hasHookMigration',
+          'hasSlashCommandConflictResolution', 'hasMcpPromptLoader',
+          'hasContextFileNameArray', 'hasGemini31CustomTools',
+          'hasToolLegacyAliases', 'hasStrictTomlValidation',
+          'hasSubagentPolicies', 'hasThemeSubdirectories', 'hasUpgradeCommand'
+        ];
+        for (const k of v034Baseline) {
+          assert(k in flags, `v0.34.0 baseline flag "${k}" must be present`);
+          assertEqual(flags[k], true, `flag "${k}" must be true at v0.34.0`);
+        }
+        assert(Object.keys(flags).length >= 19, `flag set must remain >= 19 (got ${Object.keys(flags).length})`);
       });
     }
   },
   {
-    name: 'VER-02: All 14 flags true when version=0.34.0',
+    name: 'VER-02: v0.34.0+ flags are all true when version=0.34.0',
     fn: () => {
+      // Refactored 2026-04-23: the original "all flags true" check failed any
+      // time newer-version flags (v0.35+, v0.36+, v0.39+) were added because
+      // those legitimately remain false at v0.34.0. Tighten the assertion to
+      // the v0.34.0+ family only.
       withVersion('0.34.0', () => {
         const flags = getFeatureFlags();
-        const allTrue = Object.values(flags).every(v => v === true);
-        assert(allTrue, 'All 14 flags should be true for v0.34.0');
+        const v034Family = [
+          'hasNativeSkillSystem', 'hasACP', 'hasExtensionRegistryClient',
+          'hasExtensionValidation', 'hasHookMigration',
+          'hasSlashCommandConflictResolution', 'hasMcpPromptLoader',
+          'hasContextFileNameArray', 'hasGemini31CustomTools',
+          'hasToolLegacyAliases', 'hasStrictTomlValidation',
+          'hasSubagentPolicies', 'hasThemeSubdirectories', 'hasUpgradeCommand'
+        ];
+        const allTrue = v034Family.every(k => flags[k] === true);
+        assert(allTrue, `v0.34.0 family flags should all be true for v0.34.0`);
       });
     }
   },
   {
-    name: 'VER-03: All 14 flags false when version=0.29.0',
+    name: 'VER-03: v0.34.0+ family flags are all false when version=0.29.0',
     fn: () => {
+      // Refactored 2026-04-23: same rationale as VER-02. At v0.29.0, only
+      // legacy v0.29.0 flags (hasSkillsStable, hasPlanMode, hasGemini3Default,
+      // hasExtensionRegistry) are true. Constrain the assertion to v0.34.0+
+      // family which must be false.
       withVersion('0.29.0', () => {
         const flags = getFeatureFlags();
-        const allFalse = Object.values(flags).every(v => v === false);
-        assert(allFalse, 'All 14 flags should be false for v0.29.0');
+        const v034Family = [
+          'hasNativeSkillSystem', 'hasACP', 'hasExtensionRegistryClient',
+          'hasExtensionValidation', 'hasHookMigration',
+          'hasSlashCommandConflictResolution', 'hasMcpPromptLoader',
+          'hasContextFileNameArray', 'hasGemini31CustomTools',
+          'hasToolLegacyAliases', 'hasStrictTomlValidation',
+          'hasSubagentPolicies', 'hasThemeSubdirectories', 'hasUpgradeCommand'
+        ];
+        const allFalse = v034Family.every(k => flags[k] === false);
+        assert(allFalse, `v0.34.0 family flags should all be false for v0.29.0`);
       });
     }
   },

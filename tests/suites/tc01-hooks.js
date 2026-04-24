@@ -64,19 +64,23 @@ const tests = [
     teardown: cleanupTestProject
   },
   {
-    name: 'HOOK-07: Returning user detection',
+    name: 'HOOK-07: Returning user detection (verbose mode)',
     setup: () => createTestProject({ 'docs/.bkit-memory.json': BKIT_MEMORY_RETURNING, 'docs/.pdca-status.json': PDCA_STATUS_FIXTURE }),
     fn: () => {
-      const result = executeHook('session-start.js');
+      // Refactored 2026-04-24 (v2.0.5-finalization): SessionStart default is
+      // slim. The "Previous Work" body lives in GEMINI.md / verbose body, so
+      // this test now opts into verbose mode to verify the underlying logic.
+      const result = executeHook('session-start.js', {}, { BKIT_SESSION_START_VERBOSE: 'true' });
       assertContains(result.output.systemMessage || result.output.context, 'Previous Work', 'Should show previous work');
     },
     teardown: cleanupTestProject
   },
   {
-    name: 'HOOK-08: New user onboarding',
+    name: 'HOOK-08: New user onboarding (verbose mode)',
     setup: () => createTestProject({}),
     fn: () => {
-      const result = executeHook('session-start.js');
+      // Refactored 2026-04-24 (v2.0.5-finalization): see HOOK-07 rationale.
+      const result = executeHook('session-start.js', {}, { BKIT_SESSION_START_VERBOSE: 'true' });
       assertContains(result.output.systemMessage || result.output.context, 'Welcome', 'Should show welcome');
     },
     teardown: cleanupTestProject

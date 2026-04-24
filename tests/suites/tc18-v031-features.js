@@ -194,10 +194,26 @@ module.exports = {
       }
     },
     {
-      name: 'V156-14: getFeatureFlags() returns 48 keys',
+      name: 'V156-14: getFeatureFlags() exposes the documented v0.31.0 baseline keys',
       fn: () => {
+        // Refactored 2026-04-23 (gemini-cli-v0.39.0-migration Wave 3 follow-up):
+        // The hardcoded "48 keys" assertion was added in v1.5.6 era when the
+        // feature flag set was 48 entries. Adding new version groups (v0.34.0+
+        // v0.35.0+, v0.36.0+, v0.39.0+) bumped the total to 55+. Rather than
+        // chasing the magic number per release, assert that the v0.31.0
+        // baseline subset is intact (this is what V156-14 was actually testing).
         const flags = getFeatureFlags();
-        assertEqual(Object.keys(flags).length, 48);
+        const v031Baseline = [
+          'hasBrowserAgent', 'hasMcpProgress', 'hasParallelReadCalls',
+          'hasPlanModeCustomStorage', 'hasToolAnnotations',
+          'hasExtensionFolderTrust', 'hasAllowMultipleReplace',
+          'hasRuntimeHookFunctions'
+        ];
+        for (const k of v031Baseline) {
+          assert(k in flags, `v0.31.0 baseline flag "${k}" must be present`);
+        }
+        // Floor check — never less than the historical minimum baseline.
+        assert(Object.keys(flags).length >= 48, `flag set must remain >= 48 (got ${Object.keys(flags).length})`);
       }
     },
     {

@@ -9,6 +9,29 @@ const path = require('path');
 
 const libPath = path.resolve(__dirname, '..', '..', 'lib');
 
+// When required as a module (e.g. by tests/suites/tc100-comprehensive-v200.js
+// COMP-07 calling `require('hooks/scripts/session-start')`), suppress the
+// CLI-style `main() + process.exit()` so the parent process is not killed.
+// Standalone CLI execution still flows normally because `require.main === module`
+// holds true for `node hooks/scripts/session-start.js` and for child_process
+// spawns from tc113 defensive tests.
+//
+// Discovered during gemini-cli-v0.39.0-migration Wave 3 runtime verification
+// (2026-04-23) — tc100 had been silently aborting tests/run-all.js since at
+// least v2.0.4 because requiring this script triggered main() side-effects.
+if (require.main !== module) {
+  module.exports = {
+    main,
+    detectProjectLevel: typeof detectProjectLevel === 'function' ? detectProjectLevel : undefined,
+    getGeminiCliFeatures: typeof getGeminiCliFeatures === 'function' ? getGeminiCliFeatures : undefined,
+    loadOutputStyle: typeof loadOutputStyle === 'function' ? loadOutputStyle : undefined,
+    detectReturningUser: typeof detectReturningUser === 'function' ? detectReturningUser : undefined,
+    generateDynamicContext: typeof generateDynamicContext === 'function' ? generateDynamicContext : undefined,
+    ensureAgentsEnabled: typeof ensureAgentsEnabled === 'function' ? ensureAgentsEnabled : undefined
+  };
+  return; // do not run main() at module load time
+}
+
 function main() {
   try {
     const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
@@ -88,7 +111,7 @@ function main() {
       decision: 'allow',
       systemMessage: dynamicContext,
       metadata: {
-        version: '2.0.3',
+        version: '2.0.5',
         platform: 'gemini',
         level: level,
         primaryFeature: pdcaStatus.primaryFeature,
@@ -111,7 +134,7 @@ function main() {
     }
     console.log(JSON.stringify({
       decision: 'allow',
-      systemMessage: 'bkit Vibecoding Kit v2.0.4 activated (Gemini CLI)'
+      systemMessage: 'bkit Vibecoding Kit v2.0.5 activated (Gemini CLI)'
     }));
     process.exit(0);
   }
@@ -321,12 +344,24 @@ function buildAvailableSkillsSection(level) {
 }
 
 // ─── Dynamic Context Generation ────────────────────────────────
+// v2.0.5+: SessionStart systemMessage default is SLIM (single line) to mitigate
+// Issue #25655 (CLI v0.38.x+ duplicates the systemMessage payload). Full body
+// content (PDCA Core Rules, Skills, Returning User, etc.) is loaded via
+// GEMINI.md context file automatically by the Gemini CLI on every session.
+// Set BKIT_SESSION_START_VERBOSE=true to restore the verbose body.
 
 function generateDynamicContext(pdcaStatus, level, memory, returningInfo, outputStyle, pluginRoot, trackerContext) {
-  const sections = [];
+  const verbose = process.env.BKIT_SESSION_START_VERBOSE === 'true';
+  const header = `bkit Vibecoding Kit v2.0.5 activated (Gemini CLI) - Level: ${level}`;
 
-  // Header - Legacy compatible format for HOOK-01~08 tests
-  sections.push(`bkit Vibecoding Kit v2.0.4 activated (Gemini CLI) - Level: ${level}`);
+  if (!verbose) {
+    // Slim default: single line. Body lives in GEMINI.md (auto-loaded by CLI).
+    return header;
+  }
+
+  // Verbose mode: legacy v2.0.4 behavior (full body for backward compatibility).
+  const sections = [];
+  sections.push(header);
   sections.push('');
   sections.push('# bkit Session Start');
   sections.push('');

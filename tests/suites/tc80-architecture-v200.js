@@ -919,4 +919,16 @@ if (failures.length > 0) {
 }
 
 console.log('');
-process.exit(failed > 0 ? 1 : 0);
+// Only exit when run standalone (`node tests/suites/tc80-architecture-v200.js`).
+// When required by tests/run-all.js, suppress the exit so the parent runner
+// can continue to subsequent suites (TC-81~TC-113). Discovered during
+// gemini-cli-v0.39.0-migration Wave 3 runtime verification (2026-04-23).
+if (require.main === module) {
+  process.exit(failed > 0 ? 1 : 0);
+}
+
+// Export results so run-all.js can aggregate tc80's 140 tests.
+module.exports = {
+  tests: [],
+  precomputed: { passed, failed, skipped, total: passed + failed + skipped }
+};

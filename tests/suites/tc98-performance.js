@@ -13,11 +13,12 @@ const tests = [
       `GEMINI.md has ${imports.length} @imports, should be <= 3`);
   }},
 
-  { name: 'TC98-02: GEMINI.md line count <= 50', fn: () => {
+  { name: 'TC98-02: GEMINI.md line count <= 100', fn: () => {
+    // Refactored 2026-04-24 (v2.0.5-finalization): see TC94-67 rationale.
     const content = fs.readFileSync(path.join(PLUGIN_ROOT, 'GEMINI.md'), 'utf-8');
     const lineCount = content.split('\n').length;
-    assert(lineCount <= 50,
-      `GEMINI.md has ${lineCount} lines, should be <= 50`);
+    assert(lineCount <= 100,
+      `GEMINI.md has ${lineCount} lines, should be <= 100`);
   }},
 
   // ─── Config file size constraints (3 tests) ───
@@ -41,11 +42,14 @@ const tests = [
     }
   }},
 
-  { name: 'TC98-05: session-start.js line count <= 500', fn: () => {
+  { name: 'TC98-05: session-start.js line count <= 600', fn: () => {
+    // Refactored 2026-04-24 (v2.0.5-finalization): added module-export guard
+    // (require.main !== module) for tc100 + verbose env var branch + slim
+    // default header path. Limit raised 500 → 600 to absorb new branches.
     const content = fs.readFileSync(path.join(PLUGIN_ROOT, 'hooks/scripts/session-start.js'), 'utf-8');
     const lineCount = content.split('\n').length;
-    assert(lineCount <= 500,
-      `session-start.js has ${lineCount} lines, should be <= 500`);
+    assert(lineCount <= 600,
+      `session-start.js has ${lineCount} lines, should be <= 600`);
     }},
 
   // ─── Module load performance (5 tests) ───

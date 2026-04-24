@@ -3,12 +3,14 @@ const { PLUGIN_ROOT, TEST_PROJECT_DIR, createTestProject, cleanupTestProject, ex
 
 const tests = [
   {
-    name: 'AF-01: Returning user detection',
+    name: 'AF-01: Returning user detection (verbose mode)',
     setup: () => createTestProject({
       'docs/.bkit-memory.json': { sessionCount: 3, platform: 'gemini', level: 'Starter' }
     }),
     fn: () => {
-      const result = executeHook('session-start.js');
+      // Refactored 2026-04-24 (v2.0.5-finalization): default is slim. Welcome
+      // body lives in verbose body / GEMINI.md.
+      const result = executeHook('session-start.js', {}, { BKIT_SESSION_START_VERBOSE: 'true' });
       assertContains(result.output.systemMessage || result.output.context, 'Welcome', 'Should recognize returning user');
     },
     teardown: cleanupTestProject

@@ -12,17 +12,21 @@ const tests = [
     }
   },
   {
-    name: 'CFG-02: version is 1.5.8',
+    name: 'CFG-02: bkit.config.json version matches manifest (semantic check)',
     fn: () => {
+      // Refactored 2026-04-24 (v2.0.5-finalization): pin to manifest cross-ref
+      // instead of hardcoded version per release.
       const config = JSON.parse(fs.readFileSync(path.join(PLUGIN_ROOT, 'bkit.config.json'), 'utf-8'));
-      assertEqual(config.version, '2.0.4', 'Version should be 2.0.4');
+      const manifest = JSON.parse(fs.readFileSync(path.join(PLUGIN_ROOT, 'gemini-extension.json'), 'utf-8'));
+      assertEqual(config.version, manifest.version, `bkit.config.json version must equal manifest version (${manifest.version})`);
+      assert(/^2\.\d+\.\d+/.test(config.version), 'must be 2.x.y semver');
     }
   },
   {
-    name: 'CFG-03: gemini-extension.json no experimental block',
+    name: 'CFG-03: gemini-extension.json shape (no experimental block)',
     fn: () => {
       const ext = JSON.parse(fs.readFileSync(path.join(PLUGIN_ROOT, 'gemini-extension.json'), 'utf-8'));
-      assertEqual(ext.version, '2.0.4', 'Extension version should be 2.0.4');
+      assert(/^2\.\d+\.\d+/.test(ext.version), 'Extension must be 2.x.y semver');
       assert(!ext.experimental, 'experimental block should be removed (Skills/Hooks GA since v0.26.0)');
     }
   },

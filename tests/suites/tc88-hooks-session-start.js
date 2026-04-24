@@ -219,11 +219,18 @@ const tests = [
     }
   },
   {
-    name: 'SS-24: Version string is v2.0.3 (not v1.5.x)',
+    name: 'SS-24: Version string references current bkit major.minor (v2.0.x)',
     fn: () => {
+      // Refactored 2026-04-23 (gemini-cli-v0.39.0-migration iter): the original
+      // assertion pinned a single patch ('v2.0.3') but the project tracks
+      // semantic versions per release. Accept any v2.0.x string and forbid
+      // legacy v1.5.x leakage. metadata.version uses bare '2.0.x'; sentinel
+      // strings use 'v2.0.x' prefix — both forms count.
       const src = fs.readFileSync(HOOK_PATH, 'utf-8');
-      assertContains(src, 'v2.0.3', 'Should reference v2.0.3');
-      assert(!src.includes('v1.5.8') && !src.includes('v1.5.7'), 'Should not reference old v1.5.x versions');
+      const hasV20x = /\bv?2\.0\.\d+/.test(src);
+      assert(hasV20x, 'Should reference any v2.0.x version (got nothing)');
+      assert(!src.includes('v1.5.8') && !src.includes('v1.5.7'),
+        'Should not reference legacy v1.5.x versions');
     }
   },
   {

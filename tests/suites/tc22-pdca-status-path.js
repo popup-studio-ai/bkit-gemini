@@ -5,24 +5,27 @@ const { PDCA_STATUS_V157 } = require('../fixtures');
 
 const tests = [
   {
-    name: 'TC-22-01: PDCA status reads from root .pdca-status.json',
+    name: 'TC-22-01: PDCA status reads from root .pdca-status.json (verbose mode)',
     fn: async () => {
+      // Refactored 2026-04-24 (v2.0.5-finalization): the "feature in body" view
+      // is part of the verbose SessionStart body; metadata.primaryFeature also
+      // carries it. Test now uses verbose mode for the body assertion.
       createTestProject({
         '.pdca-status.json': PDCA_STATUS_V157
       });
-      const result = executeHook('session-start.js');
+      const result = executeHook('session-start.js', {}, { BKIT_SESSION_START_VERBOSE: 'true' });
       assert(result.success, 'SessionStart should succeed');
       const outputText = result.output.systemMessage || result.output.context || JSON.stringify(result.output);
       assert(outputText.includes('test-feature'), 'Output should include feature from root status');
     }
   },
   {
-    name: 'TC-22-02: PDCA status fallback to docs/.pdca-status.json (legacy)',
+    name: 'TC-22-02: PDCA status fallback to docs/.pdca-status.json (legacy, verbose mode)',
     fn: async () => {
       createTestProject({
         'docs/.pdca-status.json': PDCA_STATUS_V157
       });
-      const result = executeHook('session-start.js');
+      const result = executeHook('session-start.js', {}, { BKIT_SESSION_START_VERBOSE: 'true' });
       assert(result.success, 'SessionStart should succeed');
       const outputText = result.output.systemMessage || result.output.context || JSON.stringify(result.output);
       assert(outputText.includes('test-feature'), 'Output should include feature from legacy status');

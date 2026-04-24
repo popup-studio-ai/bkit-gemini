@@ -264,6 +264,18 @@ async function runSuite(suite) {
     console.log(`  SKIP: Suite failed to load - ${e.message.split('\n')[0]}`);
     return { passed: 0, failed: 0, skipped: 1 };
   }
+  // Suites that already executed at top-level (e.g. tc80) export a
+  // `precomputed` block instead of a `tests` array. Use it directly so the
+  // runner can aggregate without re-running the suite.
+  if (mod.precomputed && (!mod.tests || mod.tests.length === 0)) {
+    const p = mod.precomputed;
+    const passed = p.passed || 0;
+    const failed = p.failed || 0;
+    const skipped = p.skipped || 0;
+    console.log(`  Result: ${passed}/${passed + failed + skipped} passed (precomputed at module load)`);
+    return { passed, failed, skipped };
+  }
+
   const tests = mod.tests || [];
   let passed = 0, failed = 0, skipped = 0;
 

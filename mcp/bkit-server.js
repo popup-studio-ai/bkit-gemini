@@ -145,6 +145,38 @@ const AGENTS = {
     description: 'Test strategy, quality metrics, verification coordination',
     recommendedModel: 'pro',
     safetyTier: SAFETY_TIERS.READONLY
+  },
+  // PM Agent Team (added in v2.0.5 — were present in agents/ but missing from
+  // this constant, so list_agents returned 16 instead of 21).
+  'pm-lead': {
+    file: 'pm-lead.md',
+    description: 'PM Team Lead — orchestrates pm-discovery/strategy/research/prd workflow',
+    recommendedModel: 'pro',
+    safetyTier: SAFETY_TIERS.DOCWRITE
+  },
+  'pm-discovery': {
+    file: 'pm-discovery.md',
+    description: 'Opportunity Solution Tree (Teresa Torres) discovery analysis',
+    recommendedModel: 'pro',
+    safetyTier: SAFETY_TIERS.READONLY
+  },
+  'pm-strategy': {
+    file: 'pm-strategy.md',
+    description: 'Value Proposition (JTBD 6-Part) + Lean Canvas product strategy',
+    recommendedModel: 'pro',
+    safetyTier: SAFETY_TIERS.READONLY
+  },
+  'pm-research': {
+    file: 'pm-research.md',
+    description: 'User Personas, Competitor Analysis, TAM/SAM/SOM market sizing',
+    recommendedModel: 'pro',
+    safetyTier: SAFETY_TIERS.READONLY
+  },
+  'pm-prd': {
+    file: 'pm-prd.md',
+    description: 'PRD synthesis — Beachhead Segment + GTM Strategy + 8-section PRD',
+    recommendedModel: 'pro',
+    safetyTier: SAFETY_TIERS.DOCWRITE
   }
 };
 
