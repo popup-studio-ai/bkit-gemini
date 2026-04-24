@@ -714,4 +714,14 @@ if (failures.length > 0) {
 }
 
 console.log('');
-process.exit(failed > 0 ? 1 : 0);
+// Guard process.exit so the parent runner (tests/run-all.js) can continue
+// to subsequent suites. Same pattern as tc80, applied during
+// gemini-cli-v0.39.0-migration Wave 3 (2026-04-23).
+if (require.main === module) {
+  process.exit(failed > 0 ? 1 : 0);
+}
+
+module.exports = {
+  tests: [],
+  precomputed: { passed, failed, skipped, total: passed + failed + skipped }
+};

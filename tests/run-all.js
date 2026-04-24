@@ -174,7 +174,10 @@ async function main() {
     { name: 'TC-110: v0.35.0 E2E Regression', file: 'suites/tc110-v035-e2e-regression.js', priority: 'P0', category: 'e2e', sprint: 7 },
 
     // ═══ v2.0.2 Gemini CLI v0.36.0 Migration (Sprint 8) ═══
-    { name: 'TC-111: v0.36.0 enableAgents Settings', file: 'suites/tc111-v036-enableagents.js', priority: 'P0', category: 'unit', sprint: 8 }
+    { name: 'TC-111: v0.36.0 enableAgents Settings', file: 'suites/tc111-v036-enableagents.js', priority: 'P0', category: 'unit', sprint: 8 },
+
+    // ═══ Gemini CLI v0.39.0 Migration (Sprint 9) — defensive carrier for Issue #25655 ═══
+    { name: 'TC-113: SessionStart systemMessage duplication defense', file: 'suites/tc113-session-start-duplication-defense.js', priority: 'P0', category: 'security', sprint: 9 }
   ];
 
   const filtered = filterSuites(suites, opts);

@@ -9,6 +9,29 @@ const path = require('path');
 
 const libPath = path.resolve(__dirname, '..', '..', 'lib');
 
+// When required as a module (e.g. by tests/suites/tc100-comprehensive-v200.js
+// COMP-07 calling `require('hooks/scripts/session-start')`), suppress the
+// CLI-style `main() + process.exit()` so the parent process is not killed.
+// Standalone CLI execution still flows normally because `require.main === module`
+// holds true for `node hooks/scripts/session-start.js` and for child_process
+// spawns from tc113 defensive tests.
+//
+// Discovered during gemini-cli-v0.39.0-migration Wave 3 runtime verification
+// (2026-04-23) — tc100 had been silently aborting tests/run-all.js since at
+// least v2.0.4 because requiring this script triggered main() side-effects.
+if (require.main !== module) {
+  module.exports = {
+    main,
+    detectProjectLevel: typeof detectProjectLevel === 'function' ? detectProjectLevel : undefined,
+    getGeminiCliFeatures: typeof getGeminiCliFeatures === 'function' ? getGeminiCliFeatures : undefined,
+    loadOutputStyle: typeof loadOutputStyle === 'function' ? loadOutputStyle : undefined,
+    detectReturningUser: typeof detectReturningUser === 'function' ? detectReturningUser : undefined,
+    generateDynamicContext: typeof generateDynamicContext === 'function' ? generateDynamicContext : undefined,
+    ensureAgentsEnabled: typeof ensureAgentsEnabled === 'function' ? ensureAgentsEnabled : undefined
+  };
+  return; // do not run main() at module load time
+}
+
 function main() {
   try {
     const { getAdapter } = require(path.join(libPath, 'gemini', 'platform'));
