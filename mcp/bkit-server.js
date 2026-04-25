@@ -1112,6 +1112,12 @@ class BkitServer {
         env.GEMINI_NON_INTERACTIVE = '1';
       }
 
+      // v0.39.1+ headless trust enforcement (PR #25814)
+      // bkit MCP는 사용자가 인터랙티브로 trust한 세션 내부에서 동작하므로
+      // 자식 gemini 프로세스에 trust를 전파한다.
+      // v0.39.0 이하에서는 미사용 env (무영향) → version-safe로 무조건 주입.
+      env.GEMINI_CLI_TRUST_WORKSPACE = 'true';
+
       console.error(`Executing: gemini ${args.join(' ')}`);
 
       const proc = spawn('gemini', args, {
