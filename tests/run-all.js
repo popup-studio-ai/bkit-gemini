@@ -180,7 +180,10 @@ async function main() {
     { name: 'TC-113: SessionStart systemMessage duplication defense', file: 'suites/tc113-session-start-duplication-defense.js', priority: 'P0', category: 'security', sprint: 9 },
 
     // ═══ bkit v2.0.5 Finalization (Sprint 10) — slim default + verbose env var ═══
-    { name: 'TC-114: SessionStart slim mode + verbose env var', file: 'suites/tc114-session-start-slim-mode.js', priority: 'P0', category: 'unit', sprint: 10 }
+    { name: 'TC-114: SessionStart slim mode + verbose env var', file: 'suites/tc114-session-start-slim-mode.js', priority: 'P0', category: 'unit', sprint: 10 },
+
+    // ═══ bkit v2.0.6 Gemini CLI v0.39.1 Migration (Sprint 11) — Headless Trust Bypass ═══
+    { name: 'TC-115: v0.39.1+ Headless Trust Bypass', file: 'suites/tc115-v0391-headless-trust.js', priority: 'P0', category: 'security', sprint: 11 }
   ];
 
   const filtered = filterSuites(suites, opts);

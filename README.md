@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-v0.34.0+-blue.svg)](https://github.com/google-gemini/gemini-cli)
-[![Version](https://img.shields.io/badge/Version-2.0.3-green.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-2.0.6-green.svg)](CHANGELOG.md)
 [![Author](https://img.shields.io/badge/Author-POPUP%20STUDIO-orange.svg)](https://popupstudio.ai)
 
 > **PDCA methodology + Context Engineering for AI-native development**
@@ -326,6 +326,17 @@ gemini extensions list
 # View bkit help
 /bkit
 ```
+
+### v0.39.1+ Trust Bootstrap (선택)
+
+Gemini CLI **v0.39.1**부터 untrusted 워크스페이스에서 헤드리스 모드(`gemini -p`/`gemini -e`) 실행이 `FatalUntrustedWorkspaceError`로 차단됩니다 ([PR #25814](https://github.com/google-gemini/gemini-cli/pull/25814)).
+
+bkit는 자동으로 `GEMINI_CLI_TRUST_WORKSPACE='true'` 환경변수를 자식 프로세스에 전파해 정상 동작하지만, 처음 한 번 다음 명령으로 워크스페이스를 trust 등록하면 이중화되어 더 안전합니다 (idempotent — 재실행 무영향):
+
+```bash
+bash scripts/bootstrap-trust.sh
+```
+
 
 ### Hooks Configuration
 

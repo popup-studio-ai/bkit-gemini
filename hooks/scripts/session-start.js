@@ -111,7 +111,7 @@ function main() {
       decision: 'allow',
       systemMessage: dynamicContext,
       metadata: {
-        version: '2.0.5',
+        version: '2.0.6',
         platform: 'gemini',
         level: level,
         primaryFeature: pdcaStatus.primaryFeature,
@@ -134,7 +134,7 @@ function main() {
     }
     console.log(JSON.stringify({
       decision: 'allow',
-      systemMessage: 'bkit Vibecoding Kit v2.0.5 activated (Gemini CLI)'
+      systemMessage: 'bkit Vibecoding Kit v2.0.6 activated (Gemini CLI)'
     }));
     process.exit(0);
   }
@@ -344,7 +344,7 @@ function buildAvailableSkillsSection(level) {
 }
 
 // ─── Dynamic Context Generation ────────────────────────────────
-// v2.0.5+: SessionStart systemMessage default is SLIM (single line) to mitigate
+// v2.0.5+ (maintained in v2.0.6): SessionStart systemMessage default is SLIM (single line) to mitigate
 // Issue #25655 (CLI v0.38.x+ duplicates the systemMessage payload). Full body
 // content (PDCA Core Rules, Skills, Returning User, etc.) is loaded via
 // GEMINI.md context file automatically by the Gemini CLI on every session.
@@ -352,7 +352,7 @@ function buildAvailableSkillsSection(level) {
 
 function generateDynamicContext(pdcaStatus, level, memory, returningInfo, outputStyle, pluginRoot, trackerContext) {
   const verbose = process.env.BKIT_SESSION_START_VERBOSE === 'true';
-  const header = `bkit Vibecoding Kit v2.0.5 activated (Gemini CLI) - Level: ${level}`;
+  const header = `bkit Vibecoding Kit v2.0.6 activated (Gemini CLI) - Level: ${level}`;
 
   if (!verbose) {
     // Slim default: single line. Body lives in GEMINI.md (auto-loaded by CLI).
