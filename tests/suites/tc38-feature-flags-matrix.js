@@ -12,6 +12,12 @@ const VERSION_FLAG_MATRIX = [
   { version: '0.31.0', expected: { hasPolicyEngine: true, hasProjectLevelPolicy: true, hasExtensionPolicies: false } },
   { version: '0.32.0', expected: { hasPolicyEngine: true, hasProjectLevelPolicy: true, hasExtensionPolicies: true, hasTaskTracker: true } },
   { version: '0.33.0', expected: { hasPolicyEngine: true, hasExtensionPolicies: true, hasTaskTracker: true } },
+  // v0.40.0+ (4 new flags, design §2.1.3)
+  { version: '0.40.0', expected: { hasContinueOnFailedApiCallRemoved: true, hasNewToolDisplay: true, hasExitPlanModeShellBan: true, hasSetSessionIdReset: true, hasGemmaDefaultOn: false } },
+  // v0.41.0+ (4 new flags) — v0.40.0 flags inherit
+  { version: '0.41.0', expected: { hasA2aServerSplit: true, hasAutoMemoryInbox: true, hasIgnoreEnvFlag: true, hasPromptUndeprecated: true, hasContinueOnFailedApiCallRemoved: true, hasGemmaDefaultOn: false } },
+  // v0.42.0+ (1 new flag, Cx13 Bx4 잠금 게이트) — v0.40.0~v0.41.0 flags inherit
+  { version: '0.42.0', expected: { hasGemmaDefaultOn: true, hasPromptUndeprecated: true, hasContinueOnFailedApiCallRemoved: true } },
 ];
 
 const tests = [];

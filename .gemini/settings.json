@@ -1,5 +1,11 @@
 {
   "experimental": {
-    "enableAgents": true
+    "enableAgents": true,
+    "autoMemory": false,
+    "memoryManager": false,
+    "gemma": false
+  },
+  "general": {
+    "topicUpdateNarration": false
   }
 }

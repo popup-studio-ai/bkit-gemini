@@ -212,6 +212,18 @@ bkit-gemini/
 
 ## Features
 
+### v2.0.7 Highlights (Gemini CLI v0.40.0~v0.42.0 stable migration)
+
+- **Tested up to Gemini CLI v0.42.0 stable** -- testedVersions array expanded from 15 to 21 entries (`0.40.0`, `0.40.1`, `0.41.0`, `0.41.1`, `0.41.2`, `0.42.0` added in this cycle)
+- **9 New Capability Flags** in `lib/gemini/version.js` -- v0.40.0+ (4): `hasContinueOnFailedApiCallRemoved`, `hasNewToolDisplay`, `hasExitPlanModeShellBan`, `hasSetSessionIdReset` / v0.41.0+ (4): `hasA2aServerSplit`, `hasAutoMemoryInbox`, `hasIgnoreEnvFlag`, `hasPromptUndeprecated` / v0.42.0+ (1): `hasGemmaDefaultOn`. **Total feature flags now 28** (was 19).
+- **Cx13 Gemma 4 Default-On Lock** -- `.gemini/settings.json` now pins `experimental.gemma: false` to prevent the v0.42.0 default-on behavior change introduced by [PR #26307](https://github.com/google-gemini/gemini-cli/pull/26307). Users wanting Gemma must explicitly opt in.
+- **`.gemini/settings.json` 4 Explicit Locks** -- `experimental.gemma: false` (Cx13), `experimental.autoMemory: false`, `experimental.memoryManager: false`, `general.topicUpdateNarration: false`. All four are verified by `jq` and `tc38` matrix.
+- **tc38 Feature Flags Matrix Expanded** -- 7 → 10 version rows (v0.40.0 / v0.41.0 / v0.42.0 added), 29 test assertions covering all 9 new capability flags. Backward-compatible: existing v0.26.0~v0.33.0 assertions unchanged.
+- **PR #25827 Workaround Retention** -- The SessionStart `systemMessage` duplicate fix ([PR #25827](https://github.com/google-gemini/gemini-cli/pull/25827)) was **MERGED into `main` on 2026-05-11 but NOT cherry-picked into the v0.42.0 release branch**. bkit retains the workaround across 9 file locations (`hooks/scripts/session-start.js`, `tc113`, `tc114`, 5 environment-variable-explicit test cases, and the `GEMINI.md` env-var documentation). Slated for removal in the v0.43.0 stable migration cycle.
+- **Dual-Version Compatibility Verified** -- Sprint v0.42.0-stable-migration ran every Wave under both `gemini` (locally installed v0.39.1) and `npx --yes @google/gemini-cli@0.42.0`. Symbolic link `~/.gemini/extensions/bkit -> bkit-gemini` loads correctly under both environments; `bkit Vibecoding Kit v2.0.7 activated` confirmation observed in both.
+- **Known Limitation R-extra-1 (carry to v2.1.0-agent-dispatch-fix sprint)** -- `gemini agents list` correctly reports the 21 bkit agents under both v0.39.1 and v0.42.0, but `gemini -p "Use the <agent> agent..."` returns `404` from `LocalSubagentInvocation.execute` and falls back to the `generalist` agent. This is a **pre-existing condition inherited from v0.39.1**, not introduced by v0.42.0. The fallback path produces correct LLM responses, but specialized agent dispatch is not currently wired into Gemini CLI's native subagent registry. Tracked separately; see `docs/01-plan/sprints/v2.1.0-agent-dispatch-fix-master-plan.md` (post-merge).
+- **Baseline Recovery** -- `node tests/run-all.js` baseline 1939/2046 passed (94.8%) under both `GEMINI_CLI_VERSION=0.39.1` and `GEMINI_CLI_VERSION=0.42.0` environments. tc113 (SessionStart duplication defense) 8/8, tc115 (v0.39.1 headless trust) 8/8. Carry items 9 (see `docs/04-report/v0.42.0-stable-migration-report.md`).
+
 ### v2.0.0 Highlights
 
 - **Gemini CLI Native Architecture** -- Complete removal of Claude Code legacy; standalone Gemini CLI extension with zero external dependencies
