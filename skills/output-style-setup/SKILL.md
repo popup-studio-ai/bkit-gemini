@@ -19,7 +19,6 @@ allowed-tools:
   - read_file
   - write_file
   - glob
-classification: capability
 ---
 
 # Output Style Setup Skill

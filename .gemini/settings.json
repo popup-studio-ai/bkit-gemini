@@ -4,8 +4,5 @@
     "autoMemory": false,
     "memoryManager": false,
     "gemma": false
-  },
-  "general": {
-    "topicUpdateNarration": false
   }
 }

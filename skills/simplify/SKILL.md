@@ -22,7 +22,6 @@ agents:
   analyze: code-analyzer
 
 context: session
-classification: workflow
 ---
 
 # Simplify — Code Quality Review and Improvement

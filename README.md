@@ -212,7 +212,31 @@ bkit-gemini/
 
 ## Features
 
-### v2.0.7 Highlights (Gemini CLI v0.40.0~v0.42.0 stable migration)
+### v2.0.7 Highlights (Gemini CLI v0.40.0~v0.42.0 stable migration + Context Engineering 고도화)
+
+#### Context-Driven Development: Convergence with Google's Conductor Philosophy
+
+Google's official [Conductor announcement](https://developers.googleblog.com/conductor-introducing-context-driven-development-for-gemini-cli/) (developers.googleblog.com, 2025-12-17) defines "context-driven development" with the same principles bkit has implemented since v1.x. bkit achieved this convergence **approximately 1 year before** Google's formal announcement.
+
+| Conductor Principle | bkit Equivalent | bkit Implementation |
+|---|---|---|
+| "Plan before you build" | `/pdca plan` phase | `docs/01-plan/features/<feature>-migration.plan.md` |
+| "Persistent markdown specs" | PDCA 6-phase artifacts | `docs/01-plan` ~ `docs/04-report` 산출물 |
+| "Review plans before code is written" | GEMINI.md Rule #4: "Always verify important decisions with user" | `hooks/scripts/session-start.js` |
+| "control your code" | "No Guessing" principle | `session-start.js:159` |
+
+Additional external alignment (independent corroboration):
+- **Andrej Karpathy** (X, [2025-06-26](https://x.com/karpathy/status/1937902205765607626)) — "context engineering is the delicate art and science of filling the context window"
+- **Tobi Lütke** (Shopify CEO, 2025-06) — "the art of providing all the context for the task to be plausibly solvable by the LLM"
+- **Anthropic** ([2025-09-29](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)) — "strategies for curating and maintaining the optimal set of tokens (information) during LLM inference"
+
+bkit's PDCA + Phase-Aware Context Engineering operationalizes these principles via 6 explicit phases (plan/design/do/check/act/idle) with `PHASE_CONTEXT_MAP` reducing idle session tokens by ~60%.
+
+#### Removed Lock (v2.0.7-upgrade D-A1 Option B)
+
+- `general.topicUpdateNarration: false` — **Removed in v2.0.7-upgrade sprint** (2026-05-14). The previous lock lacked explicit justification (anti-pattern A1 in D-axis matrix). Gemini CLI's default `true` ([PR #25586](https://github.com/google-gemini/gemini-cli/pull/25586)) is now retained. Users who prefer narration suppression can opt in via their own `.gemini/settings.json`.
+
+#### Compatibility Migration (commit `1b452ef`)
 
 - **Tested up to Gemini CLI v0.42.0 stable** -- testedVersions array expanded from 15 to 21 entries (`0.40.0`, `0.40.1`, `0.41.0`, `0.41.1`, `0.41.2`, `0.42.0` added in this cycle)
 - **9 New Capability Flags** in `lib/gemini/version.js` -- v0.40.0+ (4): `hasContinueOnFailedApiCallRemoved`, `hasNewToolDisplay`, `hasExitPlanModeShellBan`, `hasSetSessionIdReset` / v0.41.0+ (4): `hasA2aServerSplit`, `hasAutoMemoryInbox`, `hasIgnoreEnvFlag`, `hasPromptUndeprecated` / v0.42.0+ (1): `hasGemmaDefaultOn`. **Total feature flags now 28** (was 19).

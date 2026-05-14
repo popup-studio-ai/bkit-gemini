@@ -24,7 +24,6 @@ allowed-tools:
   - tracker_create_task
   - tracker_update_task
   - tracker_list_tasks
-classification: workflow
 ---
 
 # Batch Skill

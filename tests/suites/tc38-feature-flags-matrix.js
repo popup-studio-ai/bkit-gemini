@@ -16,8 +16,10 @@ const VERSION_FLAG_MATRIX = [
   { version: '0.40.0', expected: { hasContinueOnFailedApiCallRemoved: true, hasNewToolDisplay: true, hasExitPlanModeShellBan: true, hasSetSessionIdReset: true, hasGemmaDefaultOn: false } },
   // v0.41.0+ (4 new flags) — v0.40.0 flags inherit
   { version: '0.41.0', expected: { hasA2aServerSplit: true, hasAutoMemoryInbox: true, hasIgnoreEnvFlag: true, hasPromptUndeprecated: true, hasContinueOnFailedApiCallRemoved: true, hasGemmaDefaultOn: false } },
-  // v0.42.0+ (1 new flag, Cx13 Bx4 잠금 게이트) — v0.40.0~v0.41.0 flags inherit
-  { version: '0.42.0', expected: { hasGemmaDefaultOn: true, hasPromptUndeprecated: true, hasContinueOnFailedApiCallRemoved: true } },
+  // v0.42.0+ (1 new flag, Cx13 Bx4 잠금 게이트) — v0.40.0~v0.41.0 flags inherit, hasSessionStartSystemMessageFix=false (v0.43.0+ only)
+  { version: '0.42.0', expected: { hasGemmaDefaultOn: true, hasPromptUndeprecated: true, hasContinueOnFailedApiCallRemoved: true, hasSessionStartSystemMessageFix: false } },
+  // v0.43.0+ (1 new flag, ENH-5 W4 sprint v2.0.7-upgrade) — PR #25827 SessionStart systemMessage fix auto-detection
+  { version: '0.43.0', expected: { hasSessionStartSystemMessageFix: true, hasGemmaDefaultOn: true, hasPromptUndeprecated: true, hasContinueOnFailedApiCallRemoved: true } },
 ];
 
 const tests = [];
