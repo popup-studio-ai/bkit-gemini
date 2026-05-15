@@ -9,6 +9,106 @@ const path = require('path');
 
 const libPath = path.resolve(__dirname, '..', '..', 'lib');
 
+// --- Agent Dispatch Detection (S3 v2.0.7-agent-dispatch-fix) ---
+let _agentDispatch = null;
+function getAgentDispatch() {
+  if (_agentDispatch !== null) return _agentDispatch;
+  try {
+    _agentDispatch = require(path.join(libPath, 'gemini', 'agent-dispatch'));
+  } catch (e) {
+    _agentDispatch = false; // sentinel: load attempted, unavailable
+  }
+  return _agentDispatch;
+}
+
+let _auditLog = null;
+function getAuditLog() {
+  if (_auditLog !== null) return _auditLog;
+  try {
+    _auditLog = require(path.join(libPath, 'core', 'audit-log'));
+  } catch (e) {
+    _auditLog = false;
+  }
+  return _auditLog;
+}
+
+/**
+ * Detect agent dispatch intent and build directive context.
+ * Returns null when no dispatch matched, or a directive string for additionalContext.
+ *
+ * Strategy (D15 stub for Gemini CLI sync hooks):
+ *   Gemini CLI's BeforeModel hook is synchronous and cannot invoke MCP directly.
+ *   So we inject a structured directive telling the model to call
+ *   mcp__bkit-server__spawn_agent with the resolved arguments.
+ *   When Gemini CLI gains async hook support (v0.44.0+ capability flag),
+ *   this path will be replaced by direct MCP invocation.
+ */
+function buildAgentDispatchDirective(prompt, projectDir) {
+  const AD = getAgentDispatch();
+  if (!AD) return null;
+
+  let detection;
+  try {
+    detection = AD.detectDispatch(prompt);
+  } catch (e) {
+    return null;
+  }
+  if (!detection || !detection.matched) return null;
+
+  let call;
+  try {
+    call = AD.buildDispatchCall(detection);
+  } catch (e) {
+    return null;
+  }
+  if (!call) return null;
+
+  // Audit log (D17): record interception for traceability + telemetry
+  const AuditLogger = getAuditLog();
+  if (AuditLogger && typeof AuditLogger === 'function') {
+    try {
+      const logger = new AuditLogger(projectDir);
+      logger.append({
+        event: 'ALLOW',
+        tool: 'spawn_agent',
+        decision: 'allow',
+        reason: 'agent_dispatch_intercepted',
+        hook: 'BeforeModel',
+        agent: detection.agent,
+        lang: detection.lang,
+        taskPreview: (detection.task || '').slice(0, 120)
+      });
+    } catch (e) { /* non-fatal */ }
+  }
+
+  // Directive text — instructs the model to invoke MCP spawn_agent and wrap output.
+  const args = JSON.stringify(call.arguments, null, 2);
+  return [
+    '## Agent Dispatch (bkit S3)',
+    '',
+    `User invoked a specialized agent via natural language (lang=${detection.lang}).`,
+    `Detected agent: **${detection.agent}**`,
+    '',
+    'You MUST call the MCP tool `mcp__bkit-server__spawn_agent` with the following arguments,',
+    'then wrap its returned text inside boundary markers exactly as shown below.',
+    '',
+    '```json',
+    args,
+    '```',
+    '',
+    'Output format — wrap the agent\'s returned content:',
+    '```',
+    `[Agent: ${detection.agent}]`,
+    '<agent output here>',
+    '[End Agent Output]',
+    '```',
+    '',
+    'Do NOT answer the task yourself; delegate to the agent via the MCP tool.',
+    'If the MCP tool fails or is unavailable, report the failure clearly to the user'
+      + ' and suggest running `gemini mcp list` to verify the bkit MCP server is connected.'
+  ].join('\n');
+}
+
 // --- Model Routing Hints (v2.0.0) ---
 const MODEL_ROUTING = Object.freeze({
   plan:   { preferredModel: 'pro', reason: 'Deep reasoning for requirements analysis' },
@@ -87,6 +187,13 @@ function processHook(input) {
 
     const projectDir = input.projectDir || process.cwd();
     const contexts = [];
+
+    // S3: Agent dispatch detection runs first — if a dispatch directive is built,
+    // it takes precedence and is prepended (model still receives phase context after).
+    const dispatchDirective = buildAgentDispatchDirective(prompt, projectDir);
+    if (dispatchDirective) {
+      contexts.push(dispatchDirective);
+    }
 
     const pdcaPhase = getCurrentPdcaPhase(projectDir);
     if (pdcaPhase) {

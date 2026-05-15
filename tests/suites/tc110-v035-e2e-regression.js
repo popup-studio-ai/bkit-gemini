@@ -6,10 +6,12 @@ const fs = require('fs');
 const tests = [
   // ─── Directory structure ─────────────────────
 
-  { name: 'TC110-01: lib/gemini/ has 8 files', fn: () => {
+  { name: 'TC110-01: lib/gemini/ has 11 files', fn: () => {
     const dir = path.join(PLUGIN_ROOT, 'lib/gemini');
     const files = fs.readdirSync(dir).filter(f => f.endsWith('.js'));
-    assertEqual(files.length, 8, `lib/gemini/ should have 8 JS files, found ${files.length}`);
+    // v2.0.7 S3 Wave 1 Day 2: +2 modules (agent-dispatch, agent-dispatch.lang)
+    // Prior drift from 8 → 9 (v2.0.5-era model-resolver split) also captured here.
+    assertEqual(files.length, 11, `lib/gemini/ should have 11 JS files, found ${files.length}`);
   }},
 
   { name: 'TC110-02: lib/core/ has 16 files', fn: () => {
