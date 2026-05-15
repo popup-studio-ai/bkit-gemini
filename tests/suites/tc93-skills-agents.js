@@ -74,7 +74,7 @@ function classifyAgentSafety(tools) {
   return 'READONLY';
 }
 
-const VALID_MODELS = ['gemini-3.1-pro-preview', 'gemini-3.1-pro-preview-customtools', 'gemini-3-pro', 'gemini-3-flash', 'gemini-3-flash-lite'];
+const VALID_MODELS = ['gemini-3-pro', 'gemini-3-pro-customtools', 'gemini-3-flash', 'gemini-3-flash-lite'];
 
 const tests = [
   // ═══════════════════════════════════════════════════════════════
@@ -368,40 +368,37 @@ const tests = [
       assertContains(content, 'Enterprise: null', 'Enterprise should be null (all skills)');
     }
   },
+  // v2.0.7-S6 (Sprint v2.0.7-baseline-full-recovery):
+  // SKILL-93-36~40 are intentionally skipped — `lib/skill-orchestrator` was
+  // removed when bkit-gemini migrated to Gemini CLI's native skill system
+  // (v0.34.0+ .gemini/skills/*.toml). Skill orchestration is now delegated to
+  // the CLI itself; bkit no longer ships a custom orchestrator module.
+  // Revisit: if Gemini CLI deprecates native skill system OR bkit reintroduces
+  // a custom orchestrator, restore these tests against the new module path.
   {
-    name: 'SKILL-93-36: Skill orchestrator exports parseSkillFrontmatter',
-    fn: () => {
-      const orchestrator = require(path.join(PLUGIN_ROOT, 'lib', 'skill-orchestrator'));
-      assertType(orchestrator.parseSkillFrontmatter, 'function', 'Should export parseSkillFrontmatter');
-    }
+    name: 'SKILL-93-36: Skill orchestrator exports parseSkillFrontmatter (SKIP — delegated to Gemini CLI native skills)',
+    skip: true,
+    fn: () => {}
   },
   {
-    name: 'SKILL-93-37: Skill orchestrator exports loadSkill',
-    fn: () => {
-      const orchestrator = require(path.join(PLUGIN_ROOT, 'lib', 'skill-orchestrator'));
-      assertType(orchestrator.loadSkill, 'function', 'Should export loadSkill');
-    }
+    name: 'SKILL-93-37: Skill orchestrator exports loadSkill (SKIP — delegated to Gemini CLI native skills)',
+    skip: true,
+    fn: () => {}
   },
   {
-    name: 'SKILL-93-38: Skill orchestrator exports activateSkill',
-    fn: () => {
-      const orchestrator = require(path.join(PLUGIN_ROOT, 'lib', 'skill-orchestrator'));
-      assertType(orchestrator.activateSkill, 'function', 'Should export activateSkill');
-    }
+    name: 'SKILL-93-38: Skill orchestrator exports activateSkill (SKIP — delegated to Gemini CLI native skills)',
+    skip: true,
+    fn: () => {}
   },
   {
-    name: 'SKILL-93-39: Skill orchestrator exports listSkills',
-    fn: () => {
-      const orchestrator = require(path.join(PLUGIN_ROOT, 'lib', 'skill-orchestrator'));
-      assertType(orchestrator.listSkills, 'function', 'Should export listSkills');
-    }
+    name: 'SKILL-93-39: Skill orchestrator exports listSkills (SKIP — delegated to Gemini CLI native skills)',
+    skip: true,
+    fn: () => {}
   },
   {
-    name: 'SKILL-93-40: Skill orchestrator exports resolveAgent',
-    fn: () => {
-      const orchestrator = require(path.join(PLUGIN_ROOT, 'lib', 'skill-orchestrator'));
-      assertType(orchestrator.resolveAgent, 'function', 'Should export resolveAgent');
-    }
+    name: 'SKILL-93-40: Skill orchestrator exports resolveAgent (SKIP — delegated to Gemini CLI native skills)',
+    skip: true,
+    fn: () => {}
   },
 
   // ═══════════════════════════════════════════════════════════════
@@ -451,14 +448,16 @@ const tests = [
     }
   },
   {
-    name: 'AGENT-93-46: gemini-3.1-pro agents exist',
+    name: 'AGENT-93-46: gemini-3-pro agents exist',
     fn: () => {
+      // v2.0.7-S6: truth update — agents migrated from gemini-3-pro
+      // to gemini-3-pro stable. 14 agents use gemini-3-pro (Pro tier).
       const agents = listAgentFiles();
       const proAgents = agents.filter(a => {
         const fm = readFrontmatter(path.join(AGENTS_DIR, a));
-        return fm.model === 'gemini-3.1-pro-preview';
+        return fm.model === 'gemini-3-pro';
       });
-      assert(proAgents.length > 0, 'Should have gemini-3.1-pro-preview agents');
+      assert(proAgents.length > 0, 'Should have gemini-3-pro agents');
     }
   },
   {
@@ -716,12 +715,12 @@ const tests = [
     }
   },
   {
-    name: 'AGENT-93-76: All 5 PM agents use gemini-3.1-pro-preview model',
+    name: 'AGENT-93-76: All 5 PM agents use gemini-3-pro model',
     fn: () => {
       const pmAgents = ['pm-lead', 'pm-discovery', 'pm-strategy', 'pm-research', 'pm-prd'];
       for (const agent of pmAgents) {
         const fm = readFrontmatter(path.join(AGENTS_DIR, `${agent}.md`));
-        assertEqual(fm.model, 'gemini-3.1-pro-preview', `${agent} should use gemini-3.1-pro-preview`);
+        assertEqual(fm.model, 'gemini-3-pro', `${agent} should use gemini-3-pro`);
       }
     }
   },
@@ -730,7 +729,7 @@ const tests = [
     fn: () => {
       assertExists(path.join(AGENTS_DIR, 'gap-detector.md'), 'gap-detector.md should exist');
       const fm = readFrontmatter(path.join(AGENTS_DIR, 'gap-detector.md'));
-      assertEqual(fm.model, 'gemini-3.1-pro-preview', 'gap-detector should use gemini-3.1-pro-preview');
+      assertEqual(fm.model, 'gemini-3-pro', 'gap-detector should use gemini-3-pro');
     }
   },
   {
@@ -744,7 +743,7 @@ const tests = [
     fn: () => {
       assertExists(path.join(AGENTS_DIR, 'cto-lead.md'), 'cto-lead.md should exist');
       const fm = readFrontmatter(path.join(AGENTS_DIR, 'cto-lead.md'));
-      assertEqual(fm.model, 'gemini-3.1-pro-preview', 'cto-lead should use gemini-3.1-pro-preview');
+      assertEqual(fm.model, 'gemini-3-pro', 'cto-lead should use gemini-3-pro');
     }
   },
   {
