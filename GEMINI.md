@@ -6,8 +6,15 @@
 
 bkit's PDCA + Phase-Aware Context Engineering aligns with Google's
 [Conductor: context-driven development for Gemini CLI](https://developers.googleblog.com/conductor-introducing-context-driven-development-for-gemini-cli/)
-(2025-12-17). bkit shipped the same model ~1 year before. See README.md
-"v2.0.7 Highlights" for the full alignment matrix and external references.
+(2025-12-17). bkit shipped the same model ~1 year before. See
+`docs/reference/features-history.md` § v2.0.7 Highlights for the full
+alignment matrix and external references.
+
+## Deep Reference (slim by design — load on demand)
+- Architecture: `docs/reference/architecture.md`
+- Features history (v1.5.x ~ v2.0.7): `docs/reference/features-history.md`
+- Commands / 21 Agents / 35 Skills / 24 TOML: `docs/reference/commands.md`
+- Update / Development / Security: `docs/reference/troubleshooting.md`
 
 ## Rules
 1. New feature request -> `/pdca plan` first
@@ -32,7 +39,8 @@ Restore verbose body: `export BKIT_SESSION_START_VERBOSE=true`.
 ## Gemini CLI v0.42.0 Compatibility (v2.0.7)
 
 Supports v0.34.0 minimum through v0.42.0 stable (tested). 5-version
-cumulative migration absorbed in one sprint. Details: README.md.
+cumulative migration absorbed in one sprint. Details:
+`docs/reference/features-history.md`.
 
 Behavior locks in `.gemini/settings.json`:
 - `gemma: false` — prevents v0.42.0 Gemma 4 default-on (Cx13).
