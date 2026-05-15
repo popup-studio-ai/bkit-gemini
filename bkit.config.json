@@ -112,7 +112,19 @@
     "run_shell_command(rm -rf*)": "deny",
     "run_shell_command(rm -r*)": "ask",
     "run_shell_command(git push --force*)": "deny",
-    "run_shell_command(git reset --hard*)": "ask"
+    "run_shell_command(git reset --hard*)": "ask",
+    "run_shell_command(sudo*)": "deny",
+    "run_shell_command(chmod 777*)": "deny",
+    "run_shell_command(drop table*)": "deny",
+    "run_shell_command(drop database*)": "deny",
+    "run_shell_command(truncate*)": "deny",
+    "run_shell_command(npm publish*--force*)": "deny",
+    "run_shell_command(gpg*--delete-key*)": "deny",
+    "run_shell_command(rm -rf .git*)": "deny",
+    "run_shell_command(rm id_rsa*)": "deny",
+    "run_shell_command(rm *.pem)": "deny",
+    "run_shell_command(rm *.p12)": "deny",
+    "run_shell_command(git config --unset credential*)": "deny"
   },
 
   "compatibility": {
