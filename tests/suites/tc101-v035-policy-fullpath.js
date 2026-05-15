@@ -114,21 +114,35 @@ const tests = [
 
   // ─── generateLevelPolicy / generateSubagentRules ─────
 
-  { name: 'TC101-14: generateSubagentRules includes regex comment in v0.35.0', fn: () => {
+  { name: 'TC101-14: generateSubagentRules emits subagent entries in v0.35.0', fn: () => {
+    // v2.0.7-S2: FULL tier(rm-rf/git-push)는 SUBAGENT_POLICY_GROUPS에서 skip (TC80-29 호환).
+    // commandRegex 검증은 Starter policy의 'rm' commandPrefix를 통해 TC101-15에서 별도 수행.
     withVersion('0.35.0', () => {
       const output = generateSubagentRules();
-      // full tier has commandPrefix rules that generate commandRegex
-      assertContains(output, 'commandRegex', 'v0.35.0 subagent rules should have commandRegex');
+      assertContains(output, 'subagent =', 'subagent rules should be emitted');
+      assertContains(output, 'gap-detector', 'readonly tier agents should be present');
     });
   }},
 
-  { name: 'TC101-15: generateSubagentRules v0.35.0 includes subagent + commandRegex', fn: () => {
-    withVersion('0.35.0', () => {
-      const output = generateSubagentRules();
-      assertContains(output, 'subagent =', 'should have subagent entries');
-      assertContains(output, 'commandRegex', 'should have commandRegex for full-path');
-      assertContains(output, 'gap-detector', 'should include gap-detector agent');
-    });
+  { name: 'TC101-15: Starter policy v0.35.0 includes commandRegex (full-path matching)', fn: () => {
+    // v2.0.7-S2: commandRegex 검증을 Starter policy('rm' commandPrefix 보유)로 이전.
+    // generateSubagentRules는 FULL tier skip하므로 더 이상 commandRegex emit 안 함.
+    const fs = require('fs');
+    const path = require('path');
+    const tmp = fs.mkdtempSync(require('os').tmpdir() + '/bkit-tc101-');
+    try {
+      withVersion('0.35.0', () => {
+        const { generateLevelPolicy } = require('../../lib/gemini/policy');
+        const result = generateLevelPolicy('Starter', tmp);
+        if (!result.created || !result.path) {
+          throw new Error(`generateLevelPolicy failed: ${result.reason}`);
+        }
+        const content = fs.readFileSync(result.path, 'utf-8');
+        assertContains(content, 'commandRegex', 'Starter policy v0.35.0 should have commandRegex for full-path');
+      });
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
   }}
 ];
 

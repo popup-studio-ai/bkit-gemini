@@ -1,6 +1,10 @@
 // TC-80: Security v2.0.0 Comprehensive Test Suite (~100 TC)
 // Covers SEC-01 through SEC-10 security fixes for bkit-gemini v2.0.0
 //
+// v2.0.7-S2: 'use strict' 명시 — frozen object 변경 시 TypeError 발생 보장.
+// (sloppy mode에서는 silent fail로 false-negative 위험)
+'use strict';
+//
 // SEC-01: Agent Safety Tiers (17 TC)
 // SEC-02: Subagent TOML Policies (12 TC)
 // SEC-03: Path Traversal Prevention (14 TC)
@@ -256,11 +260,13 @@ const tests = [
     }
   },
 
-  { name: 'TC80-19: SEC-02 readonly group has 10 agents',
+  { name: 'TC80-19: SEC-02 readonly group has 13 agents',
     fn: () => {
       const pm = require(policyPath);
-      assertEqual(pm.SUBAGENT_POLICY_GROUPS.readonly.agents.length, 10,
-        'readonly group should have 10 agents');
+      // v2.0.7-S2: AGENTS 21-agent 동기화 후 readonly = 13
+      // (원 8 + bkend-expert + enterprise-expert + PM 3)
+      assertEqual(pm.SUBAGENT_POLICY_GROUPS.readonly.agents.length, 13,
+        'readonly group should have 13 agents (21-agent sync)');
     }
   },
 
@@ -286,11 +292,13 @@ const tests = [
     }
   },
 
-  { name: 'TC80-22: SEC-02 docwrite group has 4 agents',
+  { name: 'TC80-22: SEC-02 docwrite group has 6 agents',
     fn: () => {
       const pm = require(policyPath);
-      assertEqual(pm.SUBAGENT_POLICY_GROUPS.docwrite.agents.length, 4,
-        'docwrite group should have 4 agents');
+      // v2.0.7-S2: AGENTS 21-agent 동기화 후 docwrite = 6
+      // (원 4 + pm-lead + pm-prd)
+      assertEqual(pm.SUBAGENT_POLICY_GROUPS.docwrite.agents.length, 6,
+        'docwrite group should have 6 agents (21-agent sync)');
     }
   },
 
@@ -312,9 +320,9 @@ const tests = [
       const toml = pm.generateSubagentRules();
       assert(toml.includes('[[rule]]'), 'Should contain [[rule]] blocks');
       assert(toml.includes('subagent ='), 'Should contain subagent field');
-      // Each readonly agent x 3 rules + each docwrite agent x 1 rule = 10*3 + 4*1 = 34
+      // v2.0.7-S2: 21-agent 동기화 후 → readonly 13*3 + docwrite 6*1 = 45 rules
       const ruleCount = (toml.match(/\[\[rule\]\]/g) || []).length;
-      assertEqual(ruleCount, 34, 'Should generate 34 subagent rules (10*3 + 4*1)');
+      assertEqual(ruleCount, 45, 'Should generate 45 subagent rules (13*3 + 6*1)');
     }
   },
 
@@ -882,7 +890,9 @@ const tests = [
     fn: () => {
       const starterPath = path.join(PLUGIN_ROOT, '.gemini', 'policies', 'bkit-starter-policy.toml');
       const content = fs.readFileSync(starterPath, 'utf-8');
-      const modesMatches = content.match(/modes\s*=\s*["plan"]/g);
+      // v2.0.7-S2: 원 regex `["plan"]`는 character class — `\[` `\]` escape 누락 버그.
+      // 실제 TOML은 `modes = ["plan"]` 배열 형태 (3개 이상).
+      const modesMatches = content.match(/modes\s*=\s*\["plan"\]/g);
       assert(modesMatches && modesMatches.length >= 3,
         'Should have at least 3 plan mode rules with array syntax');
     }
@@ -1146,12 +1156,19 @@ const tests = [
   { name: 'TC80-95: SEC-10 handleGetAgentInfo does not expose agentContent (file body) in response',
     fn: () => {
       const src = fs.readFileSync(spawnAgentPath, 'utf-8');
-      const funcMatch = src.match(/handleGetAgentInfo[\s\S]*?return\s*\{\s*content[\s\S]*?\}\s*\}\s*;/);
-      assert(funcMatch, 'handleGetAgentInfo return should exist');
-      // The function reads agentContent but should NOT include it in the response JSON
-      assert(!funcMatch[0].includes('agentContent') ||
-             (funcMatch[0].includes('agentContent') && !funcMatch[0].match(/content:\s*agentContent/)),
-        'Agent file content should not be directly exposed in the response');
+      // v2.0.7-S2: helper-aware. mcp/bkit-server.js는 _textResponse helper로 리팩토링됨.
+      // 함수 정의(`handleGetAgentInfo(args) {`)부터 매치하여 dispatch case 우선 매치 회피.
+      const funcStart = src.indexOf('handleGetAgentInfo(args) {');
+      assert(funcStart !== -1, 'handleGetAgentInfo function definition should exist');
+      // 함수 body는 다음 메서드 시작 (`handle...(...)\s*{` 직전 또는 첫 closing `}` depth)까지.
+      // 안전하게 1500 chars window 사용 (함수 길이 ~30 line ≤ 1500 chars).
+      const funcBody = src.substring(funcStart, funcStart + 1500);
+      // _textResponse 호출이 응답 contract
+      assert(funcBody.includes('_textResponse('),
+        'handleGetAgentInfo should use _textResponse helper');
+      // 응답 인자 객체에 agentContent (file body) 또는 content: agentContent 패턴 없음
+      assert(!funcBody.match(/_textResponse\([\s\S]*?agentContent[\s\S]*?\)/),
+        'Agent file content (agentContent) should not be passed to _textResponse');
     }
   }
 ];

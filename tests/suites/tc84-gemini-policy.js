@@ -28,9 +28,10 @@ const tests = [
     assert('readonly' in SUBAGENT_POLICY_GROUPS, 'should have readonly group');
     assert('docwrite' in SUBAGENT_POLICY_GROUPS, 'should have docwrite group');
   }},
-  { name: 'TC84-04: readonly group has 8 agents and 3 deny rules', fn: () => {
+  { name: 'TC84-04: readonly group has 13 agents and 3 deny rules', fn: () => {
+    // v2.0.7-S2: 21-agent 동기화 후 readonly = 13
     const ro = SUBAGENT_POLICY_GROUPS.readonly;
-    assertEqual(ro.agents.length, 8, 'readonly should have 8 agents');
+    assertEqual(ro.agents.length, 13, 'readonly should have 13 agents (21-agent sync)');
     assertEqual(ro.rules.length, 3, 'readonly should have 3 deny rules');
     ro.rules.forEach(r => assertEqual(r.decision, 'deny', 'readonly rules should all be deny'));
   }},

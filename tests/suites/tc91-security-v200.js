@@ -219,11 +219,12 @@ const tests = [
     }
   },
 
-  { name: 'TC91-20: SEC-02 readonly group has exactly 8 agents',
+  { name: 'TC91-20: SEC-02 readonly group has exactly 13 agents',
     fn: () => {
       const policy = require(policyPath);
-      assertEqual(policy.SUBAGENT_POLICY_GROUPS.readonly.agents.length, 8,
-        'readonly.agents should have 8 entries');
+      // v2.0.7-S2: AGENTS 21-agent 동기화 후 readonly = 13
+      assertEqual(policy.SUBAGENT_POLICY_GROUPS.readonly.agents.length, 13,
+        'readonly.agents should have 13 entries (21-agent sync)');
     }
   },
 
@@ -301,17 +302,18 @@ const tests = [
   { name: 'TC91-29: SEC-02 readonly agents list matches expected READONLY agents from SEC-01',
     fn: () => {
       const policy = require(policyPath);
+      // v2.0.7-S2: AGENTS (mcp/bkit-server.js) source-of-truth 기반 — bkend-expert,
+      // enterprise-expert, PM 3명 (discovery/strategy/research) 모두 READONLY tier로 등록됨.
       const expected = [
         'gap-detector', 'design-validator', 'code-analyzer', 'security-architect',
-        'qa-monitor', 'qa-strategist', 'starter-guide', 'pipeline-guide'
+        'qa-monitor', 'qa-strategist', 'starter-guide', 'pipeline-guide',
+        'bkend-expert', 'enterprise-expert',
+        'pm-discovery', 'pm-strategy', 'pm-research'
       ];
       for (const name of expected) {
         assert(policy.SUBAGENT_POLICY_GROUPS.readonly.agents.includes(name),
           `${name} should be in readonly agents list`);
       }
-      // bkend-expert moved to docwrite
-      assert(!policy.SUBAGENT_POLICY_GROUPS.readonly.agents.includes('bkend-expert'),
-        'bkend-expert should NOT be in readonly (moved to docwrite)');
     }
   },
 
@@ -392,12 +394,13 @@ const tests = [
     }
   },
 
-  { name: 'TC91-40: SEC-03 source uses sanitizeTeamName before file operations',
+  { name: 'TC91-40: SEC-03 source uses _sanitizeTeamName before file operations',
     fn: () => {
       const src = fs.readFileSync(spawnAgentPath, 'utf-8');
-      // Verify sanitizeTeamName is called in handleTeamAssign and handleTeamStatus
-      assert(src.includes('this.sanitizeTeamName(team_name)'),
-        'Should call sanitizeTeamName on team_name input');
+      // v2.0.7-S2: private convention `_sanitizeTeamName` (JS class private prefix)
+      // bkit-server.js:732,766,830에서 모두 _sanitizeTeamName 호출.
+      assert(src.includes('this._sanitizeTeamName(team_name)'),
+        'Should call _sanitizeTeamName on team_name input (private convention)');
     }
   },
 
@@ -941,9 +944,10 @@ const tests = [
   { name: 'TC91-89: SEC-10 response uses relative file name (agentInfo.file) not full path',
     fn: () => {
       const src = fs.readFileSync(spawnAgentPath, 'utf-8');
-      const funcStart = src.indexOf('handleGetAgentInfo(args)');
-      assert(funcStart !== -1, 'handleGetAgentInfo should exist');
-      const funcBody = src.substring(funcStart, funcStart + 1200);
+      // v2.0.7-S2: dispatch case 우선 매치 회피 — 함수 정의 시그니처 정확 매칭
+      const funcStart = src.indexOf('handleGetAgentInfo(args) {');
+      assert(funcStart !== -1, 'handleGetAgentInfo function definition should exist');
+      const funcBody = src.substring(funcStart, funcStart + 1500);
       assert(funcBody.includes('agentInfo.file'),
         'Should use agentInfo.file (relative filename) in response');
     }
@@ -972,14 +976,14 @@ const tests = [
   { name: 'TC91-92: SEC-10 handleGetAgentInfo does not expose agentContent in response',
     fn: () => {
       const src = fs.readFileSync(spawnAgentPath, 'utf-8');
-      const funcStart = src.indexOf('handleGetAgentInfo(args)');
-      assert(funcStart !== -1, 'handleGetAgentInfo should exist');
-      // Find the second return statement (success response with JSON.stringify)
-      const funcBody = src.substring(funcStart, funcStart + 1200);
-      const jsonBlock = funcBody.match(/JSON\.stringify\(\{[\s\S]*?\}\s*,\s*null/);
-      assert(jsonBlock, 'Should have JSON.stringify response block');
-      // agentContent is read but should NOT appear inside the JSON response
-      assert(!jsonBlock[0].includes('agentContent'),
+      // v2.0.7-S2: helper-aware — _textResponse 사용.
+      const funcStart = src.indexOf('handleGetAgentInfo(args) {');
+      assert(funcStart !== -1, 'handleGetAgentInfo function definition should exist');
+      const funcBody = src.substring(funcStart, funcStart + 1500);
+      const respBlock = funcBody.match(/_textResponse\(\{[\s\S]*?\}\s*\)/);
+      assert(respBlock, 'Should have _textResponse helper invocation');
+      // agentContent (file body)이 응답 인자 객체에 포함되어선 안 됨
+      assert(!respBlock[0].includes('agentContent'),
         'Agent file content should not be directly exposed in response');
     }
   },
@@ -995,14 +999,23 @@ const tests = [
   { name: 'TC91-94: SEC-10 handleListAgents does not expose file paths',
     fn: () => {
       const src = fs.readFileSync(spawnAgentPath, 'utf-8');
-      // Find handleListAgents method
-      const listMatch = src.match(/handleListAgents\(\)\s*\{[\s\S]*?return\s*\{[\s\S]*?\}\s*;/);
-      if (listMatch) {
-        assert(!listMatch[0].includes('extensionPath'),
-          'handleListAgents should not expose extensionPath');
-        assert(!listMatch[0].includes('agentPath'),
-          'handleListAgents should not expose full agent paths');
-      }
+      // v2.0.7-S2: helper-aware — handleListAgents 함수 boundary 정확 매칭.
+      // 원 regex `return\s*\{`는 `return this._textResponse({`와 매치 안 되어
+      // lazy quantifier가 다음 함수까지 흡수 (false positive).
+      const funcStart = src.indexOf('handleListAgents() {');
+      assert(funcStart !== -1, 'handleListAgents function definition should exist');
+      // 함수 body는 첫 _textResponse 호출 + `;\n  }` 종결까지
+      const funcBody = src.substring(funcStart, funcStart + 600);
+      const respBlock = funcBody.match(/_textResponse\(\{[\s\S]*?\}\s*\)/);
+      assert(respBlock, 'handleListAgents should use _textResponse helper');
+      // 응답 인자 객체에 file path 류 노출 없음
+      assert(!respBlock[0].includes('extensionPath'),
+        'handleListAgents response should not expose extensionPath');
+      assert(!respBlock[0].includes('agentPath'),
+        'handleListAgents response should not expose agentPath');
+      // 추가: absolute path 류 (file, path 키)도 없어야 함
+      assert(!respBlock[0].match(/\bfile\s*:/),
+        'handleListAgents response should not expose file paths');
     }
   },
 
