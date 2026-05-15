@@ -12,11 +12,12 @@ const tests = [
     assertEqual(files.length, 8, `lib/gemini/ should have 8 JS files, found ${files.length}`);
   }},
 
-  { name: 'TC110-02: lib/core/ has 15 files', fn: () => {
+  { name: 'TC110-02: lib/core/ has 16 files', fn: () => {
     const dir = path.join(PLUGIN_ROOT, 'lib/core');
     const files = fs.readdirSync(dir).filter(f => f.endsWith('.js'));
-    // v2.0.7 S7 (Wave 1 Day 2): +4 modules (trust-score, control-state, audit-log, cmd-parser)
-    assertEqual(files.length, 15, `lib/core/ should have 15 JS files, found ${files.length}`);
+    // v2.0.7 S7 Wave 1 Day 2~3: +5 modules
+    // (trust-score, control-state, audit-log, cmd-parser, checkpoint)
+    assertEqual(files.length, 16, `lib/core/ should have 16 JS files, found ${files.length}`);
   }},
 
   { name: 'TC110-03: lib/pdca/ has 6 files', fn: () => {
