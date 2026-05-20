@@ -32,7 +32,6 @@ agents:
 
 context: session
 memory: project
-classification: workflow
 ---
 
 # PM Agent Team Skill

@@ -55,6 +55,8 @@ function processHook(input) {
     const permResult = checkPermissionManager(toolName, toolInput, projectDir);
     if (permResult.level === 'deny') {
       writeSecurityAuditLog(projectDir, 'DENY', toolName, toolInput, permResult.reason);
+      // S7 (Wave 1 Day 2, D6 정합성): destructive op 차단 시 audit JSONL + trust_score downgrade
+      applyL4Audit('DENY', 'deny', toolName, toolInput, permResult.reason, projectDir, /*forceDowngrade*/ true);
       return { decision: 'deny', reason: `Permission denied: ${permResult.reason || 'Blocked by permission policy'}` };
     }
 
@@ -83,9 +85,26 @@ function processHook(input) {
       const bashResult = handleBash(toolInput);
       if (bashResult.block) {
         writeSecurityAuditLog(projectDir, 'BLOCK', toolName, toolInput, bashResult.message || 'Blocked by pattern');
+        // S7 (Wave 1 Day 2, D6 정합성): bash 차단도 audit JSONL + downgrade
+        applyL4Audit('BLOCK', 'deny', toolName, toolInput, bashResult.message || 'Blocked by pattern', projectDir, /*forceDowngrade*/ true);
         return { decision: 'deny', reason: bashResult.message };
       }
       contexts.push(...bashResult.warnings);
+    }
+
+    // S7 v2.0.7-gemini-cli-l4-automation: L3+ automation channel
+    // evaluateAutomation() returns null → fall through to legacy L0~L2 behavior.
+    // Otherwise returns explicit { decision, reason/systemMessage }.
+    try {
+      const autoResult = evaluateAutomation(toolName, toolInput, projectDir);
+      if (autoResult) {
+        if (contexts.length > 0 && autoResult.decision === 'allow') {
+          autoResult.systemMessage = (autoResult.systemMessage ? autoResult.systemMessage + '\n' : '') + contexts.join('\n');
+        }
+        return autoResult;
+      }
+    } catch (e) {
+      // S7 automation must not block legacy behavior
     }
 
     if (contexts.length > 0) {
@@ -95,6 +114,115 @@ function processHook(input) {
   } catch (error) {
     return { decision: 'allow' };
   }
+}
+
+/**
+ * evaluateAutomation — S7 Wave 1 Day 2 (Sprint v2.0.7-gemini-cli-l4-automation)
+ *
+ * Decides hook outcome based on automation level + trust score + destructive
+ * analysis. Returns `null` for L1~L2 (legacy path), otherwise an explicit
+ * decision. Audit log + trust-score update are side-effects.
+ *
+ * @returns {{decision:'allow'|'deny'|'ask',systemMessage?:string,reason?:string}|null}
+ */
+function evaluateAutomation(toolName, toolInput, projectDir) {
+  // Lazy load: missing modules must not break legacy hook (graceful)
+  let TrustScoreManager, CmdParser, AuditLogger;
+  try {
+    TrustScoreManager = require(path.join(libPath, 'core', 'trust-score'));
+    CmdParser = require(path.join(libPath, 'core', 'cmd-parser'));
+    AuditLogger = require(path.join(libPath, 'core', 'audit-log'));
+  } catch (e) {
+    return null; // automation modules unavailable
+  }
+
+  let mgr;
+  try {
+    mgr = new TrustScoreManager(projectDir);
+  } catch (e) {
+    return null;
+  }
+
+  const level = mgr.getLevel();
+  const score = mgr.getScore();
+  const logger = new AuditLogger(projectDir);
+  const parser = new CmdParser();
+
+  // L0: explicit manual mode → ask user
+  if (level === 0) {
+    return { decision: 'ask', systemMessage: 'bkit L0 manual mode: user confirmation required.' };
+  }
+
+  // L1~L2: legacy behavior (caller handles)
+  if (level <= 2) return null;
+
+  // L3~L4 automation channel below
+  const cmd = (toolInput && (toolInput.command || toolInput.file_path)) || '';
+
+  // Hard deny check (L4 무관, D6 in design)
+  if (cmd && parser.isDestructive(cmd)) {
+    logger.append({
+      event: 'DENY',
+      hook: 'BeforeTool',
+      tool: toolName,
+      decision: 'deny',
+      reason: `L${level}-hardguard: destructive op`,
+      command: typeof cmd === 'string' ? cmd.substring(0, 200) : undefined,
+      level_before: level,
+      level_after: 3,
+      score_after: score
+    });
+    mgr.downgrade(3, 'destructive op detected (D6)');
+    return { decision: 'deny', reason: 'L4-hardguard: destructive operation blocked' };
+  }
+
+  // Tool whitelist (D5 — read-only ops)
+  // Mirrors mcp/bkit-server.js:1094 read-only allowlist for consistency.
+  const READONLY_WHITELIST = [
+    'read_file', 'read_many_files', 'list_directory', 'glob',
+    'grep_search', 'google_web_search', 'web_fetch'
+  ];
+
+  if (READONLY_WHITELIST.includes(toolName)) {
+    mgr.recordDecision({ type: 'allow', tool: toolName, timestamp: Date.now(), durationMs: 0 });
+    logger.append({
+      event: 'ALLOW',
+      hook: 'BeforeTool',
+      tool: toolName,
+      decision: 'allow',
+      reason: `L${level} whitelist`,
+      level_after: mgr.getLevel(),
+      score_after: mgr.getScore()
+    });
+    return { decision: 'allow', systemMessage: `bkit L${mgr.getLevel()}: whitelist auto-approve (${toolName})` };
+  }
+
+  // L4 + trust ≥ 80: auto-approve any non-destructive tool
+  if (level === 4 && score >= 80) {
+    mgr.recordDecision({ type: 'allow', tool: toolName, timestamp: Date.now(), durationMs: 0 });
+    logger.append({
+      event: 'ALLOW',
+      hook: 'BeforeTool',
+      tool: toolName,
+      decision: 'allow',
+      reason: 'L4 auto-approve',
+      level_after: mgr.getLevel(),
+      score_after: mgr.getScore()
+    });
+    return { decision: 'allow', systemMessage: 'bkit L4: auto-approve' };
+  }
+
+  // L3 (or L4 with score < 80): ask user
+  logger.append({
+    event: 'ASK',
+    hook: 'BeforeTool',
+    tool: toolName,
+    decision: 'ask',
+    reason: `L${level} confirm`,
+    level_after: level,
+    score_after: score
+  });
+  return { decision: 'ask', systemMessage: `bkit L${level}: confirm ${toolName} (score=${score})` };
 }
 
 // --- RuntimeHook function export (v0.31.0+ SDK) ---
@@ -144,10 +272,9 @@ function checkPdcaPhaseRestriction(toolName, projectDir) {
     const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
     const status = pdcaStatusModule.loadPdcaStatus(projectDir);
     const feature = status.primaryFeature;
-    const active = status.activeFeatures || {};
-    if (!feature || !active[feature]) return null;
+    if (!feature || !status.features || !status.features[feature]) return null;
 
-    const phase = active[feature].phase;
+    const phase = status.features[feature].phase;
 
     // Plan/Check phases should be read-only
     if ((phase === 'plan' || phase === 'check') &&
@@ -248,4 +375,44 @@ function handleBash(toolInput) {
 
 if (require.main === module) { main(); }
 
-module.exports = { handler };
+/**
+ * applyL4Audit — S7 helper for D6 정합성 (Wave 1 Day 2)
+ *
+ * Mirrors deny/block decisions to .bkit/state/audit/{date}/decisions.jsonl
+ * and optionally triggers trust-score downgrade. Graceful: any failure must
+ * not block hook execution.
+ *
+ * @param {'DENY'|'BLOCK'|'ASK'|'ALLOW'} event
+ * @param {'allow'|'deny'|'ask'} decision
+ * @param {boolean} forceDowngrade  if true and level >= 3, downgrade to L3 with "destructive op" reason
+ */
+function applyL4Audit(event, decision, toolName, toolInput, reason, projectDir, forceDowngrade) {
+  try {
+    const TSM = require(path.join(libPath, 'core', 'trust-score'));
+    const AL = require(path.join(libPath, 'core', 'audit-log'));
+    const mgr = new TSM(projectDir);
+    const before = mgr.getLevel();
+    if (forceDowngrade && before >= 3) {
+      mgr.downgrade(3, 'destructive op detected (D6, hard deny via legacy policy)');
+    } else if (event === 'DENY' || event === 'BLOCK') {
+      // Record rejection on trust-score (so 5 consecutive rejection downgrade still applies)
+      mgr.recordDecision({ type: 'rejection', tool: toolName, timestamp: Date.now(), durationMs: 0 });
+    }
+    new AL(projectDir).append({
+      event,
+      hook: 'BeforeTool',
+      tool: toolName,
+      decision,
+      reason,
+      command: (toolInput && toolInput.command) ? String(toolInput.command).substring(0, 200) : undefined,
+      filePath: (toolInput && toolInput.file_path) || undefined,
+      level_before: before,
+      level_after: mgr.getLevel(),
+      score_after: mgr.getScore()
+    });
+  } catch (e) {
+    // graceful: audit/downgrade failure must not block hook
+  }
+}
+
+module.exports = { handler, processHook, evaluateAutomation, applyL4Audit };

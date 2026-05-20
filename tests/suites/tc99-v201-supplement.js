@@ -81,13 +81,17 @@ const tests = [
 
   // ─── TC-96-06: full tier has correct agents ─────────────────────
   {
-    name: 'TC96-06: full tier has pdca-iterator, cto-lead, pm-lead',
+    name: 'TC96-06: full tier has pdca-iterator and cto-lead',
     fn: () => {
+      // v2.0.7-S2: AGENTS source-of-truth 동기화 후 pm-lead는 DOCWRITE tier (mcp/bkit-server.js:155).
+      // full tier는 pdca-iterator + cto-lead 2명.
       const { SUBAGENT_POLICY_GROUPS } = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'policy'));
       const fullAgents = SUBAGENT_POLICY_GROUPS.full.agents;
       assert(fullAgents.includes('pdca-iterator'), 'full tier should include pdca-iterator');
       assert(fullAgents.includes('cto-lead'), 'full tier should include cto-lead');
-      assert(fullAgents.includes('pm-lead'), 'full tier should include pm-lead');
+      // pm-lead는 DOCWRITE로 정정 (AGENTS와 동기화)
+      const docwriteAgents = SUBAGENT_POLICY_GROUPS.docwrite.agents;
+      assert(docwriteAgents.includes('pm-lead'), 'pm-lead should be DOCWRITE (AGENTS tier-corrected)');
     }
   },
 
@@ -106,15 +110,17 @@ const tests = [
     }
   },
 
-  // ─── TC-96-08: bkend-expert is in docwrite tier ─────────────────
+  // ─── TC-96-08: bkend-expert is in readonly tier ─────────────────
   {
-    name: 'TC96-08: bkend-expert is in docwrite tier (not readonly)',
+    name: 'TC96-08: bkend-expert is in readonly tier (AGENTS source-of-truth)',
     fn: () => {
+      // v2.0.7-S2: mcp/bkit-server.js:105에서 bkend-expert.safetyTier = READONLY로 등록됨.
+      // 정책 그룹은 AGENTS source-of-truth를 따라 readonly로 정정.
       const { SUBAGENT_POLICY_GROUPS } = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'policy'));
       const docwriteAgents = SUBAGENT_POLICY_GROUPS.docwrite.agents;
       const readonlyAgents = SUBAGENT_POLICY_GROUPS.readonly.agents;
-      assert(docwriteAgents.includes('bkend-expert'), 'bkend-expert should be in docwrite tier');
-      assert(!readonlyAgents.includes('bkend-expert'), 'bkend-expert should NOT be in readonly tier');
+      assert(readonlyAgents.includes('bkend-expert'), 'bkend-expert should be in readonly tier (AGENTS sync)');
+      assert(!docwriteAgents.includes('bkend-expert'), 'bkend-expert should NOT be in docwrite tier');
     }
   },
 

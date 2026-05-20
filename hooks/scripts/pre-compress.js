@@ -55,6 +55,44 @@ function main() {
       _jitPartial: jitPartial
     }, null, 2));
 
+    // v2.0.7-S5 W1: Strategy 1 Compaction — extract decisions/openItems/codeRefs and persist
+    // alongside the snapshot. Honors BKIT_COMPACTION=false toggle (graceful no-op).
+    try {
+      const compactor = require(path.join(libPath, 'core', 'compactor'));
+      if (compactor.isCompactionEnabled()) {
+        // Reading raw transcript is out-of-scope for sync hook; we extract from the
+        // PDCA status itself (history field if present, plus active feature notes).
+        const messages = [];
+        if (pdcaStatus.history && Array.isArray(pdcaStatus.history)) {
+          for (const entry of pdcaStatus.history.slice(-200)) {
+            if (entry && typeof entry.details === 'string') messages.push(entry.details);
+            if (entry && typeof entry.summary === 'string') messages.push(entry.summary);
+          }
+        }
+        if (pdcaStatus.features) {
+          for (const [name, feat] of Object.entries(pdcaStatus.features)) {
+            if (feat && feat.notes) messages.push(`${name}: ${feat.notes}`);
+          }
+        }
+        const result = compactor.compactSession(
+          {
+            turnCount: (pdcaStatus.history && pdcaStatus.history.length) || 0,
+            tokenUsage: 0,           // hook has no token visibility; rely on turn threshold
+            contextWindow: 200_000,
+            messages
+          },
+          projectDir
+        );
+        if (result.compacted) {
+          fs.writeFileSync(snapshotPath + '.compact.json',
+            JSON.stringify(result.summary, null, 2), 'utf-8');
+        }
+      }
+    } catch (e) {
+      // non-fatal: compaction failures must not break PreCompress hook
+      if (process.env.BKIT_DEBUG === '1') console.error('compactor:', e.message);
+    }
+
     // Cleanup old snapshots (keep last 10)
     const snapshots = fs.readdirSync(snapshotDir)
       .filter(f => f.startsWith('snapshot-'))

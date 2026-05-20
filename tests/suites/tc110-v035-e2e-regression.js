@@ -6,22 +6,28 @@ const fs = require('fs');
 const tests = [
   // ─── Directory structure ─────────────────────
 
-  { name: 'TC110-01: lib/gemini/ has 8 files', fn: () => {
+  { name: 'TC110-01: lib/gemini/ has 11 files', fn: () => {
     const dir = path.join(PLUGIN_ROOT, 'lib/gemini');
     const files = fs.readdirSync(dir).filter(f => f.endsWith('.js'));
-    assertEqual(files.length, 8, `lib/gemini/ should have 8 JS files, found ${files.length}`);
+    // v2.0.7 S3 Wave 1 Day 2: +2 modules (agent-dispatch, agent-dispatch.lang)
+    // Prior drift from 8 → 9 (v2.0.5-era model-resolver split) also captured here.
+    assertEqual(files.length, 11, `lib/gemini/ should have 11 JS files, found ${files.length}`);
   }},
 
-  { name: 'TC110-02: lib/core/ has 11 files', fn: () => {
+  { name: 'TC110-02: lib/core/ has 18 files', fn: () => {
     const dir = path.join(PLUGIN_ROOT, 'lib/core');
     const files = fs.readdirSync(dir).filter(f => f.endsWith('.js'));
-    assertEqual(files.length, 11, `lib/core/ should have 11 JS files, found ${files.length}`);
+    // v2.0.7 S7: +5 modules (trust-score, control-state, audit-log, cmd-parser, checkpoint)
+    // v2.0.7 S5: +2 modules (compactor, tool-result-summarizer)
+    assertEqual(files.length, 18, `lib/core/ should have 18 JS files, found ${files.length}`);
   }},
 
-  { name: 'TC110-03: lib/pdca/ has 6 files', fn: () => {
+  { name: 'TC110-03: lib/pdca/ has 5 files', fn: () => {
+    // v2.0.7-S6: truth update — lib/pdca consolidated to 5 modules
+    // (index, level, phase, status, tier). Removed: per-feature wrapper.
     const dir = path.join(PLUGIN_ROOT, 'lib/pdca');
     const files = fs.readdirSync(dir).filter(f => f.endsWith('.js'));
-    assertEqual(files.length, 6, `lib/pdca/ should have 6 JS files, found ${files.length}`);
+    assertEqual(files.length, 5, `lib/pdca/ should have 5 JS files, found ${files.length}`);
   }},
 
   // ─── Configuration ─────────────────────
@@ -68,14 +74,19 @@ const tests = [
     assertEqual(ext.name, 'bkit', 'extension name should be bkit');
   }},
 
-  { name: 'TC110-10: gemini-extension.json version is 2.0.3', fn: () => {
+  { name: 'TC110-10: gemini-extension.json version is 2.0.7', fn: () => {
+    // v2.0.7-S6: truth update
     const ext = JSON.parse(fs.readFileSync(path.join(PLUGIN_ROOT, 'gemini-extension.json'), 'utf-8'));
-    assertEqual(ext.version, '2.0.3', 'version should be 2.0.3');
+    assertEqual(ext.version, '2.0.7', 'version should be 2.0.7');
   }},
 
   // ─── All lib/ modules load without error ─────────────
 
   { name: 'TC110-11: all lib/ modules require() successfully', fn: () => {
+    // v2.0.7-S6: truth update — lib/ structure consolidated.
+    // Removed: lib/task (merged into PDCA history), lib/team (orchestration → cto-lead agent),
+    //          lib/skill-orchestrator (deprecated → MCP server), lib/context-hierarchy (→ lib/gemini/context-fork).
+    // Added: lib/test (v2.0.7-S1 CI Stub Mode).
     const modules = [
       'lib/core/index',
       'lib/gemini/version',
@@ -84,12 +95,10 @@ const tests = [
       'lib/gemini/hooks',
       'lib/gemini/tracker',
       'lib/gemini/import-resolver',
+      'lib/gemini/agent-dispatch',         // v2.0.7-S3 NEW
       'lib/pdca/index',
       'lib/intent/index',
-      'lib/task/index',
-      'lib/team/index',
-      'lib/skill-orchestrator',
-      'lib/context-hierarchy'
+      'lib/test/llm-replay'                // v2.0.7-S1 NEW
     ];
     let failures = [];
     for (const mod of modules) {

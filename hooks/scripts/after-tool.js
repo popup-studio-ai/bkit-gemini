@@ -29,6 +29,10 @@ function processHook(input) {
       fs.appendFileSync(path.join(auditDir, `${today}.jsonl`), record + '\n');
     } catch (_) { /* audit is best-effort */ }
 
+    // S7 v2.0.7-gemini-cli-l4-automation (Wave 1 Day 2):
+    // PostToolUse continueOnBlock + JSONL audit + auto-downgrade in L3+
+    applyAfterToolAudit(toolName, toolInput, input, projectDir);
+
     if (['write_file', 'replace'].includes(toolName)) {
       return processPostWrite(toolInput, projectDir);
     } else if (toolName === 'activate_skill') {
@@ -37,6 +41,54 @@ function processHook(input) {
     return { decision: 'allow' };
   } catch (error) {
     return { decision: 'allow' };
+  }
+}
+
+/**
+ * applyAfterToolAudit — S7 PostToolUse continueOnBlock + JSONL audit + auto-downgrade
+ *
+ * Only active in L3+ modes (AC-T6 무회귀: L0~L2 동작 무변경).
+ * Graceful: any failure must not block hook execution.
+ */
+function applyAfterToolAudit(toolName, toolInput, hookInput, projectDir) {
+  try {
+    const TSM = require(path.join(libPath, 'core', 'trust-score'));
+    const AL = require(path.join(libPath, 'core', 'audit-log'));
+    const mgr = new TSM(projectDir);
+    const level = mgr.getLevel();
+    if (level < 3) return; // legacy untouched
+
+    const errorMessage = hookInput.tool_error || hookInput.error
+      || (hookInput.tool_response && hookInput.tool_response.error)
+      || null;
+    const success = !errorMessage;
+    const durationMs = hookInput.duration_ms || (hookInput.tool_response && hookInput.tool_response.duration_ms) || 0;
+
+    if (!success) {
+      mgr.recordDecision({
+        type: 'rejection',
+        tool: toolName,
+        timestamp: Date.now(),
+        durationMs,
+        rejected: true
+      });
+    }
+
+    new AL(projectDir).append({
+      event: success ? 'ALLOW' : 'DENY',
+      hook: 'AfterTool',
+      tool: toolName,
+      decision: success ? 'allow' : 'deny',
+      reason: success ? 'tool completed' : `tool failure: ${errorMessage}`,
+      command: (toolInput && toolInput.command) ? String(toolInput.command).substring(0, 200) : undefined,
+      filePath: (toolInput && (toolInput.file_path || toolInput.path)) || undefined,
+      durationMs,
+      success,
+      level_after: mgr.getLevel(),
+      score_after: mgr.getScore()
+    });
+  } catch (e) {
+    // graceful
   }
 }
 
@@ -100,9 +152,9 @@ function processPostWrite(toolInput, projectDir) {
     const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
     const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
     const primaryFeature = pdcaStatus.primaryFeature;
-    if (!primaryFeature || !pdcaStatus.activeFeatures[primaryFeature]) return { decision: 'allow' };
+    if (!primaryFeature || !pdcaStatus.features[primaryFeature]) return { decision: 'allow' };
 
-    const featureStatus = pdcaStatus.activeFeatures[primaryFeature];
+    const featureStatus = pdcaStatus.features[primaryFeature];
     if (featureStatus.phase === 'design' && (normalizedPath.includes('src/') || normalizedPath.includes('lib/'))) {
       const oldPhase = featureStatus.phase;
       featureStatus.phase = 'do';
@@ -136,17 +188,17 @@ function processPostSkill(toolInput, projectDir) {
 
         if (action === 'plan') {
           pdcaStatus.primaryFeature = feature;
-          if (!pdcaStatus.activeFeatures[feature]) {
-            pdcaStatus.activeFeatures[feature] = { phase: 'plan', createdAt: new Date().toISOString() };
+          if (!pdcaStatus.features[feature]) {
+            pdcaStatus.features[feature] = { phase: 'plan', createdAt: new Date().toISOString() };
           } else {
-            pdcaStatus.activeFeatures[feature].phase = 'plan';
+            pdcaStatus.features[feature].phase = 'plan';
           }
           pdcaStatusModule.savePdcaStatus(pdcaStatus, projectDir);
           contexts.push(`**PDCA Progress**: Plan created for "${feature}". Next: \`/pdca design ${feature}\``);
         } else if (action === 'design') {
-          if (pdcaStatus.activeFeatures[feature]) {
-            pdcaStatus.activeFeatures[feature].phase = 'design';
-            pdcaStatus.activeFeatures[feature].updatedAt = new Date().toISOString();
+          if (pdcaStatus.features[feature]) {
+            pdcaStatus.features[feature].phase = 'design';
+            pdcaStatus.features[feature].updatedAt = new Date().toISOString();
             pdcaStatusModule.savePdcaStatus(pdcaStatus, projectDir);
           }
           contexts.push(`**PDCA Progress**: Design created for "${feature}". Next: Start implementation, then \`/pdca analyze ${feature}\``);
@@ -189,4 +241,4 @@ function main() {
 
 if (require.main === module) { main(); }
 
-module.exports = { handler };
+module.exports = { handler, processHook, applyAfterToolAudit };

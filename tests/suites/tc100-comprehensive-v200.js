@@ -7,54 +7,33 @@ const fs = require('fs');
 const tests = [
   // ─── Perspective 1: Multilingual Triggers (Korean/Japanese) ───
 
+  // v2.0.7-S6 (Sprint v2.0.7-baseline-full-recovery):
+  // COMP-01~03 are intentionally skipped — the underlying APIs were either
+  // moved or replaced by v2.0.x:
+  //   - sessionStart.detectAgentFromInput   → S3 agent-dispatch.js (8-lang matcher)
+  //                                            Korean/Japanese natural-language
+  //                                            dispatch is now handled by
+  //                                            lib/gemini/agent-dispatch.js +
+  //                                            hooks/scripts/before-model.js.
+  //   - tracker.addTask                     → Gemini CLI native task tracker
+  //                                            (lib/gemini/tracker.js no longer
+  //                                            exposes a direct addTask API).
+  // For multilingual dispatch coverage see tests/regression/agent-dispatch/
+  // full-matrix.test.js (21 agents × 8 languages = 168 cases).
   {
-    name: 'COMP-01: Korean trigger "분석해줘" activates gap-detector',
-    fn: () => {
-      const sessionStart = require(path.join(PLUGIN_ROOT, 'hooks', 'scripts', 'session-start'));
-      // Simulate input that should trigger gap-detector
-      const input = "현재 진행 상황 분석해줘";
-      const result = sessionStart.detectAgentFromInput(input);
-      assertEqual(result, 'gap-detector', 'Korean "분석해줘" should trigger gap-detector');
-    }
+    name: 'COMP-01: Korean trigger activates gap-detector (SKIP — replaced by S3 agent-dispatch full-matrix)',
+    skip: true,
+    fn: () => {}
   },
-
   {
-    name: 'COMP-02: Japanese trigger "計画" activates pdca-iterator',
-    fn: () => {
-      const sessionStart = require(path.join(PLUGIN_ROOT, 'hooks', 'scripts', 'session-start'));
-      const input = "新しい機能を計画してください";
-      const result = sessionStart.detectAgentFromInput(input);
-      assertEqual(result, 'pdca-iterator', 'Japanese "計画" should trigger pdca-iterator');
-    }
+    name: 'COMP-02: Japanese trigger activates pdca-iterator (SKIP — replaced by S3 agent-dispatch full-matrix)',
+    skip: true,
+    fn: () => {}
   },
-
-  // ─── Perspective 2: Stress Testing (Tracker) ───
-
   {
-    name: 'COMP-03: Tracker handles 1000 tasks without failure',
-    fn: () => {
-      const tracker = require(path.join(PLUGIN_ROOT, 'lib', 'gemini', 'tracker'));
-      const testDir = createTestProject('stress-tracker');
-      const statusPath = path.join(testDir, '.pdca-status.json');
-
-      // Create initial status
-      const status = {
-        version: '2.0',
-        features: {
-          'stress-feat': { tasks: [] }
-        }
-      };
-      fs.writeFileSync(statusPath, JSON.stringify(status));
-
-      // Add 1000 tasks
-      for (let i = 0; i < 1000; i++) {
-        tracker.addTask('stress-feat', `Task ${i}`, { projectDir: testDir });
-      }
-
-      const updatedStatus = JSON.parse(fs.readFileSync(statusPath, 'utf-8'));
-      assertEqual(updatedStatus.features['stress-feat'].tasks.length, 1000, 'Should have 1000 tasks');
-      cleanupTestProject(testDir);
-    }
+    name: 'COMP-03: Tracker handles 1000 tasks (SKIP — delegated to Gemini CLI native task tracker)',
+    skip: true,
+    fn: () => {}
   },
 
   // ─── Perspective 3: Edge Case (Context Fork) ───
@@ -103,25 +82,20 @@ const tests = [
 
   // ─── Perspective 5: Phase-Aware Context Verification ───
 
+  // v2.0.7-S6: COMP-06/07 — sessionStart.getContextFilesForPhase was replaced
+  // by Phase-Aware Context Loading via GEMINI.md @-imports (see context/*.md
+  // files referenced by GEMINI.md and the Phase-Aware Context table in
+  // docs/reference/architecture.md). The hook no longer exposes a direct
+  // per-phase file-list API.
   {
-    name: 'COMP-06: session-start selects correct context files for PLAN phase',
-    fn: () => {
-      const sessionStart = require(path.join(PLUGIN_ROOT, 'hooks', 'scripts', 'session-start'));
-      const contextFiles = sessionStart.getContextFilesForPhase('plan');
-      assert(contextFiles.includes('core-rules.md'), 'Plan phase should include core-rules.md');
-      assert(contextFiles.includes('pdca-rules.md'), 'Plan phase should include pdca-rules.md');
-      // Should NOT include tool-reference-v2.md (only for DO phase)
-      assert(!contextFiles.includes('tool-reference-v2.md'), 'Plan phase should NOT include tool-reference-v2.md');
-    }
+    name: 'COMP-06: session-start phase context for PLAN (SKIP — replaced by GEMINI.md @-import)',
+    skip: true,
+    fn: () => {}
   },
-
   {
-    name: 'COMP-07: session-start selects tool-reference-v2.md for DO phase',
-    fn: () => {
-      const sessionStart = require(path.join(PLUGIN_ROOT, 'hooks', 'scripts', 'session-start'));
-      const contextFiles = sessionStart.getContextFilesForPhase('do');
-      assert(contextFiles.includes('tool-reference-v2.md'), 'Do phase should include tool-reference-v2.md');
-    }
+    name: 'COMP-07: session-start phase context for DO (SKIP — replaced by GEMINI.md @-import)',
+    skip: true,
+    fn: () => {}
   }
 ];
 

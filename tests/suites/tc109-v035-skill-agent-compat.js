@@ -67,26 +67,23 @@ const tests = [
     assertEqual(missing.length, 0, `Missing agent files: ${missing.join(', ')}`);
   }},
 
-  { name: 'TC109-06: skill-orchestrator.js loads without error', fn: () => {
-    const mod = require(path.join(PLUGIN_ROOT, 'lib/skill-orchestrator'));
-    assert(mod !== null, 'skill-orchestrator should load');
-    assertType(mod.listSkills, 'function', 'should export listSkills');
-  }},
+  // v2.0.7-S6 (Sprint v2.0.7-baseline-full-recovery):
+  // TC109-06~08 are intentionally skipped — `lib/skill-orchestrator` was
+  // removed in v2.0.x when bkit-gemini migrated to Gemini CLI's native skill
+  // system (v0.34.0+ .gemini/skills/*.toml). Skill discovery + activation are
+  // now handled by the CLI runtime; bkit no longer ships a custom orchestrator.
+  // See SKILL-93-36~40 in tc93-skills-agents.js for the matching SKIP set.
+  { name: 'TC109-06: skill-orchestrator.js loads (SKIP — delegated to Gemini CLI native skills)',
+    skip: true,
+    fn: () => {} },
 
-  { name: 'TC109-07: skill-orchestrator exports listSkills function', fn: () => {
-    const mod = require(path.join(PLUGIN_ROOT, 'lib/skill-orchestrator'));
-    assertType(mod.listSkills, 'function', 'listSkills should be exported');
-    // listSkills may need plugin root context; just verify it's callable
-    const result = mod.listSkills();
-    assert(Array.isArray(result), 'listSkills should return an array');
-  }},
+  { name: 'TC109-07: skill-orchestrator exports listSkills (SKIP — delegated to Gemini CLI native skills)',
+    skip: true,
+    fn: () => {} },
 
-  { name: 'TC109-08: skill-orchestrator exports getUserInvocableSkills', fn: () => {
-    const mod = require(path.join(PLUGIN_ROOT, 'lib/skill-orchestrator'));
-    assertType(mod.getUserInvocableSkills, 'function', 'getUserInvocableSkills should be exported');
-    const result = mod.getUserInvocableSkills();
-    assert(Array.isArray(result), 'getUserInvocableSkills should return an array');
-  }},
+  { name: 'TC109-08: skill-orchestrator exports getUserInvocableSkills (SKIP — delegated to Gemini CLI native skills)',
+    skip: true,
+    fn: () => {} },
 
   { name: 'TC109-09: output-styles/ has 4 style files', fn: () => {
     const stylesDir = path.join(PLUGIN_ROOT, 'output-styles');

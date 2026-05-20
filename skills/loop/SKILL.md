@@ -20,7 +20,6 @@ allowed-tools:
   - run_shell_command
   - read_file
   - write_file
-classification: workflow
 ---
 
 # Loop Skill

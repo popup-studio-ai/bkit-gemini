@@ -1,0 +1,19 @@
+{
+  "hash": "abdcd7c892352a46",
+  "captured_at": "2026-05-15T13:30:00.000Z",
+  "gemini_cli_version": "0.42.0",
+  "bkit_version": "2.0.7",
+  "_note": "Synthetic placeholder fixture for S1 framework validation. Replace with actual `BKIT_TEST_MODE=record` capture before relying on this for regression testing. Schema is exact — only the response stdout/stderr/exitCode is synthesized from docs/test-plans/v0.42.0-bkit-extension-test-plan.md §4.1 expected output.",
+  "request": {
+    "args": ["-p", "Respond with exactly: ONE TWO THREE"],
+    "env": {
+      "GEMINI_CLI_TRUST_WORKSPACE": "true"
+    },
+    "cwd_rel": "bkit-gemini"
+  },
+  "response": {
+    "stdout": "bkit Vibecoding Kit v2.0.7 activated (Gemini CLI) - Level: Starter\nHook system message: bkit Vibecoding Kit v2.0.7 activated (Gemini CLI) - Level: Starter\nONE TWO THREE\n\nHook system message: bkit session ended. State preserved.\nHook execution for SessionEnd: 1 hooks executed successfully, total duration: 12ms\n",
+    "stderr": "",
+    "exitCode": 0
+  }
+}

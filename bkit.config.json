@@ -1,6 +1,6 @@
 {
   "$schema": "./bkit.config.schema.json",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "platform": "gemini",
 
   "sourceDirectories": ["src", "lib", "app", "components", "pages", "features", "services"],
@@ -112,12 +112,24 @@
     "run_shell_command(rm -rf*)": "deny",
     "run_shell_command(rm -r*)": "ask",
     "run_shell_command(git push --force*)": "deny",
-    "run_shell_command(git reset --hard*)": "ask"
+    "run_shell_command(git reset --hard*)": "ask",
+    "run_shell_command(sudo*)": "deny",
+    "run_shell_command(chmod 777*)": "deny",
+    "run_shell_command(drop table*)": "deny",
+    "run_shell_command(drop database*)": "deny",
+    "run_shell_command(truncate*)": "deny",
+    "run_shell_command(npm publish*--force*)": "deny",
+    "run_shell_command(gpg*--delete-key*)": "deny",
+    "run_shell_command(rm -rf .git*)": "deny",
+    "run_shell_command(rm id_rsa*)": "deny",
+    "run_shell_command(rm *.pem)": "deny",
+    "run_shell_command(rm *.p12)": "deny",
+    "run_shell_command(git config --unset credential*)": "deny"
   },
 
   "compatibility": {
     "minGeminiCliVersion": "0.34.0",
-    "testedVersions": ["0.29.0", "0.30.0", "0.31.0", "0.32.0", "0.33.0", "0.34.0", "0.35.0", "0.35.3", "0.36.0", "0.37.0", "0.38.0", "0.38.1", "0.38.2", "0.39.0", "0.39.1"],
+    "testedVersions": ["0.29.0", "0.30.0", "0.31.0", "0.32.0", "0.33.0", "0.34.0", "0.35.0", "0.35.3", "0.36.0", "0.37.0", "0.38.0", "0.38.1", "0.38.2", "0.39.0", "0.39.1", "0.40.0", "0.40.1", "0.41.0", "0.41.1", "0.41.2", "0.42.0"],
     "policyEngine": {
       "autoGenerate": true,
       "outputDir": ".gemini/policies/",

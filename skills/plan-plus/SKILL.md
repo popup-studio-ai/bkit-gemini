@@ -35,7 +35,6 @@ imports:
 context: session
 memory: project
 pdca-phase: plan
-classification: hybrid
 ---
 
 # Plan Plus — Brainstorming-Enhanced PDCA Planning

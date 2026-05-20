@@ -1,5 +1,5 @@
 {
-  "description": "bkit Vibecoding Kit v2.0.4 - Gemini CLI Native Edition",
+  "description": "bkit Vibecoding Kit v2.0.7 - Gemini CLI Native Edition",
   "hooks": {
     "SessionStart": [
       {
@@ -127,6 +127,18 @@
             "name": "bkit-agent-cleanup",
             "type": "command",
             "command": "node ${extensionPath}/hooks/scripts/after-agent.js",
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
+    "BeforePhase": [
+      {
+        "hooks": [
+          {
+            "name": "bkit-phase-gate",
+            "type": "command",
+            "command": "node ${extensionPath}/hooks/scripts/before-phase.js",
             "timeout": 10000
           }
         ]

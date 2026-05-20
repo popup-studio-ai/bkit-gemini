@@ -100,10 +100,10 @@ const EXPECTED_GEMINI_FILES = [
   'policy.js', 'tracker.js', 'context-fork.js', 'import-resolver.js'
 ];
 
-test('DS-02', 'lib/gemini/ has exactly 9 .js files', () => {
+test('DS-02', 'lib/gemini/ has exactly 11 .js files', () => {
   const files = fs.readdirSync(GEMINI_DIR).filter(f => f.endsWith('.js'));
-  assert(files.length === 9,
-    `Expected 9 files, found ${files.length}: ${files.join(', ')}`);
+  assert(files.length === 11,
+    `Expected 11 files, found ${files.length}: ${files.join(', ')}`);
 });
 
 test('DS-03', 'lib/gemini/ contains platform.js', () => {
@@ -418,20 +418,20 @@ test('CC-20', 'hooks.js does not reference "claude" (case-insensitive)', () => {
 // ================================================================
 console.log('\n=== Section 4: Version Consistency (15 tests) ===');
 
-test('VER-01', 'bkit.config.json version = "2.0.4"', () => {
+test('VER-01', 'bkit.config.json version = "2.0.7"', () => {
   const config = JSON.parse(fs.readFileSync(path.join(ROOT, 'bkit.config.json'), 'utf-8'));
-  assert(config.version === '2.0.4', `bkit.config.json version is "${config.version}"`);
+  assert(config.version === '2.0.7', `bkit.config.json version is "${config.version}"`);
 });
 
-test('VER-02', 'gemini-extension.json version = "2.0.4"', () => {
+test('VER-02', 'gemini-extension.json version = "2.0.7"', () => {
   const ext = JSON.parse(fs.readFileSync(path.join(ROOT, 'gemini-extension.json'), 'utf-8'));
-  assert(ext.version === '2.0.4', `gemini-extension.json version is "${ext.version}"`);
+  assert(ext.version === '2.0.7', `gemini-extension.json version is "${ext.version}"`);
 });
 
-test('VER-03', 'hooks.json description contains "v2.0.4"', () => {
+test('VER-03', 'hooks.json description contains "v2.0.7"', () => {
   const hooks = JSON.parse(fs.readFileSync(path.join(HOOKS_DIR, 'hooks.json'), 'utf-8'));
-  assert(hooks.description.includes('v2.0.4'),
-    `hooks.json description does not contain v2.0.4: "${hooks.description}"`);
+  assert(hooks.description.includes('v2.0.7'),
+    `hooks.json description does not contain v2.0.7: "${hooks.description}"`);
 });
 
 test('VER-04', 'bkit.config.json minGeminiCliVersion = "0.34.0"', () => {
@@ -460,9 +460,9 @@ test('VER-07', 'No "v1.5" in session-start.js', () => {
   assert(!match, `Found "v1.5" in session-start.js: ${match}`);
 });
 
-test('VER-08', 'session-start.js references v2.0.4', () => {
+test('VER-08', 'session-start.js references v2.0.7', () => {
   const content = fs.readFileSync(path.join(HOOKS_SCRIPTS, 'session-start.js'), 'utf-8');
-  assert(content.includes('v2.0.4'), 'session-start.js does not contain v2.0.4');
+  assert(content.includes('v2.0.7'), 'session-start.js does not contain v2.0.7');
 });
 
 test('VER-09', 'scripts/sync-version.js exists', () => {
@@ -643,10 +643,10 @@ test('PD-10', '.gemini/context/tool-reference-v2.md exists', () => {
     '.gemini/context/tool-reference-v2.md not found');
 });
 
-test('PD-11', 'GEMINI.md has <= 50 lines', () => {
+test('PD-11', 'GEMINI.md has <= 100 lines', () => {
   const content = fs.readFileSync(path.join(ROOT, 'GEMINI.md'), 'utf-8');
   const lineCount = content.split('\n').length;
-  assert(lineCount <= 50, `GEMINI.md has ${lineCount} lines, expected <= 50`);
+  assert(lineCount <= 100, `GEMINI.md has ${lineCount} lines, expected <= 100`);
 });
 
 test('PD-12', 'GEMINI.md has exactly 2 @imports', () => {

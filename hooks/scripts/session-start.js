@@ -111,7 +111,7 @@ function main() {
       decision: 'allow',
       systemMessage: dynamicContext,
       metadata: {
-        version: '2.0.6',
+        version: '2.0.7',
         platform: 'gemini',
         level: level,
         primaryFeature: pdcaStatus.primaryFeature,
@@ -134,7 +134,7 @@ function main() {
     }
     console.log(JSON.stringify({
       decision: 'allow',
-      systemMessage: 'bkit Vibecoding Kit v2.0.6 activated (Gemini CLI)'
+      systemMessage: 'bkit Vibecoding Kit v2.0.7 activated (Gemini CLI)'
     }));
     process.exit(0);
   }
@@ -344,19 +344,46 @@ function buildAvailableSkillsSection(level) {
 }
 
 // ─── Dynamic Context Generation ────────────────────────────────
-// v2.0.5+ (maintained in v2.0.6): SessionStart systemMessage default is SLIM (single line) to mitigate
+// v2.0.5+ (maintained in v2.0.7): SessionStart systemMessage default is SLIM (single line) to mitigate
 // Issue #25655 (CLI v0.38.x+ duplicates the systemMessage payload). Full body
 // content (PDCA Core Rules, Skills, Returning User, etc.) is loaded via
 // GEMINI.md context file automatically by the Gemini CLI on every session.
 // Set BKIT_SESSION_START_VERBOSE=true to restore the verbose body.
+// v2.0.7-upgrade ENH-5: Auto-detect via hasSessionStartSystemMessageFix flag.
+// When Gemini CLI >= v0.43.0, the upstream PR #25827 fix is absorbed and slim default is auto-lifted.
+
+// v2.0.7-upgrade ENH-4: Auto Memory inbox hint (D-A2 Option A — informational only)
+// - Emits a single-line read-only awareness notice when:
+//   (a) Gemini CLI v0.41.0+ supports Auto Memory inbox flow (hasAutoMemoryInbox)
+//   (b) ~/.gemini/agent-memory/main/.inbox/ directory exists (user opted in to autoMemory)
+//   (c) BKIT_AUTO_MEMORY_INBOX_HINT env var is not "false"
+// - bkit retains experimental.autoMemory:false by default; this hint exists for users who
+//   manually enabled autoMemory and want bkit to acknowledge the inbox without overriding it.
+function maybeAutoMemoryInboxHint(flags) {
+  if (!flags.hasAutoMemoryInbox) return null;
+  if (process.env.BKIT_AUTO_MEMORY_INBOX_HINT === 'false') return null;
+
+  const os = require('os');
+  const inboxPath = path.join(os.homedir(), '.gemini', 'agent-memory', 'main', '.inbox');
+  if (!fs.existsSync(inboxPath)) return null;
+
+  return 'Auto Memory inbox detected at ~/.gemini/agent-memory/main/.inbox/ (v0.41.0+ feature). ' +
+    'bkit retains experimental.autoMemory:false by default (see GEMINI.md). ' +
+    'Run `gemini memory inbox` to review entries, or set BKIT_AUTO_MEMORY_INBOX_HINT=false to silence.';
+}
 
 function generateDynamicContext(pdcaStatus, level, memory, returningInfo, outputStyle, pluginRoot, trackerContext) {
-  const verbose = process.env.BKIT_SESSION_START_VERBOSE === 'true';
-  const header = `bkit Vibecoding Kit v2.0.6 activated (Gemini CLI) - Level: ${level}`;
+  // ENH-5 (Sprint v2.0.7-upgrade): v0.43.0+ auto-detection of PR #25827 absorption
+  const flags = require(path.join(libPath, 'gemini/version')).getFeatureFlags();
+  const verbose = process.env.BKIT_SESSION_START_VERBOSE === 'true' || flags.hasSessionStartSystemMessageFix;
+  const header = `bkit Vibecoding Kit v2.0.7 activated (Gemini CLI) - Level: ${level}`;
+
+  // ENH-4: Auto Memory inbox hint (read-only awareness, opt-in users only)
+  const inboxHint = maybeAutoMemoryInboxHint(flags);
 
   if (!verbose) {
-    // Slim default: single line. Body lives in GEMINI.md (auto-loaded by CLI).
-    return header;
+    // Slim default: header + optional inbox hint
+    return inboxHint ? `${header}\n${inboxHint}` : header;
   }
 
   // Verbose mode: legacy v2.0.4 behavior (full body for backward compatibility).
@@ -506,7 +533,7 @@ function buildOutputStyleSection(outputStyle) {
 
 function buildPdcaStatusSection(pdcaStatus, level) {
   const activeCount = pdcaStatus.activeFeatures ? Object.keys(pdcaStatus.activeFeatures).length : 0;
-  const currentPhase = pdcaStatus.primaryFeature ? (pdcaStatus.activeFeatures[pdcaStatus.primaryFeature]?.phase || 'plan') : 'N/A';
+  const currentPhase = pdcaStatus.primaryFeature ? (pdcaStatus.features[pdcaStatus.primaryFeature]?.phase || 'plan') : 'N/A';
 
   return [
     '## Current Session',
