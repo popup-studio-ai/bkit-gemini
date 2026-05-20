@@ -533,7 +533,7 @@ function buildOutputStyleSection(outputStyle) {
 
 function buildPdcaStatusSection(pdcaStatus, level) {
   const activeCount = pdcaStatus.activeFeatures ? Object.keys(pdcaStatus.activeFeatures).length : 0;
-  const currentPhase = pdcaStatus.primaryFeature ? (pdcaStatus.activeFeatures[pdcaStatus.primaryFeature]?.phase || 'plan') : 'N/A';
+  const currentPhase = pdcaStatus.primaryFeature ? (pdcaStatus.features[pdcaStatus.primaryFeature]?.phase || 'plan') : 'N/A';
 
   return [
     '## Current Session',

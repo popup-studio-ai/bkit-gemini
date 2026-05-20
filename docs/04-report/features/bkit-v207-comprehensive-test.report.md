@@ -2,14 +2,14 @@
 
 > **Feature**: bkit-v159-comprehensive-test
 > **Status**: IN_PROGRESS
-> **Match Rate**: 96.7%
-> **Date**: 2026-05-15
+> **Match Rate**: 97.1%
+> **Date**: 2026-05-19
 
 ## 1. Summary
 
 | Category | Passed | Failed | Skipped | Status |
 |----------|--------|--------|---------|--------|
-| Total | 1984 | 30 | 37 | ❌ |
+| Total | 1992 | 22 | 37 | ❌ |
 
 ## 2. Test Execution Details
 

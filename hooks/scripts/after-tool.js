@@ -152,9 +152,9 @@ function processPostWrite(toolInput, projectDir) {
     const pdcaStatusModule = require(path.join(libPath, 'pdca', 'status'));
     const pdcaStatus = pdcaStatusModule.loadPdcaStatus(projectDir);
     const primaryFeature = pdcaStatus.primaryFeature;
-    if (!primaryFeature || !pdcaStatus.activeFeatures[primaryFeature]) return { decision: 'allow' };
+    if (!primaryFeature || !pdcaStatus.features[primaryFeature]) return { decision: 'allow' };
 
-    const featureStatus = pdcaStatus.activeFeatures[primaryFeature];
+    const featureStatus = pdcaStatus.features[primaryFeature];
     if (featureStatus.phase === 'design' && (normalizedPath.includes('src/') || normalizedPath.includes('lib/'))) {
       const oldPhase = featureStatus.phase;
       featureStatus.phase = 'do';
@@ -188,17 +188,17 @@ function processPostSkill(toolInput, projectDir) {
 
         if (action === 'plan') {
           pdcaStatus.primaryFeature = feature;
-          if (!pdcaStatus.activeFeatures[feature]) {
-            pdcaStatus.activeFeatures[feature] = { phase: 'plan', createdAt: new Date().toISOString() };
+          if (!pdcaStatus.features[feature]) {
+            pdcaStatus.features[feature] = { phase: 'plan', createdAt: new Date().toISOString() };
           } else {
-            pdcaStatus.activeFeatures[feature].phase = 'plan';
+            pdcaStatus.features[feature].phase = 'plan';
           }
           pdcaStatusModule.savePdcaStatus(pdcaStatus, projectDir);
           contexts.push(`**PDCA Progress**: Plan created for "${feature}". Next: \`/pdca design ${feature}\``);
         } else if (action === 'design') {
-          if (pdcaStatus.activeFeatures[feature]) {
-            pdcaStatus.activeFeatures[feature].phase = 'design';
-            pdcaStatus.activeFeatures[feature].updatedAt = new Date().toISOString();
+          if (pdcaStatus.features[feature]) {
+            pdcaStatus.features[feature].phase = 'design';
+            pdcaStatus.features[feature].updatedAt = new Date().toISOString();
             pdcaStatusModule.savePdcaStatus(pdcaStatus, projectDir);
           }
           contexts.push(`**PDCA Progress**: Design created for "${feature}". Next: Start implementation, then \`/pdca analyze ${feature}\``);
